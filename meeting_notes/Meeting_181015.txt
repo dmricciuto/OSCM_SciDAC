@@ -1,0 +1,73 @@
+OSCM SciDAC team meeting agenda – 1/5/2018
+
+
+1.	 Talks and abstract submissions
+
+Relevant AGU meeting presentations
+
+C. Safta, K. Sargsyan, D. Ricciuto.  Machine learning techniques for global sensitivity analysis in Earth system models.
+
+K. Sargsyan, D. Ricciuto, C. Safta, P. Thornton.  Embedded model error representation and propagation in climate models
+
+D. Lu, D. Ricciuto, K. Evans.  Efficient data-worth analysis using a multilevel Monte Carlo method applied in oil reservoir simulations
+
+
+ESCO abstract submission (European Seminar on Computing)
+June 3-8, 2018
+
+2.	Relevant publications
+
+D. Ricciuto, K. Sargsyan, P. Thornton (2017).   The impact of parametric uncertainties in the E3SM land model.   JAMES, accepted.
+
+D. Lu, D. Ricciuto, A. Walker, C. Safta, W. Munger (2017).  Bayesian calibration of terrestrial ecosystem models:  A study of advanced Markov Chain Monte Carlo Methods.   Biogeosciences, accepted.
+
+D. Lu, D. Ricciuto, K. Evans.  An efficient Bayesian data-worth analysis using a multilevel Monte Carlo method.  Advances in water resources, submitted 12/19/17.
+
+
+
+3.	E3SM update
+-	“Dedicated” project staff have been chosen for next phase– mostly working on core activities.   Regular staff – still unclear.
+-	Proposal white paper due Jan 16th (full proposal due in spring)
+-	Next generation “NGD” projects to be determined next week
+o	Epics (major subtasks) and project leads
+o	Land UQ role/tasks should be more clear next week.
+o	Atmosphere NGDs – SCAM and/or UQ?
+More recent documentation from Peter B. and Peter C.
+-	Land Model v1 is finalized (but there are 2 versions – some clarity on this next week)
+-	Draft collaboration agreement, I am behind but will send around for comment next week.
+
+4.	 Progress 
+
+      Tasks 1-2
+       See Khachik and Cosmin’s AGU presentations showing advances in embedded error representation and machine learning techniques
+       Discussion at AGU – given that it may be several months before we have a functional SCAM-ELM ensemble framework, we agreed that a simple, well-tested land model like DALEC (Safta et al., 2015, Lu et al., 2017) would be useful.   But, we might need to add energy/hydrology for greater relevance.
+Initial commit of python-based DALEC and new project repo:  https://github.com/dmricciuto/OSCM_SciDAC (please send your github ID)
+ - include notes on model structure
+
+Task 4:  ORNL-MIT Subcontract being finalized.  We agreed that the simple modeling framework would also be useful to test the network optimization concept.  We will be creating a regional gridded version of DALEC that uses reanalysis forcing.
+Task 5:  Dan Lu submitted MLMC paper (see above).  We will discuss how to use gridded DALEC in an MLMC framework.
+
+Task 6:  Meeting on 12/19 with Dan Lu, Kate Evans, Dan Ricciuto and Joe Kennedy to discuss setup of SCAM and workflow for ensemble simulations.  CIME can handle ensembles (multi-instance capability).  E3SM has a working version of SCAM but for the Eulerian dynamical Core.
+https://acme-climate.atlassian.net/wiki/spaces/Docs/pages/128294958/Running+the+ACME+Single+Column+Model
+
+
+5.	Preparation for telecon on 1/25
+- send calendar invite
+Project introduction and overview (5-7 slides)
+1.	Recent sensitivity analysis work (2-4)
+2.	Machine learning, DREAM, embedded error representation (3-5)
+3.	Reconstruction techniques (2-4)
+4.	Example of multisite optimization framework (2-3)
+5.	MLMC workflow and example from Dan Lu (2-3)
+6.	SCAM ensemble workflow schematic and successful single simulation (3-4) – Kate and Joe can make a slide
+7.	Datasets/benchmarks for inclusion in calibration (2-3)
+8.	Utilizing pre-exascale architectures (1-2)
+9.	Modeling frameworks (2-3)
+10.	Timeline and deliverables (2-3)
+- April – Kate will update on SciDACS
+
+6.	Collaborations
+Chad Steed – visualization
+Joe Kennedy, Valentine Anatharaj – workflow
+CANGA SciDAC – Multiphysics modeling
+

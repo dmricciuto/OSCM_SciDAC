@@ -1,0 +1,48 @@
+Agenda:  
+
+Award formally announced:
+https://climatemodeling.science.energy.gov/news/jointly-funded-scidac-awards-announced
+
+Task discussion (see task list below)
+-	What have we done and where should we be by mid-January (in prep for first telecon with PMs)
+
+Project organization 
+-	Task leads to organize task-level meetings as required 
+-	Monthly whole-project call – summarize task project and discuss critical needs
+-	Project face-to-face:  Early next year?
+-	Google drive:  https://drive.google.com/drive/u/0/folders/0Bwd-fK4aI7EieWlKUlFsQ2l5MU0
+-	Project repository – github?
+-	Interactions with E3SM project
+o	Space on confluence
+o	Space on ACME github repo for shared tools
+o	Plan for integrating UQ tools into E3SM
+o	Collaboration agreement for non-E3SM participants needing access to model
+
+Funding / subcontracts
+
+
+Task 1:  Sensitivity analysis and surrogate modeling methods for network simulations [100% SNL; Lead: C. Safta, SNL, K. Sargsyan]
+Perform global sensitivity analysis (GSA) on the land, atmosphere and coupled single column model to identify key sensitivities and reduce the number of model parameters used in calibration. Construct accurate model surrogates using PCE techniques for specific QoIs.
+
+Task 2:  Calibration techniques for network optimization using observations, and including representation of model structural error [75% SNL / 25% ORNL; Lead: K. Sargsyan, SNL, C. Safta, D. Lu]
+Identify locations in ACME models and components to embed model structural uncertainties. Pursue code development using ACME single column models interface with these structural uncertainties to identify statistical properties of model parameters.
+
+Task 3:  Methods to reconstruct global maps from network simulations [80% ORNL; 20% MIT;
+Lead [R. Kerekes, ORNL, D. Ricciuto, Y. Marzouk]
+Construct ensembles globally gridded maps at high resolution using the network of
+single-column simulations from 1) and 2). Use these maps to compare against regional QoIs.
+
+Task 4:  Network Optimization [80% MIT / 10% ORNL / 10% SNL Lead: Y.  Marzouk, MIT, D. Ricciuto, R. Kerekes, K. Sargsyan]
+Optimize the locations for new single-column model simulations and observation locations that would minimize posterior predictive uncertainties in regional QoIs.
+
+Task 5:  Multi-level Monte Carlo for uncertainty propagation [70% ORNL / 20% SNL / 10% MIT;
+Lead: D. Lu, ORNL, M. Stoyanov, D. Ricciuto, K. Sargsyan, C. Safta, Y. Marzouk]
+Develop a new multilevel Monte Carlo (MLMC) method to efficiently quantifying the prediction uncertainty in probabilistic sense based on the parameter uncertainty obtained in Task 2, and strategize the MLMC method to exploit pre-exascale and exascale computing systems.
+
+Task 6:  Develop infrastructure to run SCAM and CAM in ensemble mode [100% ORNL; Lead: K. Evans, ORNL; D. Lu, M. Stoyanov]
+Leverage existing tools to build a new framework to enable large ensembles of
+Coordinate with the ACME project to connect to existing model and workflow software and develop tools to run these efficiently in ensemble mode. Develop verification and validation procedures for these ensembles.
+
+Task 7:  Synthesize existing datasets for use in network calibration and regional to global scale model validation and identify uncertain processes [100% ORNL; Lead: D. Ricciuto ORNL; K. Evans, D. Lu]
+Collect land and atmosphere observations from intensively observed sites within networks, and regional variables for validation of upscaled simulations. Test data against ensemble simulations, using GSA and calibration approaches to identify most uncertain parameters and processes.
+
