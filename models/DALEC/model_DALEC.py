@@ -12,7 +12,7 @@ class MyModel(object):
                       'nue': 15.0, 'slatop':0.03,                                                      \
                       'livewdcn': 50, 'leafcn': 25, 'frootcn': 42,                                     \
                       'fstor2tran': 0.5, 'stem_leaf': 2.7, 'croot_stem': 0.3, 'f_livewd':0.1,          \
-                      'froot_leaf': 0.5,                                                               \
+                      'froot_leaf': 1.0,                                                               \
                       'rg_frac': 0.3, 'br_mr': 0.216, 'q10_mr': 1.5, 'cstor_tau':3.0,                  \
                       'r_mort': 0.02, 'lwtop_ann': 0.7, 'leaf_long': 1.5, 'froot_long': 1.5,           \
                       'q10_hr': 1.5, 'k_l1': 1.2039728, 'k_l2':0.0725707, 'k_l3':0.0140989,            \
@@ -35,8 +35,19 @@ class MyModel(object):
         self.pmax = {}
         self.nparms = 0
         for p in self.parms:
-            self.pmin[p] = self.parms[p]*0.75
-            self.pmax[p] = self.parms[p]*1.25
+            if (p == 'crit_dayl'):
+                self.pmin[p] = 9.5
+                self.pmax[p] = 12.5
+            elif (p == 'gdd_crit'):
+                self.pmin[p] = 25.0
+                self.pmax[p] = 100.0
+            elif (p == 'fpg'):
+                self.pmin[p] = 0.50
+                self.pmax[p] = 1.00
+            else:
+                self.pmin[p] = self.parms[p]*0.75
+                self.pmax[p] = self.parms[p]*1.25
+            
             self.nparms = self.nparms+1
         self.issynthetic = False
 

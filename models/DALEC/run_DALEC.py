@@ -26,9 +26,10 @@ numpy.savetxt('gpp_obs.txt',model.obs['gpp'])
 model.plot_output(startyear=2000,endyear=2005)
 
 #run an ensemble
-nens = 100     #ensemble size
+nens = 50     #ensemble size
 pall   = numpy.zeros([nens,model.nparms],numpy.float)
 gppall = numpy.zeros([nens,365],numpy.float)
+names_out = open('pnames.txt','w')
 for i in range(0,nens):
     print 'Running #'+str(i+1)
     pnum=0
@@ -37,10 +38,13 @@ for i in range(0,nens):
         model.parms[p] = numpy.random.uniform(low=model.pmin[p],high=model.pmax[p])
         #Save the parameters
         pall[i,pnum] = model.parms[p]
+        if (i == 0):
+            names_out.write(p+'\n')
         pnum=pnum+1
     model.run(spinup_cycles=6,deciduous=True)
     #Save the first year of daily output.  We may want to operate on this (e.g. average to monthly)
     gppall[i,:] = model.output['gpp'][0:365]
+names_out.close()
 
 #Save "UQ-ready" outputs
 numpy.savetxt('ptrain.txt',pall)
