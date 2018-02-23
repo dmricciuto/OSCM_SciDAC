@@ -408,8 +408,8 @@ class MyModel(object):
         myobs = Dataset("../site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
         site_name = myobs.variables['site_name']
         lnum=0
-        firstind = (self.start_year-1991)*365
-        lastind  = (self.end_year-1991+1)*365
+        firstind = (self.start_year[0]-1991)*365
+        lastind  = (self.end_year[0]-1991+1)*365
         self.obs={}
         for s in site_name:
           if site in ''.join(s):
