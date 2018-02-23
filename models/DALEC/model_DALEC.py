@@ -2,26 +2,47 @@ import numpy
 from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 from math import sin, cos, sqrt, atan2, radians
+import os
 
 class MyModel(object):
     
     def __init__(self):
         self.name = 'DALEC'
-        self.parms = {'gdd_crit': 200.0, 'crit_dayl': 10.0, 'ndays_on':15, 'ndays_off': 15,      \
-                      'nue': 15.0, 'slatop':0.0125,                                                 \
-                      'livewdcn': 40, 'leafcn': 25, 'frootcn': 42,                               \
-                      'fstor2tran': 0.5, 'stem_leaf': 2.2, 'croot_stem': 0.3, 'f_livewood':0.1,  \
-                      'froot_leaf': 0.5,                                                        \
-                      'rg_frac': 0.2, 'br_mr': 0.216, 'q10_mr': 1.5,                             \
-                      'r_mort': 0.02, 'lwtop_ann': 0.7, 'leaf_long': 1.5, 'froot_long': 1.5, \
-                      'q10_hr': 1.5, 'br_lit':0.00137, 'dr':0.001, 'br_som':0.00009132}
-                     #To add later:  CTC decomposition model from ELM.  k_l1, k_l2, k_l3, k_s1, k_s2, k_s3, k_s4, k_cwd
-                     #r_l1s1, r_l2s2, r_l3s3, r_s1s2, r_s2s3_, r_s3s4 (replaces last 3 parametrers above)
+        self.parms = {'gdd_crit': 50.0, 'crit_dayl': 10.917, 'ndays_on':30, 'ndays_off': 15,           \
+                      'nue': 15.0, 'slatop':0.03,                                                      \
+                      'livewdcn': 50, 'leafcn': 25, 'frootcn': 42,                                     \
+                      'fstor2tran': 0.5, 'stem_leaf': 2.7, 'croot_stem': 0.3, 'f_livewd':0.1,          \
+                      'froot_leaf': 0.5,                                                               \
+                      'rg_frac': 0.3, 'br_mr': 0.216, 'q10_mr': 1.5, 'cstor_tau':3.0,                  \
+                      'r_mort': 0.02, 'lwtop_ann': 0.7, 'leaf_long': 1.5, 'froot_long': 1.5,           \
+                      'q10_hr': 1.5, 'k_l1': 1.2039728, 'k_l2':0.0725707, 'k_l3':0.0140989,            \
+                      'k_s1':0.0725707, 'k_s2':0.0140989244, 'k_s3':0.00140098, 'k_s4':0.0001,         \
+                      'k_frag':0.0010005, 'rf_l1s1':0.39, 'rf_l2s2':0.55, 'rf_l3s3':0.29,              \
+                      'rf_s1s2':0.28, 'rf_s2s3':0.46, 'rf_s3s4':0.55, 'soil4ci':1000.,                 \
+                      'cwd_flig':0.24, 'fr_flig':0.25, 'lf_flig':0.25,'fr_flab':0.25, 'lf_flab':0.25,  \
+                      'fpi':0.1, 'fpg':0.9}
+        #Line 1:      Phenology (4 parameters)
+        #Line 2:      Photosyntesis (2 parameters)
+        #Line 3:      Nitrogen content (3 parmameters)
+        #Lines 4-5:   Allocation (5 parameters)
+        #Line 6:      Autotrophic respiration (5 parameters)
+        #Line 7:      Plant turnover (4 parameters)
+        #Lines 8-12:  Soil decomposition and turnover (16 parameters)
+        #Line 13:     Litter chemistry(5 parameters)
+        #Line 14:     Nutrient limitation (2 parameters)
+        self.pdefault=self.parms
+        self.pmin = {}
+        self.pmax = {}
+        self.nparms = 0
+        for p in self.parms:
+            self.pmin[p] = self.parms[p]*0.75
+            self.pmax[p] = self.parms[p]*1.25
+            self.nparms = self.nparms+1
         self.issynthetic = False
 
         #Model outputs
         self.outvars = ['gpp','npp','gr', 'mr','hr','nee','lai','leafc','leafc_stor','frootc','frootc_stor','livestemc', \
-                   'deadstemc','livecrootc','deadcrootc','litrc','somc','nee','totecosysc']
+                        'deadstemc','livecrootc','deadcrootc','ctcpools','totecosysc','totsomc','totlitc', 'cstor']
 
 
     def run(self, spinup_cycles=0, deciduous=True):
@@ -45,14 +66,18 @@ class MyModel(object):
         livecrootc  = self.output['livecrootc']
         deadcrootc  = self.output['deadcrootc']
         totecosysc  = self.output['totecosysc']
-        litrc  = self.output['litrc']
-        somc  = self.output['somc']
+        ctcpools    = self.output['ctcpools']
+        totsomc     = self.output['totsomc']
+        totlitc     = self.output['totlitc']
+        cstor       = self.output['cstor']
 
         #Set initial States (if non-zero)
         if (deciduous):
             leafc_stor[0] = 10.0
         else:
             leafc[0] = 10.0
+        #Set initial soil carbon for long-lived pool
+        ctcpools[6] = self.parms['soil4ci']
 
         #Forcings
         tmax = self.forcings['tmax']
@@ -62,9 +87,27 @@ class MyModel(object):
         cair = self.forcings['cair']
         dayl = self.forcings['dayl']
 
-        #Coefficents for GPP submodel
+        #Coefficents for ACM (GPP submodel)
         a = [self.parms['nue'], 0.0156935, 4.22273, 208.868, 0.0453194, 0.37836, 7.19298, 0.011136, \
              2.1001, 0.789798]
+             
+        #Turnover times for CTC model
+        k_ctc = [self.parms['k_l1'],self.parms['k_l2'],self.parms['k_l3'],self.parms['k_s1'], \
+                 self.parms['k_s2'],self.parms['k_s3'],self.parms['k_s4'],self.parms['k_frag']]
+        #Respiration fractions for CTC model pools
+        rf_ctc = [self.parms['rf_l1s1'], self.parms['rf_l2s2'], self.parms['rf_l3s3'] , \
+          self.parms['rf_s1s2'], self.parms['rf_s2s3'], self.parms['rf_s3s4'], 1.0, 0.0]
+        #transfer matrix for CTC model
+        tr_ctc = numpy.zeros([8,8],numpy.float)
+        tr_ctc[0,3] = 1.0 - self.parms['rf_l1s1']
+        tr_ctc[1,4] = 1.0 - self.parms['rf_l2s2']
+        tr_ctc[2,5] = 1.0 - self.parms['rf_l3s3']
+        tr_ctc[3,4] = 1.0 - self.parms['rf_s1s2']
+        tr_ctc[4,5] = 1.0 - self.parms['rf_s2s3']
+        tr_ctc[5,6] = 1.0 - self.parms['rf_s3s4']
+        tr_ctc[7,1] = self.parms['cwd_flig']
+        tr_ctc[7,2] = 1.0 - self.parms['cwd_flig']
+
 
         #Initialize local variables
         gdd     = 0
@@ -85,10 +128,13 @@ class MyModel(object):
             deadstemc[0]   = deadstemc[self.nobs-1] 
             livecrootc[0]  = livecrootc[self.nobs-1]
             deadcrootc[0]  = deadcrootc[self.nobs-1]
-            litrc[0]       = litrc[self.nobs-1]
-            somc[0]        = somc[self.nobs-1]
+            ctcpools[:,0]  = ctcpools[:,self.nobs-1]
             totecosysc[0]  = totecosysc[self.nobs-1]
-            #print s, (totecosysc[0]-totecosysc_last)/(self.nobs/365)
+            totsomc[0]     = totsomc[self.nobs-1]
+            totlitc[0]     = totlitc[self.nobs-1]
+            cstor[0]       = cstor[self.nobs-1]
+                                  
+                                  #print s, (totecosysc[0]-totecosysc_last)/(self.nobs/365)
           for v in range(0,self.nobs):
             # --------------------1.  Phenology -------------------------
             #Calculate leaf on
@@ -123,6 +169,7 @@ class MyModel(object):
                 frootc_litter = frootc[v] * self.parms['froot_long']/365.
 
             lai[v+1] = leafc[v] * self.parms['slatop']
+
             #---------------------2. GPP -------------------------------------
             #Calculate GPP flux using the ACM model (Williams et al., 1997)
             if (lai[v] > 1e-3):
@@ -149,12 +196,15 @@ class MyModel(object):
             mr[v+1] = (leafc[v]/self.parms['leafcn'] + frootc[v]/self.parms['frootcn'] + \
                        (livecrootc[v]+livestemc[v])/self.parms['livewdcn'])* \
                        self.parms['br_mr']*trate
-            availc = max(gpp[v+1]-mr[v+1],0.0)
-            xsmr   = max(mr[v+1]-gpp[v+1],0.0)
+            #Nutrient limitation
+            availc      = max(gpp[v+1]-mr[v+1],0.0)
+            availc      = availc * self.parms['fpg']
+            cstor_alloc = availc * (1.0 - self.parms['fpg'])
+            xsmr        = max(mr[v+1]-gpp[v+1],0.0)
 
             #---------------4.  Allocation and growth respiration -------------------
             frg  = self.parms['rg_frac']
-            flw  = self.parms['f_livewood']
+            flw  = self.parms['f_livewd']
             f1   = self.parms['froot_leaf']
             f2   = max(self.parms['stem_leaf']/(1.0+numpy.exp(-0.004*(annsum_npp - \
                            300.0))) - 0.4, 0.1)
@@ -186,6 +236,7 @@ class MyModel(object):
             #Cacluate live wood turnover
             livestemc_turnover  = self.parms['lwtop_ann'] / 365. * livestemc[v]
             livecrootc_turnover = self.parms['lwtop_ann'] / 365. * livecrootc[v]
+            cstor_turnover      = 1.0 / (self.parms['cstor_tau'] * 365) * cstor[v] * trate
  
             #increment plant pools
             leafc[v+1]       = leafc[v]       + leafc_alloc + leafc_trans - leafc_litter
@@ -200,6 +251,7 @@ class MyModel(object):
                                               - livecrootc_turnover
             deadcrootc[v+1]  = deadcrootc[v]  + deadcrootc_alloc - deadcrootc_litter \
                                               + livecrootc_turnover - xsmr_deadcrootc
+            cstor[v+1]       = cstor[v]       + cstor_alloc - cstor_turnover
             #Calculate growth respiration and NPP
             gr[v+1]          = availc * frg * (1.0 + f1+f2*(1+f3))/fall
             npp[v+1] = gpp[v+1] - mr[v+1] - gr[v+1]
@@ -207,20 +259,44 @@ class MyModel(object):
                 annsum_npp = annsum_npp_temp
                 annsum_npp_temp = 0
             annsum_npp_temp = annsum_npp_temp+npp[v] 
-            #Increment litter and som pools 
+            
+            # ----------------- Litter and SOM decomposition model (CTC) --------------------
             trate = self.parms['q10_hr']**((0.5*(tmax[v]+tmin[v])-10)/10.0)
-            litrc[v+1]  = litrc[v] + leafc_litter + frootc_litter + livestemc_litter + \
-                          deadstemc_litter + livecrootc_litter + deadcrootc_litter - \
-                          self.parms['dr']*litrc[v] - self.parms['br_lit']*litrc[v]*trate
-            somc[v+1]   = somc[v] + self.parms['dr']*litrc[v] - \
-                          self.parms['br_som']*somc[v]*trate
-            hr[v+1]     = (self.parms['br_lit']*litrc[v] + self.parms['br_som']*somc[v])*trate
+
+            ctc_input    = numpy.zeros([8],numpy.float)  #inputs to pool
+            ctc_output   = numpy.zeros([8],numpy.float)  #Outputs from pool
+            ctc_resp     = numpy.zeros([8],numpy.float)  #Respiration from pool
+            #Litter inputs to the system
+            ctc_input[0] = leafc_litter*self.parms['lf_flab'] + frootc_litter* \
+                                self.parms['fr_flab']
+            ctc_input[1] = leafc_litter*self.parms['lf_flig'] + frootc_litter* \
+                                self.parms['fr_flig']+(livestemc_litter+deadstemc_litter \
+                                +livecrootc_litter+deadcrootc_litter)*self.parms['cwd_flig']
+            ctc_input[2] = leafc_litter*(1.0 - self.parms['lf_flab'] - self.parms['lf_flig']) + frootc_litter* \
+                           (1.0-self.parms['fr_flab']-self.parms['fr_flig'])+(livestemc_litter+deadstemc_litter \
+                           +livecrootc_litter+deadcrootc_litter)*(1.0 - self.parms['cwd_flig'])
+            for p1 in range(0,8):
+                if (p1 < 3):
+                   ctc_output[p1] = k_ctc[p1]*ctcpools[p1,v]*trate*self.parms['fpi']
+                else:
+                   ctc_output[p1] = k_ctc[p1]*ctcpools[p1,v]*trate  #Decomposition (output)
+                ctc_resp[p1]   = ctc_output[p1]*rf_ctc[p1]       #HR from this pool
+                for p2 in range(0,8):
+                    #Transfer (input) and respiration fluxes
+                    ctc_input[p2] = ctc_input[p2] + ctc_output[p1]*tr_ctc[p1,p2]
+            hr[v+1]=0
+            for p in range(0,8):
+                ctcpools[p,v+1] = ctcpools[p,v] + ctc_input[p] - ctc_output[p]
+                hr[v+1] = hr[v+1] + ctc_resp[p]
+                    
             #Calculate NEE
             nee[v+1]    = hr[v+1] - npp[v+1] 
             #Total system carbon
             totecosysc[v+1] = leafc[v+1]+leafc_stor[v+1]+frootc[v+1]+frootc_stor[v+1]+ \
                               livestemc[v+1]+deadstemc[v+1]+livecrootc[v+1]+deadcrootc[v+1] + \
-                              litrc[v+1]+somc[v+1]                               
+                              sum(ctcpools[:,v+1])
+            totlitc[v+1] = sum(ctcpools[0:3,v+1])
+            totsomc[v+1] = sum(ctcpools[3:7,v+1])
  
     def generate_synthetic_obs(self, parms, err):
         #generate synthetic observations from model with Gaussian error
@@ -310,7 +386,10 @@ class MyModel(object):
          #Initialize output arrays
          self.output = {}
          for var in self.outvars:
-            self.output[var] = numpy.zeros([self.nobs+1], numpy.float)
+             if (var == 'ctcpools'):
+                 self.output[var] = numpy.zeros([8,self.nobs+1], numpy.float)
+             else:
+                 self.output[var] = numpy.zeros([self.nobs+1], numpy.float)
 
     #Load actual observations and uncertainties 
     def load_obs(self, site):
@@ -326,8 +405,12 @@ class MyModel(object):
              self.obs['gpp'] = myobs.variables['GPP'][lnum,firstind:lastind]*24*3600*1000
              self.obs['nee'] = myobs.variables['NEE'][lnum,firstind:lastind]*24*3600*1000
           lnum+=1
- 
-    def plot_output(self, var='all', startyear=-1,endyear=-1):
+
+
+
+
+    #Plot model outputs, with obersvations for NEE and GPP if requested
+    def plot_output(self, var='all', startyear=-1,endyear=-1, obs=True):
       var_list = []
       if (var == 'all'):
          for key in self.output:
@@ -336,15 +419,20 @@ class MyModel(object):
          var_list.append(var)
       print var_list
       for var in var_list:
-          plt.plot(self.forcings['time'], self.output[var][1:])
-          #print len(self.forcings['time']), len(self.output[var])
-          if (var == 'gpp' or var == 'nee'):
-              plt.plot(self.forcings['time'], self.obs[var])
-          if (startyear == -1):
-              startyear = self.start_year[0]
-          if (endyear == -1):
-              endyear = self.end_year[0]
-          plt.xlim(startyear, endyear)
-          plt.xlabel('Year')
-          plt.ylabel(var)
-          plt.show() 
+          fig = plt.figure()
+          ax = fig.add_subplot(111)
+          if (var != 'ctcpools'):
+              ax.plot(self.forcings['time'], self.output[var][1:])
+              if (os.path.exists('./plots') == False):
+                  os.mkdir('./plots')
+              if (var == 'gpp' or var == 'nee' and obs):
+                  ax.plot(self.forcings['time'], self.obs[var])
+                  ax.legend(['Model','Observations'])
+              if (startyear == -1):
+                  startyear = self.start_year[0]
+              if (endyear == -1):
+                  endyear = self.end_year[0]
+              plt.xlim(startyear, endyear+1)
+              plt.xlabel('Year')
+              plt.ylabel(var)
+              plt.savefig('./plots/'+var+'.pdf')
