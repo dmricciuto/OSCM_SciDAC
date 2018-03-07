@@ -417,11 +417,8 @@ class MyModel(object):
              self.obs['nee'] = myobs.variables['NEE'][lnum,firstind:lastind]*24*3600*1000
           lnum+=1
 
-
-
-
     #Plot model outputs, with obersvations for NEE and GPP if requested
-    def plot_output(self, var='all', startyear=-1,endyear=-1, obs=True):
+    def plot_output(self, var='all', startyear=-1,endyear=-1, obs=True, figname_postfix=''):
       var_list = []
       if (var == 'all'):
          for key in self.output:
@@ -436,7 +433,7 @@ class MyModel(object):
               ax.plot(self.forcings['time'], self.output[var][1:])
               if (os.path.exists('./plots') == False):
                   os.mkdir('./plots')
-              if (var == 'gpp' or var == 'nee' and obs):
+              if obs and (var == 'gpp' or var == 'nee'):
                   ax.plot(self.forcings['time'], self.obs[var])
                   ax.legend(['Model','Observations'])
               if (startyear == -1):
@@ -446,4 +443,5 @@ class MyModel(object):
               plt.xlim(startyear, endyear+1)
               plt.xlabel('Year')
               plt.ylabel(var)
-              plt.savefig('./plots/'+var+'.pdf')
+              plt.savefig('./plots/'+var+figname_postfix+'.pdf')
+              

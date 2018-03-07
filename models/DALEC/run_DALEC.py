@@ -4,32 +4,7 @@ import os, math, random
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 
-#Transform daily data to monthly (or produce a monthly mean seasonal cycle
-def daily_to_monthly(var_in, allyearsmean=False):
-    ndays_month = [31,28,31,30,31,30,31,31,30,31,30,31]
-    doy_end = numpy.cumsum(ndays_month)  #ending day of year for each month
-    ndays = len(var_in[1:])
-    if (allyearsmean):
-        nmonths=12
-    else:
-        nmonths = ndays/365*12
-    #Day of year for each output day
-    doy_in = (numpy.cumsum(numpy.ones([ndays], numpy.float))-1) % 365 + 1
-    var_out = numpy.zeros([nmonths], numpy.float)
-    for d in range(0,ndays):
-        thisyear = d/365
-        for m in range(0,12):
-            if (m == 0 and doy_in[d] <= doy_end[m]):
-                thismonth = m
-            elif (m > 0 and doy_in[d] <= doy_end[m] and doy_in[d] > doy_end[m-1]):
-                thismonth=m
-        thismonth_out = thismonth
-        if (not allyearsmean):
-            thismonth_out = thismonth+thisyear*12
-            var_out[thismonth_out] = var_out[thismonth_out] + var_in[d]/(ndays_month[thismonth])
-        else:
-            var_out[thismonth] = var_out[thismonth] + var_in[d]/(ndays_month[thismonth]*ndays/365)
-    return var_out
+from utils import *
 
 site = 'US-UMB'
 #create model object
@@ -53,7 +28,7 @@ model.plot_output(startyear=2000,endyear=2005)
 
 #---------------------- run an ensemble ----------------------------
 
-nens = 50     #ensemble size
+nens = 2 #50     #ensemble size
 p_all = numpy.zeros([nens,model.nparms],numpy.float)
 gpp_all = numpy.zeros([nens,12],numpy.float)  #Monthly GPP (mean seasonal cycle over all years)
 nee_all = numpy.zeros([nens,12],numpy.float)  #Monthly NEE (mean seasonal cycle over all years)
@@ -80,5 +55,5 @@ names_out.close()
 #Save "UQ-ready" outputs
 numpy.savetxt('p_ensemble.txt',p_all)
 numpy.savetxt('gpp_ensemble.txt',gpp_all)
-numpy.savetxt('nee_ensemble.txt',gpp_all)
-numpy.savetxt('lai_ensemble.txt',gpp_all)
+numpy.savetxt('nee_ensemble.txt',nee_all)
+numpy.savetxt('lai_ensemble.txt',lai_all)
