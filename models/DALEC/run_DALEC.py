@@ -3,10 +3,19 @@ import model_DALEC as models
 import os, math, random
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
+import argparse
 
 from utils import *
 
-site = 'US-UMB'
+parser = argparse.ArgumentParser()
+
+# main parameters
+parser.add_argument("-s","--site", dest="site", default="US-UMB", type=str, help="Site ID")
+options = parser.parse_args()
+
+site = options.site
+print('Processing site: %s'%(site))
+
 #create model object
 model = models.MyModel()
 
@@ -29,7 +38,7 @@ model.plot_output(startyear=2000,endyear=2005)
 #---------------------- run an ensemble ----------------------------
 
 nens = 2 #50     #ensemble size
-p_all = numpy.zeros([nens,model.nparms],numpy.float)
+p_all   = numpy.zeros([nens,model.nparms],numpy.float)
 gpp_all = numpy.zeros([nens,12],numpy.float)  #Monthly GPP (mean seasonal cycle over all years)
 nee_all = numpy.zeros([nens,12],numpy.float)  #Monthly NEE (mean seasonal cycle over all years)
 lai_all = numpy.zeros([nens,12],numpy.float)  #Monthly LAI (mean seasonal cycle over all years)
