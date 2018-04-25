@@ -1,6 +1,6 @@
 import numpy
 from netCDF4 import Dataset
-import matplotlib.pyplot as plt
+#import matplotlibpyplot as plt
 from math import sin, cos, sqrt, atan2, radians
 import time, os
 import utils
@@ -9,12 +9,12 @@ class MyModel(object):
     
     def __init__(self):
         self.name = 'sELM'
-        self.parms = {'gdd_crit': 50.0, 'crit_dayl': 10.917, 'ndays_on':30, 'ndays_off': 15,           \
+        self.parms = {'gdd_crit': 500.0, 'crit_dayl': 39300., 'ndays_on':30, 'ndays_off': 15,           \
                       'nue': 15.0, 'slatop':0.03,                                                      \
                       'livewdcn': 50, 'leafcn': 25, 'frootcn': 42,                                     \
                       'fstor2tran': 0.5, 'stem_leaf': 2.7, 'croot_stem': 0.3, 'f_livewd':0.1,          \
                       'froot_leaf': 1.0,                                                               \
-                      'rg_frac': 0.3, 'br_mr': 0.216, 'q10_mr': 1.5, 'cstor_tau':3.0,                  \
+                      'rg_frac': 0.3, 'br_mr': 2.52e-6, 'q10_mr': 1.5, 'cstor_tau':3.0,                  \
                       'r_mort': 0.02, 'lwtop_ann': 0.7, 'leaf_long': 1.5, 'froot_long': 1.5,           \
                       'q10_hr': 1.5, 'k_l1': 1.2039728, 'k_l2':0.0725707, 'k_l3':0.0140989,            \
                       'k_s1':0.0725707, 'k_s2':0.0140989244, 'k_s3':0.00140098, 'k_s4':0.0001,         \
@@ -38,11 +38,11 @@ class MyModel(object):
         self.nparms = 0
         for p in self.parms:
             if (p == 'crit_dayl'):
-                self.pmin[p] = 9.5
-                self.pmax[p] = 12.5
+                self.pmin[p] = 36000.
+                self.pmax[p] = 43000.
             elif (p == 'gdd_crit'):
-                self.pmin[p] = 25.0
-                self.pmax[p] = 100.0
+                self.pmin[p] = 100.0
+                self.pmax[p] = 1000.0
             elif (p == 'fpg'):
                 self.pmin[p] = 0.50
                 self.pmax[p] = 1.00
@@ -158,7 +158,8 @@ class MyModel(object):
             if (deciduous):     #Decidous phenology
               gdd_last = gdd
               dayl_last = dayl[v-1]
-              gdd = (doy[v] > 1) * (gdd + max(0.5*(tmax[v]+tmin[v])-10.0, 0.0))
+              gdd_base = 0.0
+              gdd = (doy[v] > 1) * (gdd + max(0.5*(tmax[v]+tmin[v])-gdd_base, 0.0))
               if (gdd >= parms['gdd_crit'] and gdd_last < parms['gdd_crit']):
                   leafon = parms['ndays_on']
                   leafc_trans_tot  = leafc_stor[v]*parms['fstor2tran']
@@ -168,7 +169,7 @@ class MyModel(object):
                   frootc_trans = frootc_trans_tot / parms['ndays_on']
                   leafon = leafon - 1
               #Calculate leaf off
-              if (dayl_last >= parms['crit_dayl'] and dayl[v] < parms['crit_dayl']):
+              if (dayl_last >= parms['crit_dayl']/3600. and dayl[v] < parms['crit_dayl']/3600.):
                    leafoff = parms['ndays_off']
                    leafc_litter_tot  = leafc[v]
                    frootc_litter_tot = frootc[v]
@@ -213,7 +214,7 @@ class MyModel(object):
             trate = parms['q10_mr']**((0.5*(tmax[v]+tmin[v])-25.0)/25.0)
             mr[v+1] = (leafc[v]/parms['leafcn'] + frootc[v]/parms['frootcn'] + \
                        (livecrootc[v]+livestemc[v])/parms['livewdcn'])* \
-                       parms['br_mr']*trate
+                       (parms['br_mr']*24*3600)*trate
             #Nutrient limitation
             availc      = max(gpp[v+1]-mr[v+1],0.0)
             availc      = availc * parms['fpg']
@@ -319,7 +320,7 @@ class MyModel(object):
 
     def run_selm(self, spinup_cycles=0, lat_bounds=[-999,-999], lon_bounds=[-999,-999], \
                      do_monthly_output=False, do_output_forcings=False, deciduous=False, \
-                     prefix='model', ensemble=False):
+                     prefix='model', ensemble=False, myoutvars=[]):
 
         ens_torun=[]
         indx_torun=[]
@@ -372,6 +373,7 @@ class MyModel(object):
         else:
           #site forcing has already been loaded
           rank = 0    
+          size = 0
           n_active = self.ne
           if (n_active > 1):
              from mpi4py import MPI
@@ -397,12 +399,23 @@ class MyModel(object):
              istart=1
 
           model_output={}
-          for v in self.outvars:
-            if (v != 'ctcpools'):
-                model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
-          for v in self.forcvars:
-              if (v != 'time' and do_output_forcings):
-                model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
+          if (len(myoutvars) == 0):
+            for v in self.outvars:
+              if (v != 'ctcpools'):
+                  myoutvars.append(v)
+                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
+            for v in self.forcvars:
+                if (v != 'time' and do_output_forcings):
+                  myoutvars.append(v)
+                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
+          else:
+             for v in myoutvars:
+                 model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
+                 if (v in self.forcvars):
+                     do_output_forcings=True 
+          if (size > 0):
+            comm.bcast(myoutvars)
+            comm.bcast(do_output_forcings)
 
           if (self.site == 'none'):
             self.load_forcings(lon=lons_torun[0], lat=lats_torun[0])
@@ -410,15 +423,13 @@ class MyModel(object):
           if (n_active == 1):
             #if only one gridcell and ensemble (single site run), don't use MPI
             self.selm_instance(self.parms, spinup_cycles=spinup_cycles, deciduous=deciduous)
-            for v in self.outvars:
-              if (not 'ctcpools' in v):
+            for v in myoutvars:
+              if (v in self.outvars):
                 if (do_monthly_output):
                   model_output[v][:,0,0,0] = utils.daily_to_monthly(self.output[v][1:])
                 else:
                   model_output[v][:,0,0,0] = self.output[v][1:]
-            if (do_output_forcings):
-                for v in self.forcvars:
-                  if (not 'time' in v):
+              elif (v in self.forcvars):
                     if (do_monthly_output):
                       model_output[v][:,0,0,0] = utils.daily_to_monthly(self.forcings[v])
                     else:
@@ -447,8 +458,6 @@ class MyModel(object):
             process = comm.recv(source=MPI.ANY_SOURCE, tag=3)
             thisjob = comm.recv(source=process, tag=4)
             myoutput = comm.recv(source=process, tag=5)
-            if (do_output_forcings):
-                myforc   = comm.recv(source=process, tag=12)
             print 'Received', thisjob
             n_done = n_done+1
             comm.send(n_job, dest=process, tag=1)
@@ -466,41 +475,29 @@ class MyModel(object):
             comm.send(self.forcvars,   dest = process, tag=11)
             comm.send(parms,           dest = process, tag=100)
             #write output
-            for v in self.outvars:
-              if (not 'ctcpools' in v):
-                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = \
-                      myoutput[v][istart:]
-	    for v in self.forcvars:
-              if (not 'time' in v and do_output_forcings):
-                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = \
-                      myforc[v][:]
+            for v in myoutvars:
+              model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v]
 
            #receive remaining messages and finalize
            while (n_done < n_active):
             process = comm.recv(source=MPI.ANY_SOURCE, tag=3)
             thisjob = comm.recv(source=process, tag=4)
             myoutput = comm.recv(source=process, tag=5)
-            if (do_output_forcings):
-                myforc   = comm.recv(source=process, tag=12)
             vnum = 0
             print 'Received', thisjob
             n_done = n_done+1
             comm.send(-1, dest=process, tag=1)
             comm.send(-1, dest=process, tag=2)
             #write output
-            for v in self.outvars:
-              if (not 'ctcpools' in v):
-                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = \
-                     myoutput[v][istart:]
-            for v in self.forcvars:
-              if (not 'time' in v and do_output_forcings):
-                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = \
-                     myforc[v][:]
+            for v in myoutvars:
+              model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v]
            self.write_nc_output(model_output, do_monthly_output=do_monthly_output, prefix=prefix)
            MPI.Finalize()
         #Slave
         else:
           status=0
+          comm.bcast(do_output_forcings)
+          comm.bcast(myoutvars)
           while status == 0:
             myjob = comm.recv(source=0, tag=1)
             status = comm.recv(source=0, tag=2)
@@ -522,22 +519,20 @@ class MyModel(object):
               self.selm_instance(myparms, spinup_cycles=spinup_cycles, deciduous=deciduous)
               comm.send(rank,  dest=0, tag=3)
               comm.send(myjob, dest=0, tag=4)
-              monthly_output={}
               
-              if (do_monthly_output):
-                  for v in self.outvars:
-                      if (not 'ctcpools' in v):
-                         monthly_output[v] = utils.daily_to_monthly(self.output[v][1:])
-                  comm.send(monthly_output, dest=0, tag=5)
-              else:
-                  comm.send(self.output, dest=0, tag=5)
-              if (do_output_forcings):
-                if (do_monthly_output):
-                  for v in self.forcvars:
-                    monthly_output[v] = utils.daily_to_monthly(self.forcings[v])
-                  comm.send(monthly_output, dest=0, tag=12)
-                else:
-                  comm.send(self.forcings, dest=0, tag=12)
+              thisoutput={}
+              for v in myoutvars:
+                 if (v in self.outvars):
+                   if (do_monthly_output):
+                       thisoutput[v] = utils.daily_to_monthly(self.output[v][1:])
+                   else:
+                       thisoutput[v] = self.output[v][1:]
+                 elif (v in self.forcvars):
+                   if (do_monthly_output):
+                       thisoutput[v] = utils.daily_to_monthly(self.forcings[v])
+                   else:
+                       thisoutput[v] = self.forcings[v]
+              comm.send(thisoutput, dest=0, tag=5)
           print rank, ' complete'
           MPI.Finalize()
 
@@ -551,6 +546,13 @@ class MyModel(object):
            #ens_out = output_nc.createVariable('ensemble','i4',('ensemble',))
            #ens_out.axis="E"
            #ens_out.CoordinateAxisType = "Ensemble"
+           pnum=0
+           for p in self.ensemble_pnames:
+             #write parameter values to file
+             pvars={}
+             pvars[p] = output_nc.createVariable(p, 'f8', ('ensemble',))
+             pvars[p][:] = self.parm_ensemble[:,pnum]
+             pnum=pnum+1
          if (self.site == 'none'):
            lat_out = output_nc.createVariable('lat','f8',('lat',))
            lon_out = output_nc.createVariable('lon','f8',('lon',))
@@ -755,12 +757,25 @@ class MyModel(object):
               plt.ylabel(var)
               plt.savefig('./plots/'+var+figname_postfix+'.pdf')
               
-    def generate_ensemble(self, pnames, n_ensemble):
+    def generate_ensemble(self, n_ensemble, pnames, fname=''):
       self.parm_ensemble = numpy.zeros([n_ensemble,len(pnames)])
       self.ensemble_pnames = pnames
       self.ne = n_ensemble
-      for n in range(0,n_ensemble):
-        for p in range(0,len(pnames)):
-          #Sample uniformly from the parameter space
-          self.parm_ensemble[n,p] = numpy.random.uniform(low=self.pmin[pnames[p]], \
+      
+      if (fname != ''):
+        print 'Generating parameter ensemble from '+fname
+        inparms = open(fname,'r')
+        lnum = 0
+        for s in inparms:
+          pvals = s.split()
+          if (lnum < n_ensemble):
+            for p in range(0,len(pnames)):
+              self.parm_ensemble[lnum,p] = float(pvals[p])
+          lnum=lnum+1
+        inparms.close()
+      else:     
+        for n in range(0,n_ensemble):          
+          for p in range(0,len(pnames)):
+            #Sample uniformly from the parameter space
+            self.parm_ensemble[n,p] = numpy.random.uniform(low=self.pmin[pnames[p]], \
                   high=self.pmax[pnames[p]])
