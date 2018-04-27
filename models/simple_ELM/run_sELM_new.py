@@ -1,4 +1,3 @@
-import numpy
 import model_sELM as models
 import os, math, random
 import matplotlib.mlab as mlab
@@ -54,50 +53,24 @@ numpy.savetxt('gpp_obs.txt',model.obs['gpp'])
 #model.plot_output(startyear=2000,endyear=2005)
 
 #---------------------- run an ensemble ----------------------------
-p_all   = numpy.zeros([nens,model.nparms],numpy.float)
-gpp_all = numpy.zeros([nens,12],numpy.float)  #Monthly GPP (mean seasonal cycle over all years)
-nee_all = numpy.zeros([nens,12],numpy.float)  #Monthly NEE (mean seasonal cycle over all years)
-lai_all = numpy.zeros([nens,12],numpy.float)  #Monthly LAI (mean seasonal cycle over all years)
 
 # some more checks
 if spls.shape[0]>0:
     if npars!=model.nparms:
         print('Not enough parameters in the samples file')
         quit()
+    else:
+       model.generate_ensemble(nens, splsNames, file=options.parfile, normalized=True)
+else:
+  #No file provided, generate ensemble using all parameters
+  splsNames=[]
+  for v in model.parms:
+    splsNames.append(v)
+  model.generate_ensemble(nens,splsNames)
 
 names_out = open('pnames.txt','w')
-if spls.shape[0]>0:
-    for p in splsNames:
-        names_out.write(p+'\n')
-else:
-    for p in model.parms:
-        names_out.write(p+'\n')
-
+for p in splsNames:
+  names_out.write(p+'\n')
 names_out.close()
 
-for i in range(0,nens):
-    print 'Running #'+str(i+1)
-    if spls.shape[0]>0:
-        # Sample in [-1,1] from file
-        for k in range(model.nparms):
-            p = splsNames[k]
-            model.parms[p]=model.pmin[p]+0.5*(spls[i,k]+1)*(model.pmax[p]-model.pmin[p])
-            p_all[i,k] = model.parms[p]
-    else:
-        pnum=0
-        for p in model.parms:
-            #Sample uniformly from the parameter space
-            model.parms[p] = numpy.random.uniform(low=model.pmin[p],high=model.pmax[p])
-            #Save the parameters
-            p_all[i,pnum] = model.parms[p]
-            pnum=pnum+1
-    model.run_selm(spinup_cycles=6,deciduous=True)
-    gpp_all[i,:] = daily_to_monthly(model.output['gpp'],allyearsmean=True)
-    nee_all[i,:] = daily_to_monthly(model.output['nee'],allyearsmean=True)
-    lai_all[i,:] = daily_to_monthly(model.output['lai'],allyearsmean=True)
-
-#Save "UQ-ready" outputs
-numpy.savetxt('p_ensemble.txt',p_all)
-numpy.savetxt('gpp_ensemble.txt',gpp_all)
-numpy.savetxt('nee_ensemble.txt',nee_all)
-numpy.savetxt('lai_ensemble.txt',lai_all)
+model.run_selm(spinup_cycles=6,deciduous=True, do_monthly_output=True)

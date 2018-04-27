@@ -42,7 +42,7 @@ class MyModel(object):
                 self.pmax[p] = 43000.
             elif (p == 'gdd_crit'):
                 self.pmin[p] = 100.0
-                self.pmax[p] = 1000.0
+                self.pmax[p] = 700.0
             elif (p == 'fpg'):
                 self.pmin[p] = 0.50
                 self.pmax[p] = 1.00
@@ -320,17 +320,21 @@ class MyModel(object):
 
     def run_selm(self, spinup_cycles=0, lat_bounds=[-999,-999], lon_bounds=[-999,-999], \
                      do_monthly_output=False, do_output_forcings=False, deciduous=False, \
-                     prefix='model', ensemble=False, myoutvars=[]):
+                     prefix='model', ensemble=False, myoutvars=[], use_MPI=False):
 
         ens_torun=[]
         indx_torun=[]
         indy_torun=[]
         n_active=0
         if (self.site == 'none'):
-         from mpi4py import MPI
-         comm=MPI.COMM_WORLD
-         rank=comm.Get_rank()
-         size=comm.Get_size()
+         if (use_MPI):
+           from mpi4py import MPI
+           comm=MPI.COMM_WORLD
+           rank=comm.Get_rank()
+           size=comm.Get_size()
+         else:
+           rank = 0
+           size = 0
          if (rank == 0):
           mydomain = Dataset("../pftdata/domain.360x720_ORCHIDEE0to360.100409.nc4",'r')
           landmask = mydomain.variables['mask']
@@ -352,13 +356,19 @@ class MyModel(object):
           lats_torun=[]
           lons_torun=[]
           vegfrac_torun=[]
+          if (self.ne > 1 and size > 1 and size < self.nx*self.ny):
+            all_ensembles_onejob = True
+            k_max = 1
+          else:
+            all_ensembles_onejob = False
+            k_max = self.ne
 	  for i in range(0,self.nx):
               for j in range(0,self.ny):
                 vegfrac    = pct_natveg[self.y1+j,self.x1+i]
                 bareground = pct_pft[0,self.y1+j,self.x1+i]
            	if (vegfrac > 0.1 and landmask[self.y1+j,self.x1+i] > 0):
                   if (bareground < 99.9):
-                    for k in range(0,self.ne):
+                    for k in range(0,k_max):
  		      lons_torun.append(self.hdlongrid[self.y1+j,self.x1+i])
                       lats_torun.append(self.hdlatgrid[self.y1+j,self.x1+i])
                       indx_torun.append(i)
@@ -375,7 +385,7 @@ class MyModel(object):
           rank = 0    
           size = 0
           n_active = self.ne
-          if (n_active > 1):
+          if (n_active > 1 and use_MPI):
              from mpi4py import MPI
              comm=MPI.COMM_WORLD
              rank=comm.Get_rank()
@@ -389,7 +399,7 @@ class MyModel(object):
             self.ny = 1
 
         if (rank == 0):
-          print str(n_active)+' points to run'
+          print str(n_active)+' simulation units to run'
           n_done=0
           if (do_monthly_output):
              self.nt = (self.end_year-self.start_year+1)*12
@@ -416,24 +426,34 @@ class MyModel(object):
           if (size > 0):
             comm.bcast(myoutvars)
             comm.bcast(do_output_forcings)
+            comm.bcast(all_ensembles_onejob)
 
           if (self.site == 'none'):
             self.load_forcings(lon=lons_torun[0], lat=lats_torun[0])
 
-          if (n_active == 1):
-            #if only one gridcell and ensemble (single site run), don't use MPI
-            self.selm_instance(self.parms, spinup_cycles=spinup_cycles, deciduous=deciduous)
-            for v in myoutvars:
-              if (v in self.outvars):
-                if (do_monthly_output):
-                  model_output[v][:,0,0,0] = utils.daily_to_monthly(self.output[v][1:])
-                else:
-                  model_output[v][:,0,0,0] = self.output[v][1:]
-              elif (v in self.forcvars):
+          if ((n_active == 1 and self.ne == 1) or size == 0):
+            #No MPI
+            for i in range(0,n_active):
+                print i
+                if (self.site == 'none'):
+                  self.load_forcings(lon=lons_torun[i], lat=lats_torun[i])
+                if (self.ne > 1):
+                  for p in range(0,len(self.ensemble_pnames)):
+                    self.parms[self.ensemble_pnames[p]] = self.parm_ensemble[i,p]
+                self.selm_instance(self.parms, spinup_cycles=spinup_cycles, deciduous=deciduous)
+                for v in myoutvars:
+                  if (v in self.outvars):
                     if (do_monthly_output):
-                      model_output[v][:,0,0,0] = utils.daily_to_monthly(self.forcings[v])
+                      model_output[v][:,indy_torun[i],indx_torun[i],ens_torun[i]] = \
+                         utils.daily_to_monthly(self.output[v][1:])
                     else:
-                      model_output[v][:,0,0,0] = self.forcings[v][:]
+                      model_output[v][:,indy_torun[i],indx_torun[i],ens_torun[i]] = self.output[v][1:]
+                  elif (v in self.forcvars):
+                    if (do_monthly_output):
+                       model_output[v][:,indy_torun[i],indx_torun[i],ens_torun[i]] = \
+                            utils.daily_to_monthly(self.forcings[v])
+                    else:
+                       model_output[v][:,indy_torun[i],indx_torun[i],ens_torun[i]] = self.forcings[v][:]
             self.write_nc_output(model_output, do_monthly_output=do_monthly_output, prefix=prefix)
           else:
            #send first np-1 jobs where np is number of processes
@@ -443,16 +463,22 @@ class MyModel(object):
             if (self.site == 'none'):
               self.load_forcings(lon=lons_torun[n_job-1], lat=lats_torun[n_job-1])
             parms = self.parms
-            if (self.ne > 1):
+            if (not all_ensembles_onejob and self.ne > 1):
               for p in range(0,len(self.ensemble_pnames)):
                 parms[self.ensemble_pnames[p]] = self.parm_ensemble[ens_torun[n_job-1],p]
+
             comm.send(self.forcings,   dest = n_job, tag=6)
             comm.send(self.start_year, dest = n_job, tag=7)
             comm.send(self.end_year,   dest = n_job, tag=8)
             comm.send(self.nobs,       dest = n_job, tag=9)
             comm.send(self.lat,        dest = n_job, tag=10)
             comm.send(self.forcvars,   dest = n_job, tag=11)
-            comm.send(parms,           dest = n_job, tag=100)
+            if (all_ensembles_onejob):
+              comm.send(self.parm_ensemble,   dest=n_job, tag=100)
+              comm.send(self.ensemble_pnames, dest=n_job, tag=101)
+            else:
+              comm.send(parms,           dest = n_job, tag=100)
+
            #Assign rest of jobs on demand
            for n_job in range(size,n_active+1):
             process = comm.recv(source=MPI.ANY_SOURCE, tag=3)
@@ -464,7 +490,7 @@ class MyModel(object):
             comm.send(0,     dest=process, tag=2)
             if (self.site == 'none'):
               self.load_forcings(lon=lons_torun[n_job-1], lat=lats_torun[n_job-1])
-            if (self.ne > 1):
+            if (not all_ensembles_onejob and self.ne > 1):
               for p in range(0,len(self.ensemble_pnames)):
                 parms[self.ensemble_pnames[p]] = self.parm_ensemble[ens_torun[n_job-1],p]
             comm.send(self.forcings,   dest = process, tag=6)
@@ -473,10 +499,18 @@ class MyModel(object):
             comm.send(self.nobs,       dest = process, tag=9)
             comm.send(self.lat,        dest = process, tag=10)
             comm.send(self.forcvars,   dest = process, tag=11)
-            comm.send(parms,           dest = process, tag=100)
+            if (all_ensembles_onejob):
+              comm.send(self.parm_ensemble,   dest=n_job, tag=100)
+              comm.send(self.ensemble_pnames, dest=n_job, tag=101)
+            else:
+              comm.send(parms,           dest = process, tag=100)
             #write output
             for v in myoutvars:
-              model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v]
+              if (all_ensembles_onejob):
+                for k in range(0,k_max):
+                  model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],k] = myoutput[v][k,:]
+              else:
+                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v][0,:]
 
            #receive remaining messages and finalize
            while (n_done < n_active):
@@ -490,7 +524,11 @@ class MyModel(object):
             comm.send(-1, dest=process, tag=2)
             #write output
             for v in myoutvars:
-              model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v]
+              if (all_ensembles_onejob):
+                for k in range(0,k_max):
+                  model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],k] = myoutput[v][k,:]
+              else:
+                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v][0,:]
            self.write_nc_output(model_output, do_monthly_output=do_monthly_output, prefix=prefix)
            MPI.Finalize()
         #Slave
@@ -498,6 +536,7 @@ class MyModel(object):
           status=0
           comm.bcast(do_output_forcings)
           comm.bcast(myoutvars)
+          comm.bcast(all_ensembles_onejob)
           while status == 0:
             myjob = comm.recv(source=0, tag=1)
             status = comm.recv(source=0, tag=2)
@@ -508,31 +547,50 @@ class MyModel(object):
               self.nobs       = comm.recv(source=0, tag=9)
               self.lat        = comm.recv(source=0, tag=10)
               self.forcvars   = comm.recv(source=0, tag=11)
-              myparms         = comm.recv(source=0, tag=100)
+              if (all_ensembles_onejob):
+                self.parm_ensemble = comm.recv(source=0, tag=100)
+                self.ensemble_pnames = comm.recv(source=0, tag=101)
+              else:
+                myparms         = comm.recv(source=0, tag=100)
               #Initialize output arrays
               self.output = {}
+              self.output_ens = {}
+              if (all_ensembles_onejob):
+                 k_max = self.ne
+              else: 
+                 k_max = 1
               for var in self.outvars:
                 if (var == 'ctcpools'):
                    self.output[var] = numpy.zeros([8,self.nobs+1], numpy.float)
                 else:
                    self.output[var] = numpy.zeros([self.nobs+1], numpy.float)
-              self.selm_instance(myparms, spinup_cycles=spinup_cycles, deciduous=deciduous)
+
+              thisoutput = {}
+              thisoutput_ens = {}
+              for k in range(0,k_max):
+                if (all_ensembles_onejob):
+                  myparms = self.pdefault
+                  for p in range(0,len(self.ensemble_pnames)):
+                    myparms[self.ensemble_pnames[p]] = self.parm_ensemble[n,p]
+                self.selm_instance(myparms, spinup_cycles=spinup_cycles, deciduous=deciduous)
+                for v in myoutvars:
+                   if (v in self.outvars):
+                     if (do_monthly_output):
+                         thisoutput[v] = utils.daily_to_monthly(self.output[v][1:])
+                     else:
+                         thisoutput[v] = self.output[v][1:]
+                   elif (v in self.forcvars):
+                     if (do_monthly_output):
+                         thisoutput[v] = utils.daily_to_monthly(self.forcings[v])
+                     else:
+                         thisoutput[v] = self.forcings[v]
+                   if (k == 0):
+                      thisoutput_ens[v] = numpy.zeros([k_max, len(thisoutput[v])], numpy.float)
+                   thisoutput_ens[v][k,:] = thisoutput[v]   
+
               comm.send(rank,  dest=0, tag=3)
               comm.send(myjob, dest=0, tag=4)
-              
-              thisoutput={}
-              for v in myoutvars:
-                 if (v in self.outvars):
-                   if (do_monthly_output):
-                       thisoutput[v] = utils.daily_to_monthly(self.output[v][1:])
-                   else:
-                       thisoutput[v] = self.output[v][1:]
-                 elif (v in self.forcvars):
-                   if (do_monthly_output):
-                       thisoutput[v] = utils.daily_to_monthly(self.forcings[v])
-                   else:
-                       thisoutput[v] = self.forcings[v]
-              comm.send(thisoutput, dest=0, tag=5)
+              comm.send(thisoutput_ens, dest=0, tag=5)
           print rank, ' complete'
           MPI.Finalize()
 
@@ -720,8 +778,8 @@ class MyModel(object):
         myobs = Dataset("../site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
         site_name = myobs.variables['site_name']
         lnum=0
-        firstind = (self.start_year[0]-1991)*365
-        lastind  = (self.end_year[0]-1991+1)*365
+        firstind = (self.start_year-1991)*365
+        lastind  = (self.end_year-1991+1)*365
         self.obs={}
         for s in site_name:
           if site in ''.join(s):
@@ -757,7 +815,7 @@ class MyModel(object):
               plt.ylabel(var)
               plt.savefig('./plots/'+var+figname_postfix+'.pdf')
               
-    def generate_ensemble(self, n_ensemble, pnames, fname=''):
+    def generate_ensemble(self, n_ensemble, pnames, fname='', normalized=False):
       self.parm_ensemble = numpy.zeros([n_ensemble,len(pnames)])
       self.ensemble_pnames = pnames
       self.ne = n_ensemble
@@ -770,7 +828,11 @@ class MyModel(object):
           pvals = s.split()
           if (lnum < n_ensemble):
             for p in range(0,len(pnames)):
-              self.parm_ensemble[lnum,p] = float(pvals[p])
+              if (normalized):
+                self.parm_ensemble[lnum,p] = model.pmin[pnames[p]]+0.5* \
+                     (float(pvals[p]))*(model.pmax[pnames[p]]-model.pmin[pnames[p]])
+              else:
+                self.parm_ensemble[lnum,p] = float(pvals[p])
           lnum=lnum+1
         inparms.close()
       else:     
