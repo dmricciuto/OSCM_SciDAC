@@ -25,7 +25,7 @@ if options.parfile is not None:
     infile.close()
     splsNames=firstLine.split()
     spls = numpy.genfromtxt(options.parfile,skip_header=1)
-    spls = numpy.atleast_2d(spls) 
+    spls = numpy.atleast_2d(spls)
     print(spls.shape)
     nens  = spls.shape[0] # ensemble size
     npars = spls.shape[1] # no. of parameters
@@ -37,7 +37,7 @@ print('Processing site: %s'%(site))
 #create model object
 model = models.MyModel()
 
-#Load model forcings 
+#Load model forcings
 model.load_forcings(site=site)
 
 #Load site observations

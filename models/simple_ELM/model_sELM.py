@@ -5,8 +5,17 @@ from math import sin, cos, sqrt, atan2, radians
 import time, os
 import utils
 
+if os.environ['USER']=='ksargsy':
+  print("Hello Khachik")
+  oscm_dir="/Users/ksargsy/research/OSCM_SciDAC/"
+elif os.environ['USER']=='csafta':
+  print("Hello Cosmin")
+else:
+  oscm_dir="../"
+
+
 class MyModel(object):
-    
+
     def __init__(self):
         self.name = 'sELM'
         self.parms = {'gdd_crit': 500.0, 'crit_dayl': 39300., 'ndays_on':30, 'ndays_off': 15,           \
@@ -49,7 +58,7 @@ class MyModel(object):
             else:
                 self.pmin[p] = self.parms[p]*0.75
                 self.pmax[p] = self.parms[p]*1.25
-            
+
             self.nparms = self.nparms+1
         self.issynthetic = False
         self.ne = 1
@@ -105,7 +114,7 @@ class MyModel(object):
         #Coefficents for ACM (GPP submodel)
         a = [parms['nue'], 0.0156935, 4.22273, 208.868, 0.0453194, 0.37836, 7.19298, 0.011136, \
              2.1001, 0.789798]
-             
+
         #Turnover times for CTC model
         k_ctc = [parms['k_l1'],parms['k_l2'],parms['k_l3'],parms['k_s1'], \
                  parms['k_s2'],parms['k_s3'],parms['k_s4'],parms['k_frag']]
@@ -130,17 +139,17 @@ class MyModel(object):
         leafoff = 0
         annsum_npp = 0
         annsum_npp_temp = 0
-        
+
         #Run the model
         for s in range(0,spinup_cycles+1):
           totecosysc_last = totecosysc[0]
           if (s > 0):
-            leafc_stor[0]  = leafc_stor[self.nobs-1] 
+            leafc_stor[0]  = leafc_stor[self.nobs-1]
             leafc[0]       = leafc[self.nobs-1]
             frootc_stor[0] = frootc_stor[self.nobs-1]
             frootc[0]      = frootc[self.nobs-1]
             livestemc[0]   = livestemc[self.nobs-1]
-            deadstemc[0]   = deadstemc[self.nobs-1] 
+            deadstemc[0]   = deadstemc[self.nobs-1]
             livecrootc[0]  = livecrootc[self.nobs-1]
             deadcrootc[0]  = deadcrootc[self.nobs-1]
             ctcpools[:,0]  = ctcpools[:,self.nobs-1]
@@ -148,7 +157,7 @@ class MyModel(object):
             totsomc[0]     = totsomc[self.nobs-1]
             totlitc[0]     = totlitc[self.nobs-1]
             cstor[0]       = cstor[self.nobs-1]
-                                  
+
                                   #print s, (totecosysc[0]-totecosysc_last)/(self.nobs/365)
           for v in range(0,self.nobs):
             # --------------------1.  Phenology -------------------------
@@ -251,12 +260,12 @@ class MyModel(object):
             #Excess maintance respration taken from wood pools
             xsmr_deadstemc    = f2/(f2+f3)*xsmr
             xsmr_deadcrootc   = f3/(f2+f3)*xsmr
-            
+
             #Cacluate live wood turnover
             livestemc_turnover  = parms['lwtop_ann'] / 365. * livestemc[v]
             livecrootc_turnover = parms['lwtop_ann'] / 365. * livecrootc[v]
             cstor_turnover      = 1.0 / (parms['cstor_tau'] * 365) * cstor[v] * trate
- 
+
             #increment plant pools
             leafc[v+1]       = leafc[v]       + leafc_alloc + leafc_trans - leafc_litter
             leafc_stor[v+1]  = leafc_stor[v]  + leafcstor_alloc - leafc_trans
@@ -277,8 +286,8 @@ class MyModel(object):
             if (doy[v] == 1):
                 annsum_npp = annsum_npp_temp
                 annsum_npp_temp = 0
-            annsum_npp_temp = annsum_npp_temp+npp[v] 
-            
+            annsum_npp_temp = annsum_npp_temp+npp[v]
+
             # ----------------- Litter and SOM decomposition model (CTC) --------------------
             trate = parms['q10_hr']**((0.5*(tmax[v]+tmin[v])-10)/10.0)
 
@@ -307,16 +316,16 @@ class MyModel(object):
             for p in range(0,8):
                 ctcpools[p,v+1] = ctcpools[p,v] + ctc_input[p] - ctc_output[p]
                 hr[v+1] = hr[v+1] + ctc_resp[p]
-                    
+
             #Calculate NEE
-            nee[v+1]    = hr[v+1] - npp[v+1] 
+            nee[v+1]    = hr[v+1] - npp[v+1]
             #Total system carbon
             totecosysc[v+1] = leafc[v+1]+leafc_stor[v+1]+frootc[v+1]+frootc_stor[v+1]+ \
                               livestemc[v+1]+deadstemc[v+1]+livecrootc[v+1]+deadcrootc[v+1] + \
                               sum(ctcpools[:,v+1])
             totlitc[v+1] = sum(ctcpools[0:3,v+1])
             totsomc[v+1] = sum(ctcpools[3:7,v+1])
- 
+
 
     def run_selm(self, spinup_cycles=0, lat_bounds=[-999,-999], lon_bounds=[-999,-999], \
                      do_monthly_output=False, do_output_forcings=False, deciduous=False, \
@@ -336,9 +345,9 @@ class MyModel(object):
            rank = 0
            size = 0
          if (rank == 0):
-          mydomain = Dataset("../pftdata/domain.360x720_ORCHIDEE0to360.100409.nc4",'r')
+          mydomain = Dataset(oscm_dir+"/models/pftdata/domain.360x720_ORCHIDEE0to360.100409.nc4",'r')
           landmask = mydomain.variables['mask']
-          myinput = Dataset("../pftdata/surfdata_360x720_DALEC.nc4")
+          myinput = Dataset(oscm_dir+"/models/pftdata/surfdata_360x720_DALEC.nc4")
           pct_pft    = myinput.variables['PCT_NAT_PFT']
           pct_natveg = myinput.variables['PCT_NATVEG']
           self.hdlatgrid = myinput.variables['LATIXY']
@@ -347,7 +356,7 @@ class MyModel(object):
           if (self.x1 < 0):
              self.x1 = self.x1+720
           self.x2 = int(round((lon_bounds[1]-0.25)*2))
-          if (self.x2 < 0): 
+          if (self.x2 < 0):
              self.x2 = self.x2+720
           self.nx = self.x2-self.x1+1
           self.y1 = int(round((lat_bounds[0]+89.75)*2))
@@ -382,7 +391,7 @@ class MyModel(object):
           self.load_forcings(lon=lons_torun[0], lat=lats_torun[0])
         else:
           #site forcing has already been loaded
-          rank = 0    
+          rank = 0
           size = 0
           n_active = self.ne
           if (n_active > 1 and use_MPI):
@@ -395,7 +404,7 @@ class MyModel(object):
                indx_torun.append(0)
                indy_torun.append(0)
                ens_torun.append(k)
-            self.nx = 1 
+            self.nx = 1
             self.ny = 1
 
         if (rank == 0):
@@ -403,7 +412,7 @@ class MyModel(object):
           n_done=0
           if (do_monthly_output):
              self.nt = (self.end_year-self.start_year+1)*12
-             istart=0 
+             istart=0
           else:
              self.nt = int(self.end_year-self.start_year+1)*365
              istart=1
@@ -422,7 +431,7 @@ class MyModel(object):
              for v in myoutvars:
                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
                  if (v in self.forcvars):
-                     do_output_forcings=True 
+                     do_output_forcings=True
           if (size > 0):
             comm.bcast(myoutvars)
             comm.bcast(do_output_forcings)
@@ -459,7 +468,7 @@ class MyModel(object):
            #send first np-1 jobs where np is number of processes
            for n_job in range(1,size):
             comm.send(n_job, dest=n_job, tag=1)
-            comm.send(0,     dest=n_job, tag=2) 
+            comm.send(0,     dest=n_job, tag=2)
             if (self.site == 'none'):
               self.load_forcings(lon=lons_torun[n_job-1], lat=lats_torun[n_job-1])
             parms = self.parms
@@ -557,7 +566,7 @@ class MyModel(object):
               self.output_ens = {}
               if (all_ensembles_onejob):
                  k_max = self.ne
-              else: 
+              else:
                  k_max = 1
               for var in self.outvars:
                 if (var == 'ctcpools'):
@@ -586,7 +595,7 @@ class MyModel(object):
                          thisoutput[v] = self.forcings[v]
                    if (k == 0):
                       thisoutput_ens[v] = numpy.zeros([k_max, len(thisoutput[v])], numpy.float)
-                   thisoutput_ens[v][k,:] = thisoutput[v]   
+                   thisoutput_ens[v][k,:] = thisoutput[v]
 
               comm.send(rank,  dest=0, tag=3)
               comm.send(myjob, dest=0, tag=4)
@@ -666,8 +675,8 @@ class MyModel(object):
         vnames = ['TSA', 'TSA', 'FSDS','BTRAN']
         fnum=0
         for f in fnames:
-          os.system('mkdir -p ../elm_drivers')
-          driver_path = os.path.abspath('../elm_drivers')
+          os.system('mkdir -p '+oscm_dir+'/models/elm_drivers')
+          driver_path = os.path.abspath(oscm_dir+'/models/elm_drivers')
           myfile = "GSWP3_fromELMSP_"+f+"_1980-2009.nc4"
           if (not os.path.exists(driver_path+'/'+myfile)):
             print myfile+' not found.  Downloading.'
@@ -687,7 +696,7 @@ class MyModel(object):
          self.site=site
          if (self.site != 'none'):
              #Get data for requested site
-             myinput = Dataset("../site_drivers/"+self.site+'_forcing.nc4','r',format='NETCDF4')
+             myinput = Dataset(oscm_dir+"/models/site_drivers/"+self.site+'_forcing.nc4','r',format='NETCDF4')
              npts = myinput.variables['TBOT'].size              #number of half hours or hours
              tair = myinput.variables['TBOT'][0,:]              #Air temperature (K)
              fsds  = myinput.variables['FSDS'][0,:]             #Solar radiation (W/m2)
@@ -749,7 +758,7 @@ class MyModel(object):
              self.forcings['rad']   = fsds*86400/1e6
              self.forcings['cair']  = numpy.zeros([self.nobs], numpy.float) + 360.0
              self.forcings['doy']   = (numpy.cumsum(numpy.ones([self.nobs], numpy.float)) - 1) % 365 + 1
-             self.forcings['time']  = self.start_year + (numpy.cumsum(numpy.ones([self.nobs], numpy.float)-1))/365.0 
+             self.forcings['time']  = self.start_year + (numpy.cumsum(numpy.ones([self.nobs], numpy.float)-1))/365.0
              self.forcings['dayl']  = numpy.zeros([self.nobs], numpy.float)
              for d in range(0,self.nobs):
                #Calculate day length
@@ -772,10 +781,10 @@ class MyModel(object):
              else:
                  self.output[var] = numpy.zeros([self.nobs+1], numpy.float)
 
-    #Load actual observations and uncertainties 
+    #Load actual observations and uncertainties
     def load_obs(self, site):
         obsvars = ['gpp','nee']
-        myobs = Dataset("../site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
+        myobs = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
         site_name = myobs.variables['site_name']
         lnum=0
         firstind = (self.start_year-1991)*365
@@ -793,7 +802,7 @@ class MyModel(object):
       if (var == 'all'):
          for key in self.output:
             var_list.append(key)
-      else:  
+      else:
          var_list.append(var)
       print var_list
       for var in var_list:
@@ -814,12 +823,12 @@ class MyModel(object):
               plt.xlabel('Year')
               plt.ylabel(var)
               plt.savefig('./plots/'+var+figname_postfix+'.pdf')
-              
+
     def generate_ensemble(self, n_ensemble, pnames, fname='', normalized=False):
       self.parm_ensemble = numpy.zeros([n_ensemble,len(pnames)])
       self.ensemble_pnames = pnames
       self.ne = n_ensemble
-      
+      print pnames
       if (fname != ''):
         print 'Generating parameter ensemble from '+fname
         inparms = open(fname,'r')
@@ -829,15 +838,16 @@ class MyModel(object):
           if (lnum < n_ensemble):
             for p in range(0,len(pnames)):
               if (normalized):
-                self.parm_ensemble[lnum,p] = model.pmin[pnames[p]]+0.5* \
-                     (float(pvals[p]))*(model.pmax[pnames[p]]-model.pmin[pnames[p]])
+                self.parm_ensemble[lnum,p] = self.pmin[pnames[p]]+0.5* \
+                     (float(pvals[p]))*(self.pmax[pnames[p]]-self.pmin[pnames[p]])
               else:
                 self.parm_ensemble[lnum,p] = float(pvals[p])
           lnum=lnum+1
         inparms.close()
-      else:     
-        for n in range(0,n_ensemble):          
+      else:
+        for n in range(0,n_ensemble):
           for p in range(0,len(pnames)):
             #Sample uniformly from the parameter space
             self.parm_ensemble[n,p] = numpy.random.uniform(low=self.pmin[pnames[p]], \
                   high=self.pmax[pnames[p]])
+        #numpy.savetxt('inputs.txt', self.parm_ensemble)
