@@ -74,9 +74,9 @@ else:
   #No file provided, generate ensemble using all parameters
   model.generate_ensemble(nens,splsNames)
 
-# names_out = open('pnames.txt','w')
-# for p in splsNames:
-#   names_out.write(p+'\n')
-# names_out.close()
+names_out = open('pnames.txt','w')
+for p in splsNames:
+  names_out.write(p+'\n')
+names_out.close()
 
 model.run_selm(spinup_cycles=6,deciduous=True, do_monthly_output=True)
