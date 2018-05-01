@@ -10,6 +10,7 @@ if os.environ['USER']=='ksargsy':
   oscm_dir="/Users/ksargsy/research/OSCM_SciDAC/"
 elif os.environ['USER']=='csafta':
   print("Hello Cosmin")
+  oscm_dir="/Users/csafta/Projects/OSCM_SciDAC.dmr/"
 else:
   oscm_dir="../"
 
@@ -18,12 +19,12 @@ class MyModel(object):
 
     def __init__(self):
         self.name = 'sELM'
-        self.parms = {'gdd_crit': 500.0, 'crit_dayl': 39300., 'ndays_on':30, 'ndays_off': 15,           \
+        self.parms = {'gdd_crit': 500.0, 'crit_dayl': 39300., 'ndays_on':30, 'ndays_off': 15,          \
                       'nue': 15.0, 'slatop':0.03,                                                      \
                       'livewdcn': 50, 'leafcn': 25, 'frootcn': 42,                                     \
                       'fstor2tran': 0.5, 'stem_leaf': 2.7, 'croot_stem': 0.3, 'f_livewd':0.1,          \
                       'froot_leaf': 1.0,                                                               \
-                      'rg_frac': 0.3, 'br_mr': 2.52e-6, 'q10_mr': 1.5, 'cstor_tau':3.0,                  \
+                      'rg_frac': 0.3, 'br_mr': 2.52e-6, 'q10_mr': 1.5, 'cstor_tau':3.0,                \
                       'r_mort': 0.02, 'lwtop_ann': 0.7, 'leaf_long': 1.5, 'froot_long': 1.5,           \
                       'q10_hr': 1.5, 'k_l1': 1.2039728, 'k_l2':0.0725707, 'k_l3':0.0140989,            \
                       'k_s1':0.0725707, 'k_s2':0.0140989244, 'k_s3':0.00140098, 'k_s4':0.0001,         \
