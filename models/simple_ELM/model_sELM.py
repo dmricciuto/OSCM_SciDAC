@@ -372,20 +372,20 @@ class MyModel(object):
           else:
             all_ensembles_onejob = False
             k_max = self.ne
-	  for i in range(0,self.nx):
+          for i in range(0,self.nx):
               for j in range(0,self.ny):
                 vegfrac    = pct_natveg[self.y1+j,self.x1+i]
                 bareground = pct_pft[0,self.y1+j,self.x1+i]
-           	if (vegfrac > 0.1 and landmask[self.y1+j,self.x1+i] > 0):
+                if (vegfrac > 0.1 and landmask[self.y1+j,self.x1+i] > 0):
                   if (bareground < 99.9):
                     for k in range(0,k_max):
- 		      lons_torun.append(self.hdlongrid[self.y1+j,self.x1+i])
+                      lons_torun.append(self.hdlongrid[self.y1+j,self.x1+i])
                       lats_torun.append(self.hdlatgrid[self.y1+j,self.x1+i])
                       indx_torun.append(i)
                       indy_torun.append(j)
                       ens_torun.append(k)
                       vegfrac_torun.append((100.0-bareground)/100.0)
-	              n_active = n_active+1
+                      n_active = n_active+1
           #Load all forcing data into memory
           self.get_regional_forcings()
           #get forcings for one point to get relevant info
@@ -409,7 +409,7 @@ class MyModel(object):
             self.ny = 1
 
         if (rank == 0):
-          print str(n_active)+' simulation units to run'
+          print('%d simulation units to run'%(n_active))
           n_done=0
           if (do_monthly_output):
              self.nt = (self.end_year-self.start_year+1)*12
@@ -444,7 +444,7 @@ class MyModel(object):
           if ((n_active == 1 and self.ne == 1) or size == 0):
             #No MPI
             for i in range(0,n_active):
-                print i
+                print(i)
                 if (self.site == 'none'):
                   self.load_forcings(lon=lons_torun[i], lat=lats_torun[i])
                 if (self.ne > 1):
@@ -494,7 +494,7 @@ class MyModel(object):
             process = comm.recv(source=MPI.ANY_SOURCE, tag=3)
             thisjob = comm.recv(source=process, tag=4)
             myoutput = comm.recv(source=process, tag=5)
-            print 'Received', thisjob
+            print('Received %d'%(thisjob))
             n_done = n_done+1
             comm.send(n_job, dest=process, tag=1)
             comm.send(0,     dest=process, tag=2)
@@ -528,7 +528,7 @@ class MyModel(object):
             thisjob = comm.recv(source=process, tag=4)
             myoutput = comm.recv(source=process, tag=5)
             vnum = 0
-            print 'Received', thisjob
+            print('Received %d'%(thisjob))
             n_done = n_done+1
             comm.send(-1, dest=process, tag=1)
             comm.send(-1, dest=process, tag=2)
@@ -601,7 +601,7 @@ class MyModel(object):
               comm.send(rank,  dest=0, tag=3)
               comm.send(myjob, dest=0, tag=4)
               comm.send(thisoutput_ens, dest=0, tag=5)
-          print rank, ' complete'
+          print('%d complete'%(rank))
           MPI.Finalize()
 
     def write_nc_output(self, output, do_monthly_output=False, prefix='model'):
@@ -670,7 +670,7 @@ class MyModel(object):
         self.actual_parms = parms
 
     def get_regional_forcings(self):
-        print ('Loading regional forcings')
+        print('Loading regional forcings')
         self.regional_forc={}
         fnames = ['TMAX','TMIN','FSDS','BTRAN']
         vnames = ['TSA', 'TSA', 'FSDS','BTRAN']
@@ -680,10 +680,10 @@ class MyModel(object):
           driver_path = os.path.abspath(oscm_dir+'/models/elm_drivers')
           myfile = "GSWP3_fromELMSP_"+f+"_1980-2009.nc4"
           if (not os.path.exists(driver_path+'/'+myfile)):
-            print myfile+' not found.  Downloading.'
+            print('%s not found.  Downloading.'%(myfile))
             os.system('wget --no-check-certificate https://acme-webserver.ornl.gov/dmricciuto/elm_drivers/'+myfile)
             os.rename(myfile, driver_path+'/'+myfile)
-          print driver_path+'/'+myfile
+          print('%s/%s'%(driver_path,myfile))
           myinput = Dataset(driver_path+'/'+myfile,'r')
           self.regional_forc[f.lower()] = myinput.variables[vnames[fnum]][:,:,:]
           myinput.close()
@@ -706,8 +706,8 @@ class MyModel(object):
              self.londeg = myinput.variables['LONGXY'][0]            #site longitude
              self.start_year = int(myinput.variables['start_year'][:])    #starting year of data
              self.end_year   = int(myinput.variables['end_year'][:])   #ending year of data
-             npd = npts/(self.end_year - self.start_year + 1)/365   #number of obs per day
-             self.nobs = (self.end_year - self.start_year + 1)*365  #number of days
+             npd = int(npts/(self.end_year - self.start_year + 1)/365)   #number of obs per day
+             self.nobs = int((self.end_year - self.start_year + 1)*365)  #number of days
              myinput.close()
              for fv in self.forcvars:
                self.forcings[fv] = []
@@ -791,7 +791,11 @@ class MyModel(object):
         firstind = (self.start_year-1991)*365
         lastind  = (self.end_year-1991+1)*365
         self.obs={}
-        for s in site_name:
+        nsm_0=site_name[:,:].shape[0]
+        nsm_1=site_name[:,:].shape[1]
+        siteName_str=numpy.array([[site_name[i,j].decode("utf-8") for j in range(nsm_1)] for i in range(nsm_0)])
+        #for s in site_name:
+        for s in siteName_str:
           if site in ''.join(s):
              self.obs['gpp'] = myobs.variables['GPP'][lnum,firstind:lastind]*24*3600*1000
              self.obs['nee'] = myobs.variables['NEE'][lnum,firstind:lastind]*24*3600*1000
@@ -805,7 +809,7 @@ class MyModel(object):
             var_list.append(key)
       else:
          var_list.append(var)
-      print var_list
+      print(var_list)
       for var in var_list:
           fig = plt.figure()
           ax = fig.add_subplot(111)
@@ -829,9 +833,9 @@ class MyModel(object):
       self.parm_ensemble = numpy.zeros([n_ensemble,len(pnames)])
       self.ensemble_pnames = pnames
       self.ne = n_ensemble
-      print pnames
+      print(pnames)
       if (fname != ''):
-        print 'Generating parameter ensemble from '+fname
+        print('Generating parameter ensemble from %d'%(fname))
         inparms = open(fname,'r')
         lnum = 0
         for s in inparms:
@@ -847,6 +851,8 @@ class MyModel(object):
         inparms.close()
       else:
         for n in range(0,n_ensemble):
+          # HACK: to have identical ensemble members uncomment line below
+          # numpy.random.seed(2018)
           for p in range(0,len(pnames)):
             #Sample uniformly from the parameter space
             self.parm_ensemble[n,p] = numpy.random.uniform(low=self.pmin[pnames[p]], \
