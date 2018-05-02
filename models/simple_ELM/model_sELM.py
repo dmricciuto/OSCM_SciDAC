@@ -12,7 +12,7 @@ elif os.environ['USER']=='csafta':
   print("Hello Cosmin")
   oscm_dir="/Users/csafta/Projects/OSCM_SciDAC.dmr/"
 else:
-  oscm_dir="../"
+  oscm_dir="../../"
 
 
 class MyModel(object):
@@ -95,11 +95,24 @@ class MyModel(object):
         totlitc     = self.output['totlitc']
         cstor       = self.output['cstor']
 
-        #Set initial States (if non-zero)
+        #Set initial States 
+        leafc_stor[0] = 0.0
+        leafc[0]      = 0.0
         if (deciduous):
             leafc_stor[0] = 10.0
         else:
             leafc[0] = 10.0
+        frootc_stor[0] = 0.0
+        frootc[0]      = 0.0
+        livestemc[0]   = 0.0
+        deadstemc[0]   = 0.0
+        livecrootc[0]  = 0.0
+        deadcrootc[0]  = 0.0
+        ctcpools[:,0]  = 0.0
+        totecosysc[0]  = 0.0
+        totsomc[0]     = 0.0
+        totlitc[0]     = 0.0
+        cstor[0]       = 0.0
         #Set initial soil carbon for long-lived pool
         ctcpools[6] = parms['soil4ci']
 
@@ -111,7 +124,6 @@ class MyModel(object):
         cair = self.forcings['cair']
         dayl = self.forcings['dayl']
         btran = self.forcings['btran']
-
         #Coefficents for ACM (GPP submodel)
         a = [parms['nue'], 0.0156935, 4.22273, 208.868, 0.0453194, 0.37836, 7.19298, 0.011136, \
              2.1001, 0.789798]
@@ -218,7 +230,6 @@ class MyModel(object):
             gpp[v+1] = gpp[v+1]*btran[v]
             if ((tmax[v]+tmin[v])/2 < 0.0):
               gpp[v+1] = 0.0   #Zero GPP if average temperature below freezing
-
             #--------------------3.  Maintenace respiration ------------------------
             #Maintenance respiration
             trate = parms['q10_mr']**((0.5*(tmax[v]+tmin[v])-25.0)/25.0)
@@ -444,7 +455,6 @@ class MyModel(object):
           if ((n_active == 1 and self.ne == 1) or size == 0):
             #No MPI
             for i in range(0,n_active):
-                print(i)
                 if (self.site == 'none'):
                   self.load_forcings(lon=lons_torun[i], lat=lats_torun[i])
                 if (self.ne > 1):
@@ -809,7 +819,6 @@ class MyModel(object):
             var_list.append(key)
       else:
          var_list.append(var)
-      print(var_list)
       for var in var_list:
           fig = plt.figure()
           ax = fig.add_subplot(111)
@@ -833,7 +842,6 @@ class MyModel(object):
       self.parm_ensemble = numpy.zeros([n_ensemble,len(pnames)])
       self.ensemble_pnames = pnames
       self.ne = n_ensemble
-      print(pnames)
       if (fname != ''):
         print('Generating parameter ensemble from %d'%(fname))
         inparms = open(fname,'r')
