@@ -1,5 +1,9 @@
 import numpy
-import cPickle as pk
+
+try:
+    import cPickle as pk
+except:
+    import pickle as pk
 
 #Transform daily data to monthly (or produce a monthly mean seasonal cycle
 def daily_to_monthly(var_in, allyearsmean=False):
@@ -9,12 +13,12 @@ def daily_to_monthly(var_in, allyearsmean=False):
     if (allyearsmean):
         nmonths=12
     else:
-        nmonths = ndays/365*12
+        nmonths = int(ndays/365)*12
     #Day of year for each output day
     doy_in = (numpy.cumsum(numpy.ones([ndays], numpy.float))-1) % 365 + 1
     var_out = numpy.zeros([nmonths], numpy.float)
     for d in range(0,ndays):
-        thisyear = d/365
+        thisyear = int(d/365)
         for m in range(0,12):
             if (m == 0 and doy_in[d] <= doy_end[m]):
                 thismonth = m
