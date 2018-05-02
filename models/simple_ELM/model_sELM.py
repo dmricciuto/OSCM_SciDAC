@@ -11,7 +11,7 @@ if os.environ['USER']=='ksargsy':
 elif os.environ['USER']=='csafta':
   print("Hello Cosmin")
 else:
-  oscm_dir="../"
+  oscm_dir="../../"
 
 
 class MyModel(object):
@@ -432,10 +432,6 @@ class MyModel(object):
                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
                  if (v in self.forcvars):
                      do_output_forcings=True
-          if (size > 0):
-            comm.bcast(myoutvars)
-            comm.bcast(do_output_forcings)
-            comm.bcast(all_ensembles_onejob)
 
           if (self.site == 'none'):
             self.load_forcings(lon=lons_torun[0], lat=lats_torun[0])
@@ -443,7 +439,6 @@ class MyModel(object):
           if ((n_active == 1 and self.ne == 1) or size == 0):
             #No MPI
             for i in range(0,n_active):
-                print i
                 if (self.site == 'none'):
                   self.load_forcings(lon=lons_torun[i], lat=lats_torun[i])
                 if (self.ne > 1):
@@ -476,6 +471,8 @@ class MyModel(object):
               for p in range(0,len(self.ensemble_pnames)):
                 parms[self.ensemble_pnames[p]] = self.parm_ensemble[ens_torun[n_job-1],p]
 
+            comm.send(all_ensembles_onejob, dest=n_job, tag=300)
+            comm.send(do_output_forcings,   dest=n_job, tag=400)
             comm.send(self.forcings,   dest = n_job, tag=6)
             comm.send(self.start_year, dest = n_job, tag=7)
             comm.send(self.end_year,   dest = n_job, tag=8)
@@ -487,6 +484,7 @@ class MyModel(object):
               comm.send(self.ensemble_pnames, dest=n_job, tag=101)
             else:
               comm.send(parms,           dest = n_job, tag=100)
+            comm.send(myoutvars,         dest = n_job, tag=200)
 
            #Assign rest of jobs on demand
            for n_job in range(size,n_active+1):
@@ -502,6 +500,9 @@ class MyModel(object):
             if (not all_ensembles_onejob and self.ne > 1):
               for p in range(0,len(self.ensemble_pnames)):
                 parms[self.ensemble_pnames[p]] = self.parm_ensemble[ens_torun[n_job-1],p]
+
+            comm.send(all_ensembles_onejob, dest=process, tag=300)
+            comm.send(do_output_forcings,   dest=process, tag=400)
             comm.send(self.forcings,   dest = process, tag=6)
             comm.send(self.start_year, dest = process, tag=7)
             comm.send(self.end_year,   dest = process, tag=8)
@@ -509,14 +510,15 @@ class MyModel(object):
             comm.send(self.lat,        dest = process, tag=10)
             comm.send(self.forcvars,   dest = process, tag=11)
             if (all_ensembles_onejob):
-              comm.send(self.parm_ensemble,   dest=n_job, tag=100)
-              comm.send(self.ensemble_pnames, dest=n_job, tag=101)
+              comm.send(self.parm_ensemble,   dest=process, tag=100)
+              comm.send(self.ensemble_pnames, dest=process, tag=101)
             else:
               comm.send(parms,           dest = process, tag=100)
+            comm.send(myoutvars,         dest = process, tag=200)
             #write output
             for v in myoutvars:
               if (all_ensembles_onejob):
-                for k in range(0,k_max):
+                for k in range(0,self.ne):
                   model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],k] = myoutput[v][k,:]
               else:
                 model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v][0,:]
@@ -534,7 +536,7 @@ class MyModel(object):
             #write output
             for v in myoutvars:
               if (all_ensembles_onejob):
-                for k in range(0,k_max):
+                for k in range(0,self.ne):
                   model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],k] = myoutput[v][k,:]
               else:
                 model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v][0,:]
@@ -543,13 +545,12 @@ class MyModel(object):
         #Slave
         else:
           status=0
-          comm.bcast(do_output_forcings)
-          comm.bcast(myoutvars)
-          comm.bcast(all_ensembles_onejob)
           while status == 0:
             myjob = comm.recv(source=0, tag=1)
             status = comm.recv(source=0, tag=2)
             if (status == 0):
+              all_ensembles_onejob = comm.recv(source=0, tag=300)
+              do_output_forcings   = comm.recv(source=0, tag=400)
               self.forcings = comm.recv(source = 0, tag = 6)
               self.start_year = comm.recv(source=0, tag=7)
               self.end_year   = comm.recv(source=0, tag=8)
@@ -561,6 +562,7 @@ class MyModel(object):
                 self.ensemble_pnames = comm.recv(source=0, tag=101)
               else:
                 myparms         = comm.recv(source=0, tag=100)
+              myoutvars = comm.recv(source=0, tag=200)
               #Initialize output arrays
               self.output = {}
               self.output_ens = {}
@@ -573,14 +575,14 @@ class MyModel(object):
                    self.output[var] = numpy.zeros([8,self.nobs+1], numpy.float)
                 else:
                    self.output[var] = numpy.zeros([self.nobs+1], numpy.float)
-
+  
               thisoutput = {}
               thisoutput_ens = {}
               for k in range(0,k_max):
                 if (all_ensembles_onejob):
                   myparms = self.pdefault
                   for p in range(0,len(self.ensemble_pnames)):
-                    myparms[self.ensemble_pnames[p]] = self.parm_ensemble[n,p]
+                    myparms[self.ensemble_pnames[p]] = self.parm_ensemble[k,p]
                 self.selm_instance(myparms, spinup_cycles=spinup_cycles, deciduous=deciduous)
                 for v in myoutvars:
                    if (v in self.outvars):
