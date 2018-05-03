@@ -24,7 +24,7 @@ if options.parfile is not None:
     firstLine = infile.readline()
     infile.close()
     splsNames=firstLine.split()
-    spls = numpy.genfromtxt(options.parfile,skip_header=1)
+    spls = numpy.genfromtxt(options.parfile,skip_header=0)
     spls = numpy.atleast_2d(spls)
     print(spls.shape)
     nens  = spls.shape[0] # ensemble size
