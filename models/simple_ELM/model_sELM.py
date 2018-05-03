@@ -10,20 +10,21 @@ if os.environ['USER']=='ksargsy':
   oscm_dir="/Users/ksargsy/research/OSCM_SciDAC/"
 elif os.environ['USER']=='csafta':
   print("Hello Cosmin")
+  oscm_dir="/Users/csafta/Projects/OSCM_SciDAC.dmr/"
 else:
-  oscm_dir="../"
+  oscm_dir="../../"
 
 
 class MyModel(object):
 
     def __init__(self):
         self.name = 'sELM'
-        self.parms = {'gdd_crit': 500.0, 'crit_dayl': 39300., 'ndays_on':30, 'ndays_off': 15,           \
+        self.parms = {'gdd_crit': 500.0, 'crit_dayl': 39300., 'ndays_on':30, 'ndays_off': 15,          \
                       'nue': 15.0, 'slatop':0.03,                                                      \
                       'livewdcn': 50, 'leafcn': 25, 'frootcn': 42,                                     \
                       'fstor2tran': 0.5, 'stem_leaf': 2.7, 'croot_stem': 0.3, 'f_livewd':0.1,          \
                       'froot_leaf': 1.0,                                                               \
-                      'rg_frac': 0.3, 'br_mr': 2.52e-6, 'q10_mr': 1.5, 'cstor_tau':3.0,                  \
+                      'rg_frac': 0.3, 'br_mr': 2.52e-6, 'q10_mr': 1.5, 'cstor_tau':3.0,                \
                       'r_mort': 0.02, 'lwtop_ann': 0.7, 'leaf_long': 1.5, 'froot_long': 1.5,           \
                       'q10_hr': 1.5, 'k_l1': 1.2039728, 'k_l2':0.0725707, 'k_l3':0.0140989,            \
                       'k_s1':0.0725707, 'k_s2':0.0140989244, 'k_s3':0.00140098, 'k_s4':0.0001,         \
@@ -94,11 +95,24 @@ class MyModel(object):
         totlitc     = self.output['totlitc']
         cstor       = self.output['cstor']
 
-        #Set initial States (if non-zero)
+        #Set initial States 
+        leafc_stor[0] = 0.0
+        leafc[0]      = 0.0
         if (deciduous):
             leafc_stor[0] = 10.0
         else:
             leafc[0] = 10.0
+        frootc_stor[0] = 0.0
+        frootc[0]      = 0.0
+        livestemc[0]   = 0.0
+        deadstemc[0]   = 0.0
+        livecrootc[0]  = 0.0
+        deadcrootc[0]  = 0.0
+        ctcpools[:,0]  = 0.0
+        totecosysc[0]  = 0.0
+        totsomc[0]     = 0.0
+        totlitc[0]     = 0.0
+        cstor[0]       = 0.0
         #Set initial soil carbon for long-lived pool
         ctcpools[6] = parms['soil4ci']
 
@@ -110,7 +124,6 @@ class MyModel(object):
         cair = self.forcings['cair']
         dayl = self.forcings['dayl']
         btran = self.forcings['btran']
-
         #Coefficents for ACM (GPP submodel)
         a = [parms['nue'], 0.0156935, 4.22273, 208.868, 0.0453194, 0.37836, 7.19298, 0.011136, \
              2.1001, 0.789798]
@@ -217,7 +230,6 @@ class MyModel(object):
             gpp[v+1] = gpp[v+1]*btran[v]
             if ((tmax[v]+tmin[v])/2 < 0.0):
               gpp[v+1] = 0.0   #Zero GPP if average temperature below freezing
-
             #--------------------3.  Maintenace respiration ------------------------
             #Maintenance respiration
             trate = parms['q10_mr']**((0.5*(tmax[v]+tmin[v])-25.0)/25.0)
@@ -371,20 +383,20 @@ class MyModel(object):
           else:
             all_ensembles_onejob = False
             k_max = self.ne
-	  for i in range(0,self.nx):
+          for i in range(0,self.nx):
               for j in range(0,self.ny):
                 vegfrac    = pct_natveg[self.y1+j,self.x1+i]
                 bareground = pct_pft[0,self.y1+j,self.x1+i]
-           	if (vegfrac > 0.1 and landmask[self.y1+j,self.x1+i] > 0):
+                if (vegfrac > 0.1 and landmask[self.y1+j,self.x1+i] > 0):
                   if (bareground < 99.9):
                     for k in range(0,k_max):
- 		      lons_torun.append(self.hdlongrid[self.y1+j,self.x1+i])
+                      lons_torun.append(self.hdlongrid[self.y1+j,self.x1+i])
                       lats_torun.append(self.hdlatgrid[self.y1+j,self.x1+i])
                       indx_torun.append(i)
                       indy_torun.append(j)
                       ens_torun.append(k)
                       vegfrac_torun.append((100.0-bareground)/100.0)
-	              n_active = n_active+1
+                      n_active = n_active+1
           #Load all forcing data into memory
           self.get_regional_forcings()
           #get forcings for one point to get relevant info
@@ -408,7 +420,7 @@ class MyModel(object):
             self.ny = 1
 
         if (rank == 0):
-          print str(n_active)+' simulation units to run'
+          print('%d simulation units to run'%(n_active))
           n_done=0
           if (do_monthly_output):
              self.nt = (self.end_year-self.start_year+1)*12
@@ -432,10 +444,6 @@ class MyModel(object):
                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
                  if (v in self.forcvars):
                      do_output_forcings=True
-          if (size > 0):
-            comm.bcast(myoutvars)
-            comm.bcast(do_output_forcings)
-            comm.bcast(all_ensembles_onejob)
 
           if (self.site == 'none'):
             self.load_forcings(lon=lons_torun[0], lat=lats_torun[0])
@@ -443,7 +451,6 @@ class MyModel(object):
           if ((n_active == 1 and self.ne == 1) or size == 0):
             #No MPI
             for i in range(0,n_active):
-                print i
                 if (self.site == 'none'):
                   self.load_forcings(lon=lons_torun[i], lat=lats_torun[i])
                 if (self.ne > 1):
@@ -476,6 +483,8 @@ class MyModel(object):
               for p in range(0,len(self.ensemble_pnames)):
                 parms[self.ensemble_pnames[p]] = self.parm_ensemble[ens_torun[n_job-1],p]
 
+            comm.send(all_ensembles_onejob, dest=n_job, tag=300)
+            comm.send(do_output_forcings,   dest=n_job, tag=400)
             comm.send(self.forcings,   dest = n_job, tag=6)
             comm.send(self.start_year, dest = n_job, tag=7)
             comm.send(self.end_year,   dest = n_job, tag=8)
@@ -487,13 +496,14 @@ class MyModel(object):
               comm.send(self.ensemble_pnames, dest=n_job, tag=101)
             else:
               comm.send(parms,           dest = n_job, tag=100)
+            comm.send(myoutvars,         dest = n_job, tag=200)
 
            #Assign rest of jobs on demand
            for n_job in range(size,n_active+1):
             process = comm.recv(source=MPI.ANY_SOURCE, tag=3)
             thisjob = comm.recv(source=process, tag=4)
             myoutput = comm.recv(source=process, tag=5)
-            print 'Received', thisjob
+            print('Received %d'%(thisjob))
             n_done = n_done+1
             comm.send(n_job, dest=process, tag=1)
             comm.send(0,     dest=process, tag=2)
@@ -502,6 +512,9 @@ class MyModel(object):
             if (not all_ensembles_onejob and self.ne > 1):
               for p in range(0,len(self.ensemble_pnames)):
                 parms[self.ensemble_pnames[p]] = self.parm_ensemble[ens_torun[n_job-1],p]
+
+            comm.send(all_ensembles_onejob, dest=process, tag=300)
+            comm.send(do_output_forcings,   dest=process, tag=400)
             comm.send(self.forcings,   dest = process, tag=6)
             comm.send(self.start_year, dest = process, tag=7)
             comm.send(self.end_year,   dest = process, tag=8)
@@ -509,14 +522,15 @@ class MyModel(object):
             comm.send(self.lat,        dest = process, tag=10)
             comm.send(self.forcvars,   dest = process, tag=11)
             if (all_ensembles_onejob):
-              comm.send(self.parm_ensemble,   dest=n_job, tag=100)
-              comm.send(self.ensemble_pnames, dest=n_job, tag=101)
+              comm.send(self.parm_ensemble,   dest=process, tag=100)
+              comm.send(self.ensemble_pnames, dest=process, tag=101)
             else:
               comm.send(parms,           dest = process, tag=100)
+            comm.send(myoutvars,         dest = process, tag=200)
             #write output
             for v in myoutvars:
               if (all_ensembles_onejob):
-                for k in range(0,k_max):
+                for k in range(0,self.ne):
                   model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],k] = myoutput[v][k,:]
               else:
                 model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v][0,:]
@@ -527,14 +541,14 @@ class MyModel(object):
             thisjob = comm.recv(source=process, tag=4)
             myoutput = comm.recv(source=process, tag=5)
             vnum = 0
-            print 'Received', thisjob
+            print('Received %d'%(thisjob))
             n_done = n_done+1
             comm.send(-1, dest=process, tag=1)
             comm.send(-1, dest=process, tag=2)
             #write output
             for v in myoutvars:
               if (all_ensembles_onejob):
-                for k in range(0,k_max):
+                for k in range(0,self.ne):
                   model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],k] = myoutput[v][k,:]
               else:
                 model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v][0,:]
@@ -543,13 +557,12 @@ class MyModel(object):
         #Slave
         else:
           status=0
-          comm.bcast(do_output_forcings)
-          comm.bcast(myoutvars)
-          comm.bcast(all_ensembles_onejob)
           while status == 0:
             myjob = comm.recv(source=0, tag=1)
             status = comm.recv(source=0, tag=2)
             if (status == 0):
+              all_ensembles_onejob = comm.recv(source=0, tag=300)
+              do_output_forcings   = comm.recv(source=0, tag=400)
               self.forcings = comm.recv(source = 0, tag = 6)
               self.start_year = comm.recv(source=0, tag=7)
               self.end_year   = comm.recv(source=0, tag=8)
@@ -561,6 +574,7 @@ class MyModel(object):
                 self.ensemble_pnames = comm.recv(source=0, tag=101)
               else:
                 myparms         = comm.recv(source=0, tag=100)
+              myoutvars = comm.recv(source=0, tag=200)
               #Initialize output arrays
               self.output = {}
               self.output_ens = {}
@@ -573,14 +587,14 @@ class MyModel(object):
                    self.output[var] = numpy.zeros([8,self.nobs+1], numpy.float)
                 else:
                    self.output[var] = numpy.zeros([self.nobs+1], numpy.float)
-
+  
               thisoutput = {}
               thisoutput_ens = {}
               for k in range(0,k_max):
                 if (all_ensembles_onejob):
                   myparms = self.pdefault
                   for p in range(0,len(self.ensemble_pnames)):
-                    myparms[self.ensemble_pnames[p]] = self.parm_ensemble[n,p]
+                    myparms[self.ensemble_pnames[p]] = self.parm_ensemble[k,p]
                 self.selm_instance(myparms, spinup_cycles=spinup_cycles, deciduous=deciduous)
                 for v in myoutvars:
                    if (v in self.outvars):
@@ -600,7 +614,7 @@ class MyModel(object):
               comm.send(rank,  dest=0, tag=3)
               comm.send(myjob, dest=0, tag=4)
               comm.send(thisoutput_ens, dest=0, tag=5)
-          print rank, ' complete'
+          print('%d complete'%(rank))
           MPI.Finalize()
 
     def write_nc_output(self, output, do_monthly_output=False, prefix='model'):
@@ -669,7 +683,7 @@ class MyModel(object):
         self.actual_parms = parms
 
     def get_regional_forcings(self):
-        print ('Loading regional forcings')
+        print('Loading regional forcings')
         self.regional_forc={}
         fnames = ['TMAX','TMIN','FSDS','BTRAN']
         vnames = ['TSA', 'TSA', 'FSDS','BTRAN']
@@ -679,10 +693,10 @@ class MyModel(object):
           driver_path = os.path.abspath(oscm_dir+'/models/elm_drivers')
           myfile = "GSWP3_fromELMSP_"+f+"_1980-2009.nc4"
           if (not os.path.exists(driver_path+'/'+myfile)):
-            print myfile+' not found.  Downloading.'
+            print('%s not found.  Downloading.'%(myfile))
             os.system('wget --no-check-certificate https://acme-webserver.ornl.gov/dmricciuto/elm_drivers/'+myfile)
             os.rename(myfile, driver_path+'/'+myfile)
-          print driver_path+'/'+myfile
+          print('%s/%s'%(driver_path,myfile))
           myinput = Dataset(driver_path+'/'+myfile,'r')
           self.regional_forc[f.lower()] = myinput.variables[vnames[fnum]][:,:,:]
           myinput.close()
@@ -705,8 +719,8 @@ class MyModel(object):
              self.londeg = myinput.variables['LONGXY'][0]            #site longitude
              self.start_year = int(myinput.variables['start_year'][:])    #starting year of data
              self.end_year   = int(myinput.variables['end_year'][:])   #ending year of data
-             npd = npts/(self.end_year - self.start_year + 1)/365   #number of obs per day
-             self.nobs = (self.end_year - self.start_year + 1)*365  #number of days
+             npd = int(npts/(self.end_year - self.start_year + 1)/365)   #number of obs per day
+             self.nobs = int((self.end_year - self.start_year + 1)*365)  #number of days
              myinput.close()
              for fv in self.forcvars:
                self.forcings[fv] = []
@@ -790,7 +804,11 @@ class MyModel(object):
         firstind = (self.start_year-1991)*365
         lastind  = (self.end_year-1991+1)*365
         self.obs={}
-        for s in site_name:
+        nsm_0=site_name[:,:].shape[0]
+        nsm_1=site_name[:,:].shape[1]
+        siteName_str=numpy.array([[site_name[i,j].decode("utf-8") for j in range(nsm_1)] for i in range(nsm_0)])
+        #for s in site_name:
+        for s in siteName_str:
           if site in ''.join(s):
              self.obs['gpp'] = myobs.variables['GPP'][lnum,firstind:lastind]*24*3600*1000
              self.obs['nee'] = myobs.variables['NEE'][lnum,firstind:lastind]*24*3600*1000
@@ -804,7 +822,6 @@ class MyModel(object):
             var_list.append(key)
       else:
          var_list.append(var)
-      print var_list
       for var in var_list:
           fig = plt.figure()
           ax = fig.add_subplot(111)
@@ -828,9 +845,8 @@ class MyModel(object):
       self.parm_ensemble = numpy.zeros([n_ensemble,len(pnames)])
       self.ensemble_pnames = pnames
       self.ne = n_ensemble
-      print pnames
       if (fname != ''):
-        print 'Generating parameter ensemble from '+fname
+        print('Generating parameter ensemble from %d'%(fname))
         inparms = open(fname,'r')
         lnum = 0
         for s in inparms:
@@ -846,6 +862,8 @@ class MyModel(object):
         inparms.close()
       else:
         for n in range(0,n_ensemble):
+          # HACK: to have identical ensemble members uncomment line below
+          # numpy.random.seed(2018)
           for p in range(0,len(pnames)):
             #Sample uniformly from the parameter space
             self.parm_ensemble[n,p] = numpy.random.uniform(low=self.pmin[pnames[p]], \

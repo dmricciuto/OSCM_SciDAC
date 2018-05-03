@@ -76,7 +76,7 @@ else:
 names_out.close()
 
 for i in range(0,nens):
-    print 'Running #'+str(i+1)
+    print('Running #%d'%(i+1))
     if spls.shape[0]>0:
         # Sample in [-1,1] from file
         for k in range(model.nparms):
@@ -85,6 +85,8 @@ for i in range(0,nens):
             p_all[i,k] = model.parms[p]
     else:
         pnum=0
+        # HACK: to have identical ensemble members uncomment line below
+        # numpy.random.seed(2018)
         for p in model.parms:
             #Sample uniformly from the parameter space
             model.parms[p] = numpy.random.uniform(low=model.pmin[p],high=model.pmax[p])
