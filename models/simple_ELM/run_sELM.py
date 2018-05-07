@@ -8,7 +8,7 @@ import argparse
 from utils import *
 
 # default parameters
-nens = 5 # ensemble size
+nens = 1 # ensemble size
 
 parser = argparse.ArgumentParser()
 
@@ -86,10 +86,11 @@ for i in range(0,nens):
     else:
         pnum=0
         # HACK: to have identical ensemble members uncomment line below
-        # numpy.random.seed(2018)
+        numpy.random.seed(2018)
         for p in model.parms:
             #Sample uniformly from the parameter space
             model.parms[p] = numpy.random.uniform(low=model.pmin[p],high=model.pmax[p])
+            print(model.parms[p],model.pmin[p],model.pmax[p],p)
             #Save the parameters
             p_all[i,pnum] = model.parms[p]
             pnum=pnum+1
