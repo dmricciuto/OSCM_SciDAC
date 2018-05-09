@@ -846,20 +846,30 @@ class MyModel(object):
       self.ensemble_pnames = pnames
       self.ne = n_ensemble
       if (fname != ''):
-        print('Generating parameter ensemble from %d'%(fname))
-        inparms = open(fname,'r')
-        lnum = 0
-        for s in inparms:
-          pvals = s.split()
-          if (lnum < n_ensemble):
+        print('Generating parameter ensemble from %s'%(fname))
+        pvals = numpy.genfromtxt(fname)
+        if (normalized):
+          for n in range(0,n_ensemble):
             for p in range(0,len(pnames)):
-              if (normalized):
-                self.parm_ensemble[lnum,p] = self.pmin[pnames[p]]+0.5* \
-                     (float(pvals[p]))*(self.pmax[pnames[p]]-self.pmin[pnames[p]])
-              else:
-                self.parm_ensemble[lnum,p] = float(pvals[p])
-          lnum=lnum+1
-        inparms.close()
+                self.parm_ensemble[n,p] = self.pmin[pnames[p]]+0.5* \
+                     (pvals[n,p]+1.0)*(self.pmax[pnames[p]]-self.pmin[pnames[p]])
+        else:
+          for n in range(0,n_ensemble):
+            for p in range(0,len(pnames)):
+                self.parm_ensemble[n,p] = pvals[n,p]
+        # inparms = open(fname,'r')
+        # lnum = 0
+        # for s in inparms:
+        #   pvals = s.split()
+        #   if (lnum < n_ensemble):
+        #     for p in range(0,len(pnames)):
+        #       if (normalized):
+        #         self.parm_ensemble[lnum,p] = self.pmin[pnames[p]]+0.5* \
+        #              (float(pvals[p]))*(self.pmax[pnames[p]]-self.pmin[pnames[p]])
+        #       else:
+        #         self.parm_ensemble[lnum,p] = float(pvals[p])
+        #   lnum=lnum+1
+        # inparms.close()
       else:
         for n in range(0,n_ensemble):
           # HACK: to have identical ensemble members uncomment line below
@@ -869,3 +879,4 @@ class MyModel(object):
             self.parm_ensemble[n,p] = numpy.random.uniform(low=self.pmin[pnames[p]], \
                   high=self.pmax[pnames[p]])
         #numpy.savetxt('inputs.txt', self.parm_ensemble)
+
