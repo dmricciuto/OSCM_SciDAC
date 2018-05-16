@@ -6,13 +6,13 @@ import time, os
 import utils
 
 if os.environ['USER']=='ksargsy':
-  print("Hello Khachik")
-  oscm_dir="/Users/ksargsy/research/OSCM_SciDAC/"
+  print('Hello Khachik')
+  oscm_dir=os.environ['HOME']+'/research/OSCM_SciDAC/'
 elif os.environ['USER']=='csafta':
-  print("Hello Cosmin")
-  oscm_dir="/Users/csafta/Projects/OSCM_SciDAC.dmr/"
+  print('Hello Cosmin')
+  oscm_dir=os.environ['HOME']+'/Projects/OSCM_SciDAC.dmr/'
 else:
-  oscm_dir="../../"
+  oscm_dir='../../'
 
 
 class MyModel(object):
