@@ -54,11 +54,11 @@ class MyModel(object):
                 self.pmin[p] = 100.0
                 self.pmax[p] = 700.0
             elif (p == 'fpg'):
-                self.pmin[p] = 0.50
-                self.pmax[p] = 1.00
+                self.pmin[p] = 0.70
+                self.pmax[p] = 0.95
             else:
-                self.pmin[p] = self.parms[p]*0.75
-                self.pmax[p] = self.parms[p]*1.25
+                self.pmin[p] = self.parms[p]*0.50
+                self.pmax[p] = self.parms[p]*1.50
 
             self.nparms = self.nparms+1
         self.issynthetic = False
@@ -357,7 +357,7 @@ class MyModel(object):
 
 
     def run_selm(self, spinup_cycles=0, lat_bounds=[-999,-999], lon_bounds=[-999,-999], \
-                     do_monthly_output=False, do_output_forcings=False, pft=0,          \
+                     do_monthly_output=False, do_output_forcings=False, pft=-1,          \
                      prefix='model', ensemble=False, myoutvars=[], use_MPI=False):
 
         ens_torun=[]
@@ -410,9 +410,13 @@ class MyModel(object):
                   if (bareground < 95.0):
                     mypfts=[]
                     mypftfracs=[]
-                    mypftfracs.append(sum(pct_pft[6:9,self.y1+j,self.x1+i])+pct_pft[3,self.y1+j,self.x1+i])
-                    mypftfracs.append(sum(pct_pft[1:3,self.y1+j,self.x1+i])+pct_pft[4,self.y1+j,self.x1+i]+sum(pct_pft[9:12,self.y1+j,self.x1+i]))
-                    mypftfracs.append(sum(pct_pft[12:,self.y1+j,self.x1+i]))
+                    if (pft < 0):
+                      mypftfracs.append(sum(pct_pft[6:9,self.y1+j,self.x1+i])+pct_pft[3,self.y1+j,self.x1+i])
+                      mypftfracs.append(sum(pct_pft[1:3,self.y1+j,self.x1+i])+pct_pft[4,self.y1+j,self.x1+i]+sum(pct_pft[9:12,self.y1+j,self.x1+i]))
+                      mypftfracs.append(sum(pct_pft[12:,self.y1+j,self.x1+i]))
+                    else:
+                      mypftfracs=[0.0,0.0,0.0]
+                      mypftfracs[pft] = 100.0
                     if (mypftfracs[0] > 5.0):
                       mypfts.append(0)
                     if (mypftfracs[1] > 5.0):
@@ -470,17 +474,17 @@ class MyModel(object):
             for v in self.outvars:
               if (v != 'ctcpools'):
                   myoutvars.append(v)
-                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,3,self.ne], numpy.float)
+                  model_output[v] = numpy.zeros([self.ne,3,self.nt,self.ny,self.nx], numpy.float)
             for v in self.forcvars:
                 if (v != 'time' and do_output_forcings):
                   myoutvars.append(v)
-                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,3,self.ne], numpy.float)
+                  model_output[v] = numpy.zeros([3,self.nt,self.ny,self.nx], numpy.float)
           else:
              for v in myoutvars:
-                 model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,3,self.ne], numpy.float)
+                 model_output[v] = numpy.zeros([self.ne,3,self.nt,self.ny,self.nx], numpy.float)
                  if (v in self.forcvars):
                      do_output_forcings=True
-          self.pftfrac = numpy.zeros([self.ny,self.nx,3,self.ne], numpy.float)
+          self.pftfrac = numpy.zeros([self.ny,self.nx,3], numpy.float)
 
           if (self.site == 'none'):
             self.load_forcings(lon=lons_torun[0], lat=lats_torun[0])
@@ -494,22 +498,21 @@ class MyModel(object):
                   for p in range(0,len(self.ensemble_pnames)):
                     self.parms[self.ensemble_pnames[p]] = self.parm_ensemble[i,p]
                 self.selm_instance(self.parms, spinup_cycles=spinup_cycles, pft=pfts_torun[i])
-                self.pftfrac[indy_torun[i],indx_torun[i],pfts_torun[i],ens_torun[i]] = \
-                   pftfracs_torun[i]
+                self.pftfrac[indy_torun[i],indx_torun[i],pfts_torun[i]] = pftfracs_torun[i]
                 for v in myoutvars:
                   if (v in self.outvars):
                     if (do_monthly_output):
-                      model_output[v][:,indy_torun[i],indx_torun[i],pfts_torun[i],ens_torun[i]] = \
+                      model_output[v][ens_torun[i],pfts_torun[i],:,indy_torun[i],indx_torun[i]] = \
                          utils.daily_to_monthly(self.output[v][1:])
                     else:
-                      model_output[v][:,indy_torun[i],indx_torun[i],pfts_torun[i],ens_torun[i]] = \
+                      model_output[v][ens_torun[i],pfts_torun[i],:,indy_torun[i],indx_torun[i]] = \
                          self.output[v][1:]
                   elif (v in self.forcvars):
                     if (do_monthly_output):
-                       model_output[v][:,indy_torun[i],indx_torun[i],pfts_torun[i],ens_torun[i]] = \
+                       model_output[v][ens_torun,pfts_torun[i],:,indy_torun[i],indx_torun[i]] = \
                             utils.daily_to_monthly(self.forcings[v])
                     else:
-                       model_output[v][:,indy_torun[i],indx_torun[i],pfts_torun[i],ens_torun[i]] = \
+                       model_output[v][ens_torun,pfts_torun[i],:,indy_torun[i],indx_torun[i]] = \
                             self.forcings[v][:]
             self.write_nc_output(model_output, do_monthly_output=do_monthly_output, prefix=prefix)
           else:
@@ -574,13 +577,12 @@ class MyModel(object):
             for v in myoutvars:
               if (all_ensembles_onejob):
                 for k in range(0,self.ne):
-                  model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1],k] = \
+                  model_output[v][k,pfts_torun[thisjob-1],:,indy_torun[thisjob-1],indx_torun[thisjob-1]] = \
                           myoutput[v][k,:]
               else:
-                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1], \
-                          ens_torun[thisjob-1]] = myoutput[v][0,:]
-            self.pftfrac[indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1], \
-                    ens_torun[thisjob-1]] = pftfracs_torun[thisjob-1]
+                model_output[v][ens_torun[thisjob-1],pfts_torun[thisjob-1],:,indy_torun[thisjob-1],indx_torun[thisjob-1]] \
+                                  = myoutput[v][0,:]
+            self.pftfrac[indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1]] = pftfracs_torun[thisjob-1]
 
            #receive remaining messages and finalize
            while (n_done < n_active):
@@ -596,13 +598,12 @@ class MyModel(object):
             for v in myoutvars:
               if (all_ensembles_onejob):
                 for k in range(0,self.ne):
-                  model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1],k] = \
+                  model_output[v][k,pfts_torun[thisjob-1],:,indy_torun[thisjob-1],indx_torun[thisjob-1]] = \
                         myoutput[v][k,:]
               else:
-                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1], \
-                        ens_torun[thisjob-1]] = myoutput[v][0,:]
-            self.pftfrac[indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1], \
-                    ens_torun[thisjob-1]] = pftfracs_torun[thisjob-1]
+                model_output[v][ens_torun[thisjob-1],pfts_torun[thisjob-1],:,indy_torun[thisjob-1],indx_torun[thisjob-1]] \
+                        = myoutput[v][0,:]
+            self.pftfrac[indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1]] = pftfracs_torun[thisjob-1]
            self.write_nc_output(model_output, do_monthly_output=do_monthly_output, prefix=prefix)
            MPI.Finalize()
         #Slave
@@ -695,13 +696,9 @@ class MyModel(object):
          else:
            lat_out = self.latdeg
            lon_out = self.londeg
-         if (self.ne > 1):
-           pft_out = output_nc.createVariable('pft_frac','f4',('ensemble','lat','lon','pft'))
-           for n in range(0,self.ne):
-             pft_out[n,:,:,:] = self.pftfrac[:,:,:,n]
-         else:
-           pft_out = output_nc.createVariable('pft_frac','f4',('lat','lon','pft'))
-           pft_out[:,:,:] = self.pftfrac[:,:,:,0]
+         pft_out = output_nc.createVariable('pft_frac','f4',('lat','lon','pft'))
+         for n in range(0,self.ne):
+           pft_out[:,:,:] = self.pftfrac[:,:,:]
          if (do_monthly_output):
             output_nc.createDimension('time',(self.end_year-self.start_year+1)*12)
             time = output_nc.createVariable('time','f8',('time',))
@@ -723,19 +720,29 @@ class MyModel(object):
          ncvars={}
          for v in output:
             if (self.ne > 1):
-              ncvars[v] = output_nc.createVariable(v, 'f4',('ensemble','time','lat','lon'))
-              for n in range(0,self.ne):
-                for t in range(0,self.nt):
-                  ncvars[v][n,t,:,:] = (output[v][t,:,:,0,n]*self.pftfrac[:,:,0,n]/100.0 + \
-                                        output[v][t,:,:,1,n]*self.pftfrac[:,:,1,n]/100.0 + \
-                                        output[v][t,:,:,2,n]*self.pftfrac[:,:,2,n]/100.0).squeeze()
+              ncvars[v] = output_nc.createVariable(v, 'f4',('ensemble','pft','time','lat','lon'))
+              #for n in range(0,self.ne):
+              #  for t in range(0,self.nt):
+                           
+              ncvars[v][:,:,:,:,:] = output[v][:,:,:,:,:]
+                  #ncvars[v][n,t,:,:] = (output[v][t,:,:,0,n]*self.pftfrac[:,:,0]/100.0 + \
+                  #                      output[v][t,:,:,1,n]*self.pftfrac[:,:,1]/100.0 + \
+                  #                      output[v][t,:,:,2,n]*self.pftfrac[:,:,2]/100.0).squeeze()
             else:
-              ncvars[v] = output_nc.createVariable(v, 'f4',('time','lat','lon',))
+              ncvars[v] = output_nc.createVariable(v, 'f4',('pft','time','lat','lon',))
               for t in range(0,self.nt):
-                ncvars[v][t,:,:] = (output[v][t,:,:,0]).squeeze()*pft_out[:,:,0]/100.0 + \
-                                   (output[v][t,:,:,1]).squeeze()*pft_out[:,:,1]/100.0 + \
-                                   (output[v][t,:,:,2]).squeeze()*pft_out[:,:,2]/100.0
+                 ncvars[v] = output[v][0,:,:,:,:]
+#                ncvars[v][t,:,:] = (output[v][t,:,:,0]).squeeze()*pft_out[:,:,0]/100.0 + \
+#                                   (output[v][t,:,:,1]).squeeze()*pft_out[:,:,1]/100.0 + \
+#                                   (output[v][t,:,:,2]).squeeze()*pft_out[:,:,2]/100.0
          output_nc.close()
+
+         #output for eden vis system - customize as needed
+         eden_out = numpy.zeros([self.ne,pnum+1],numpy.float)
+         for n in range(0,self.ne):
+           eden_out[n,0:pnum]      = self.parm_ensemble[n,:]
+           eden_out[n,pnum:pnum+1] = numpy.mean(output['gpp'][n,0,0:60,0,0])*365.
+         numpy.savetxt("foreden.csv",eden_out,delimiter=",")
 
     def generate_synthetic_obs(self, parms, err):
         #generate synthetic observations from model with Gaussian error
