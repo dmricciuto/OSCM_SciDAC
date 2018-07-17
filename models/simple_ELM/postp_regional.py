@@ -2,13 +2,22 @@ from netCDF4 import Dataset
 from mpl_toolkits.basemap import Basemap
 from pylab import *
 
-dataset = Dataset('regional_output.nc')
+ncfile=sys.argv[1]
+#ncfile='regional_output.nc'
+print("Reading "+ncfile)
+
+dataset = Dataset(ncfile)
 qoi='gpp'
 
-print dataset.dimensions.keys() # time(360),lon(5),lat(7)
-print dataset.dimensions['lat'] # 7
+print("Dimensions #######################")
+for ikey in dataset.dimensions.keys(): # time(360),lon(5),lat(7)
+    print(dataset.dimensions[ikey].name+", size " + str(dataset.dimensions[ikey].size)) # 7
 
-print dataset.variables.keys()
+print("Variables #######################")
+for ivar in dataset.variables.keys():
+    print(ivar+str(dataset.variables[ivar].shape))
+sys.exit()
+
 
 lons=dataset.variables['lon'][:]-360. #.shape
 lats=dataset.variables['lat'][:] #.shape
