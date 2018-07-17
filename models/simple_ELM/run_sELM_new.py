@@ -1,5 +1,5 @@
 import model_sELM as models
-import os, math, random
+import os, sys, math, random
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 import argparse
@@ -49,14 +49,14 @@ model.load_obs(site)
 
 # ------------------- Run and analyze the default model ---------
 #Run model with default parameters
-model.run_selm(spinup_cycles=6, deciduous=True)
+model.run_selm(spinup_cycles=4, deciduous=True,do_monthly_output=True) #try this
 #Ouptut model GPP
 numpy.savetxt('gpp_model.txt',model.output['gpp'])
 #Output observed GPP
 numpy.savetxt('gpp_obs.txt',model.obs['gpp'])
 #plot all variables for the default run
 #model.plot_output(startyear=2000,endyear=2005)
-
+sys.exit()
 #---------------------- run an ensemble ----------------------------
 
 splsNames=[]

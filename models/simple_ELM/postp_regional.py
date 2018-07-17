@@ -26,14 +26,15 @@ print lons,lats
 # for attr in dataset.variables['time'].ncattrs():
 #     print attr #, '=', getattr(windspeed, attr)
 #
-for i in range(len(lats)):
-    for j in range(len(lons)):
-        plot(1980+dataset.variables['time'][:]/365,dataset.variables[qoi][:,i,j])
-        xlim(2000,2010)
-        ylim(0,9)
-        savefig('regional.eps')
-        show()
-        sys.exit()
+# for i in range(len(lats)):
+#     for j in range(len(lons)):
+#         plot(1980+dataset.variables['time'][:]/365,dataset.variables[qoi][:,i,j])
+#         np.savetxt('gpp.txt',dataset.variables[qoi][:,i,j])
+#         xlim(2000,2010)
+#         ylim(0,10)
+#         savefig('regional.eps')
+#         #show()
+#         #sys.exit()
 
 fig=plt.figure(figsize=(12,6))
 #ax=fig.add_axes([0.1,-0.1,0.8,1.3])
@@ -62,9 +63,9 @@ x,y = m(xx, yy)
 
 
 
-imshow(dataset.variables[qoi][-1,:,:], \
+imshow(dataset.variables[qoi][-3,::-1,:], \
         extent=(x.min(),x.max(), y.min(),y.max()), \
         interpolation='bilinear', cmap=cm.RdYlGn)
 colorbar(fraction=.02,pad=0.1) #location='bottom', pad="10%")
-#
+savefig('map.eps')
 show()
