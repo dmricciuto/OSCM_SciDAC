@@ -12,6 +12,6 @@ print dataset.variables['time'][:]
 
 plot(2000+dataset.variables['time'][:]/365,dataset.variables[qoi][:,0,0])
 xlim(2000,2010)
-ylim(0,9)
+ylim(0,10)
 savefig('site.eps')
 show()
