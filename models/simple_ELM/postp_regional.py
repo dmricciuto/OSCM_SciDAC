@@ -8,33 +8,19 @@ print("Reading "+ncfile)
 
 dataset = Dataset(ncfile)
 qoi='gpp'
+ens_id=111
+time_id=30
 
 print("Dimensions #######################")
 for ikey in dataset.dimensions.keys(): # time(360),lon(5),lat(7)
     print(dataset.dimensions[ikey].name+", size " + str(dataset.dimensions[ikey].size)) # 7
 
-print("Variables #######################")
-for ivar in dataset.variables.keys():
-    print(ivar+str(dataset.variables[ivar].shape))
-sys.exit()
-
-
 lons=dataset.variables['lon'][:]-360. #.shape
 lats=dataset.variables['lat'][:] #.shape
-print lons,lats
-#print dataset.variables['time'].units
-# for attr in dataset.variables['time'].ncattrs():
-#     print attr #, '=', getattr(windspeed, attr)
-#
-# for i in range(len(lats)):
-#     for j in range(len(lons)):
-#         plot(1980+dataset.variables['time'][:]/365,dataset.variables[qoi][:,i,j])
-#         np.savetxt('gpp.txt',dataset.variables[qoi][:,i,j])
-#         xlim(2000,2010)
-#         ylim(0,10)
-#         savefig('regional.eps')
-#         #show()
-#         #sys.exit()
+
+
+
+
 
 fig=plt.figure(figsize=(12,6))
 #ax=fig.add_axes([0.1,-0.1,0.8,1.3])
@@ -42,7 +28,7 @@ fig=plt.figure(figsize=(12,6))
 
 
 
-m = Basemap(llcrnrlon=-120.,llcrnrlat=30.,urcrnrlon=-60.,urcrnrlat=50.,\
+m = Basemap(llcrnrlon=-120.,llcrnrlat=20.,urcrnrlon=-60.,urcrnrlat=50.,\
             rsphere=(6378137.00,6356752.3142),\
             resolution='l',projection='merc',\
             lat_0=40.,lon_0=-20.,lat_ts=0.)
@@ -63,7 +49,7 @@ x,y = m(xx, yy)
 
 
 
-imshow(dataset.variables[qoi][-3,::-1,:], \
+imshow(dataset.variables[qoi][ens_id,0,time_id,::-1,:], \
         extent=(x.min(),x.max(), y.min(),y.max()), \
         interpolation='bilinear', cmap=cm.RdYlGn)
 colorbar(fraction=.02,pad=0.1) #location='bottom', pad="10%")
