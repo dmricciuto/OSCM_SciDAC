@@ -20,12 +20,12 @@ class MyModel(object):
     def __init__(self):
         self.name = 'sELM'
         self.parms = {'gdd_crit': 500.0, 'crit_dayl': 39300., 'ndays_on':30, 'ndays_off': 15,          \
-                      'nue': 15.0, 'slatop':0.03,                                                      \
+                      'nue_tree': 15.0, 'nue_grass':9.0, 'slatop_everg':0.01, 'slatop_decid':0.03,     \
                       'livewdcn': 50, 'leafcn': 25, 'frootcn': 42,                                     \
                       'fstor2tran': 0.5, 'stem_leaf': 2.7, 'croot_stem': 0.3, 'f_livewd':0.1,          \
                       'froot_leaf': 1.0,                                                               \
                       'rg_frac': 0.3, 'br_mr': 2.52e-6, 'q10_mr': 1.5, 'cstor_tau':3.0,                \
-                      'r_mort': 0.02, 'lwtop_ann': 0.7, 'leaf_long': 1.5, 'froot_long': 1.5,           \
+                      'r_mort': 0.02, 'lwtop_ann': 0.7, 'leaf_long': 3.0, 'froot_long': 3.0,           \
                       'q10_hr': 1.5, 'k_l1': 1.2039728, 'k_l2':0.0725707, 'k_l3':0.0140989,            \
                       'k_s1':0.0725707, 'k_s2':0.0140989244, 'k_s3':0.00140098, 'k_s4':0.0001,         \
                       'k_frag':0.0010005, 'rf_l1s1':0.39, 'rf_l2s2':0.55, 'rf_l3s3':0.29,              \
@@ -54,11 +54,11 @@ class MyModel(object):
                 self.pmin[p] = 100.0
                 self.pmax[p] = 700.0
             elif (p == 'fpg'):
-                self.pmin[p] = 0.50
-                self.pmax[p] = 1.00
+                self.pmin[p] = 0.70
+                self.pmax[p] = 0.95
             else:
-                self.pmin[p] = self.parms[p]*0.75
-                self.pmax[p] = self.parms[p]*1.25
+                self.pmin[p] = self.parms[p]*0.50
+                self.pmax[p] = self.parms[p]*1.50
 
             self.nparms = self.nparms+1
         self.issynthetic = False
@@ -69,7 +69,7 @@ class MyModel(object):
                         'deadstemc','livecrootc','deadcrootc','ctcpools','totecosysc','totsomc','totlitc', 'cstor']
 
 
-    def selm_instance(self, parms, spinup_cycles=0, deciduous=True):
+    def selm_instance(self, parms, spinup_cycles=0, pft=0):
 
         #--------------- Initialize ------------------------
         #Flux variables
@@ -98,7 +98,7 @@ class MyModel(object):
         #Set initial States 
         leafc_stor[0] = 0.0
         leafc[0]      = 0.0
-        if (deciduous):
+        if (pft == 0 or pft == 2):
             leafc_stor[0] = 10.0
         else:
             leafc[0] = 10.0
@@ -125,7 +125,11 @@ class MyModel(object):
         dayl = self.forcings['dayl']
         btran = self.forcings['btran']
         #Coefficents for ACM (GPP submodel)
-        a = [parms['nue'], 0.0156935, 4.22273, 208.868, 0.0453194, 0.37836, 7.19298, 0.011136, \
+        if (pft == 2):
+          nue = parms['nue_grass']
+        else:
+          nue = parms['nue_tree']
+        a = [nue, 0.0156935, 4.22273, 208.868, 0.0453194, 0.37836, 7.19298, 0.011136, \
              2.1001, 0.789798]
 
         #Turnover times for CTC model
@@ -171,13 +175,12 @@ class MyModel(object):
             totlitc[0]     = totlitc[self.nobs-1]
             cstor[0]       = cstor[self.nobs-1]
 
-                                  #print s, (totecosysc[0]-totecosysc_last)/(self.nobs/365)
           for v in range(0,self.nobs):
             # --------------------1.  Phenology -------------------------
             #Calculate leaf on
             leafc_trans = 0.0
             frootc_trans = 0.0
-            if (deciduous):     #Decidous phenology
+            if (pft == 0 or pft == 2):     #Decidous phenology
               gdd_last = gdd
               dayl_last = dayl[v-1]
               gdd_base = 0.0
@@ -196,24 +199,28 @@ class MyModel(object):
                    leafc_litter_tot  = leafc[v]
                    frootc_litter_tot = frootc[v]
               if (leafoff > 0):
-                   leafc_litter  = leafc_litter_tot  / parms['ndays_off']
-                   frootc_litter = frootc_litter_tot / parms['ndays_off']
+                   leafc_litter  = min(leafc_litter_tot  / parms['ndays_off'], leafc[v])
+                   frootc_litter = min(frootc_litter_tot / parms['ndays_off'], frootc[v])
                    leafoff = leafoff - 1
               else:
                    leafc_litter  = 0.0
                    frootc_litter = 0.0
             else:               #Evergreen phenology
-                leafc_litter  = leafc[v]  * parms['leaf_long']/365.
-                frootc_litter = frootc[v] * parms['froot_long']/365.
+                leafc_litter  = leafc[v]  * 1.0 / (parms['leaf_long']*365. )
+                frootc_litter = frootc[v] * 1.0 / (parms['froot_long']*365.)
 
-            lai[v+1] = leafc[v] * parms['slatop']
+            if (pft == 1):
+              slatop = parms['slatop_everg']
+            else:
+              slatop = parms['slatop_decid']
+            lai[v+1] = leafc[v] * slatop
 
             #---------------------2. GPP -------------------------------------
             #Calculate GPP flux using the ACM model (Williams et al., 1997)
             if (lai[v] > 1e-3):
                 rtot = 1.0
                 psid = -2.0
-                leafn = 1.0/(parms['leafcn'] * parms['slatop'])
+                leafn = 1.0/(parms['leafcn'] * slatop)
                 gs = abs(psid)**a[9]/((a[5]*rtot+(tmax[v]-tmin[v])))
                 pp = max(lai[v],0.5)*leafn/gs*a[0]*numpy.exp(a[7]*tmax[v])
                 qq = a[2]-a[3]
@@ -246,11 +253,15 @@ class MyModel(object):
             frg  = parms['rg_frac']
             flw  = parms['f_livewd']
             f1   = parms['froot_leaf']
-            f2   = max(parms['stem_leaf']/(1.0+numpy.exp(-0.004*(annsum_npp - \
-                           300.0))) - 0.4, 0.1)
-            f3   = parms['croot_stem']
+            if (pft < 2):
+              f2   = max(parms['stem_leaf']/(1.0+numpy.exp(-0.004*(annsum_npp - \
+                             300.0))) - 0.4, 0.1)
+              f3   = parms['croot_stem']
+            else:
+              f2 = 0
+              f3 = 0
             fall = (1.0+frg)*(1.0 + f1 + f2*(1+f3))
-            if (deciduous):
+            if (pft == 0 or pft ==2):
               leafc_alloc      = 0.
               frootc_alloc     = 0.
               leafcstor_alloc  = availc * 1.0/fall
@@ -270,8 +281,14 @@ class MyModel(object):
             livecrootc_litter = parms['r_mort'] / 365.0 * livecrootc[v]
             deadcrootc_litter = parms['r_mort'] / 365.0 * deadcrootc[v]
             #Excess maintance respration taken from wood pools
-            xsmr_deadstemc    = f2/(f2+f3)*xsmr
-            xsmr_deadcrootc   = f3/(f2+f3)*xsmr
+            if (f2+f3 < 0):
+              xsmr_deadstemc    = f2/(f2+f3)*xsmr
+              xsmr_deadcrootc   = f3/(f2+f3)*xsmr
+              xsmr_frootc       = 0.0
+            else:
+              xsmr_deadstemc    = 0.0
+              xsmr_deadcrootc   = 0.0
+              xsmr_frootc       = xsmr              
 
             #Cacluate live wood turnover
             livestemc_turnover  = parms['lwtop_ann'] / 365. * livestemc[v]
@@ -281,7 +298,7 @@ class MyModel(object):
             #increment plant pools
             leafc[v+1]       = leafc[v]       + leafc_alloc + leafc_trans - leafc_litter
             leafc_stor[v+1]  = leafc_stor[v]  + leafcstor_alloc - leafc_trans
-            frootc[v+1]      = frootc[v]      + frootc_alloc + frootc_trans - frootc_litter
+            frootc[v+1]      = frootc[v]      + frootc_alloc + frootc_trans - frootc_litter - xsmr_frootc
             frootc_stor[v+1] = frootc_stor[v] + frootcstor_alloc - frootc_trans
             livestemc[v+1]   = livestemc[v]   + livestemc_alloc - livestemc_litter \
                                               - livestemc_turnover
@@ -340,12 +357,14 @@ class MyModel(object):
 
 
     def run_selm(self, spinup_cycles=0, lat_bounds=[-999,-999], lon_bounds=[-999,-999], \
-                     do_monthly_output=False, do_output_forcings=False, deciduous=False, \
+                     do_monthly_output=False, do_output_forcings=False, pft=-1,          \
                      prefix='model', ensemble=False, myoutvars=[], use_MPI=False):
 
         ens_torun=[]
         indx_torun=[]
         indy_torun=[]
+        pfts_torun=[]
+        pftfracs_torun=[]
         n_active=0
         if (self.site == 'none'):
          if (use_MPI):
@@ -388,21 +407,40 @@ class MyModel(object):
                 vegfrac    = pct_natveg[self.y1+j,self.x1+i]
                 bareground = pct_pft[0,self.y1+j,self.x1+i]
                 if (vegfrac > 0.1 and landmask[self.y1+j,self.x1+i] > 0):
-                  if (bareground < 99.9):
+                  if (bareground < 95.0):
+                    mypfts=[]
+                    mypftfracs=[]
+                    if (pft < 0):
+                      mypftfracs.append(sum(pct_pft[6:9,self.y1+j,self.x1+i])+pct_pft[3,self.y1+j,self.x1+i])
+                      mypftfracs.append(sum(pct_pft[1:3,self.y1+j,self.x1+i])+pct_pft[4,self.y1+j,self.x1+i]+sum(pct_pft[9:12,self.y1+j,self.x1+i]))
+                      mypftfracs.append(sum(pct_pft[12:,self.y1+j,self.x1+i]))
+                    else:
+                      mypftfracs=[0.0,0.0,0.0]
+                      mypftfracs[pft] = 100.0
+                    if (mypftfracs[0] > 5.0):
+                      mypfts.append(0)
+                    if (mypftfracs[1] > 5.0):
+                      mypfts.append(1)
+                    if (mypftfracs[2] > 5.0):
+                      mypfts.append(2)
                     for k in range(0,k_max):
-                      lons_torun.append(self.hdlongrid[self.y1+j,self.x1+i])
-                      lats_torun.append(self.hdlatgrid[self.y1+j,self.x1+i])
-                      indx_torun.append(i)
-                      indy_torun.append(j)
-                      ens_torun.append(k)
-                      vegfrac_torun.append((100.0-bareground)/100.0)
-                      n_active = n_active+1
+                      for p in mypfts:
+                        lons_torun.append(self.hdlongrid[self.y1+j,self.x1+i])
+                        lats_torun.append(self.hdlatgrid[self.y1+j,self.x1+i])
+                        pfts_torun.append(p)
+                        pftfracs_torun.append(mypftfracs[p])
+                        indx_torun.append(i)
+                        indy_torun.append(j)
+                        ens_torun.append(k)
+                        vegfrac_torun.append((100.0-bareground)/100.0)
+                        n_active = n_active+1
           #Load all forcing data into memory
           self.get_regional_forcings()
           #get forcings for one point to get relevant info
           self.load_forcings(lon=lons_torun[0], lat=lats_torun[0])
         else:
           #site forcing has already been loaded
+          all_ensembles_onejob = False
           rank = 0
           size = 0
           n_active = self.ne
@@ -413,6 +451,8 @@ class MyModel(object):
              size=comm.Get_size()
           if (rank == 0):
             for k in range(0,self.ne):
+               pfts_torun.append(pft)
+               pftfracs_torun.append(100.0)
                indx_torun.append(0)
                indy_torun.append(0)
                ens_torun.append(k)
@@ -434,16 +474,17 @@ class MyModel(object):
             for v in self.outvars:
               if (v != 'ctcpools'):
                   myoutvars.append(v)
-                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
+                  model_output[v] = numpy.zeros([self.ne,3,self.nt,self.ny,self.nx], numpy.float)
             for v in self.forcvars:
                 if (v != 'time' and do_output_forcings):
                   myoutvars.append(v)
-                  model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
+                  model_output[v] = numpy.zeros([3,self.nt,self.ny,self.nx], numpy.float)
           else:
              for v in myoutvars:
-                 model_output[v] = numpy.zeros([self.nt,self.ny,self.nx,self.ne], numpy.float)+numpy.nan
+                 model_output[v] = numpy.zeros([self.ne,3,self.nt,self.ny,self.nx], numpy.float)
                  if (v in self.forcvars):
                      do_output_forcings=True
+          self.pftfrac = numpy.zeros([self.ny,self.nx,3], numpy.float)
 
           if (self.site == 'none'):
             self.load_forcings(lon=lons_torun[0], lat=lats_torun[0])
@@ -456,20 +497,23 @@ class MyModel(object):
                 if (self.ne > 1):
                   for p in range(0,len(self.ensemble_pnames)):
                     self.parms[self.ensemble_pnames[p]] = self.parm_ensemble[i,p]
-                self.selm_instance(self.parms, spinup_cycles=spinup_cycles, deciduous=deciduous)
+                self.selm_instance(self.parms, spinup_cycles=spinup_cycles, pft=pfts_torun[i])
+                self.pftfrac[indy_torun[i],indx_torun[i],pfts_torun[i]] = pftfracs_torun[i]
                 for v in myoutvars:
                   if (v in self.outvars):
                     if (do_monthly_output):
-                      model_output[v][:,indy_torun[i],indx_torun[i],ens_torun[i]] = \
+                      model_output[v][ens_torun[i],pfts_torun[i],:,indy_torun[i],indx_torun[i]] = \
                          utils.daily_to_monthly(self.output[v][1:])
                     else:
-                      model_output[v][:,indy_torun[i],indx_torun[i],ens_torun[i]] = self.output[v][1:]
+                      model_output[v][ens_torun[i],pfts_torun[i],:,indy_torun[i],indx_torun[i]] = \
+                         self.output[v][1:]
                   elif (v in self.forcvars):
                     if (do_monthly_output):
-                       model_output[v][:,indy_torun[i],indx_torun[i],ens_torun[i]] = \
+                       model_output[v][ens_torun,pfts_torun[i],:,indy_torun[i],indx_torun[i]] = \
                             utils.daily_to_monthly(self.forcings[v])
                     else:
-                       model_output[v][:,indy_torun[i],indx_torun[i],ens_torun[i]] = self.forcings[v][:]
+                       model_output[v][ens_torun,pfts_torun[i],:,indy_torun[i],indx_torun[i]] = \
+                            self.forcings[v][:]
             self.write_nc_output(model_output, do_monthly_output=do_monthly_output, prefix=prefix)
           else:
            #send first np-1 jobs where np is number of processes
@@ -497,6 +541,7 @@ class MyModel(object):
             else:
               comm.send(parms,           dest = n_job, tag=100)
             comm.send(myoutvars,         dest = n_job, tag=200)
+            comm.send(pfts_torun[n_job-1], dest=n_job, tag=500)
 
            #Assign rest of jobs on demand
            for n_job in range(size,n_active+1):
@@ -527,13 +572,17 @@ class MyModel(object):
             else:
               comm.send(parms,           dest = process, tag=100)
             comm.send(myoutvars,         dest = process, tag=200)
+            comm.send(pfts_torun[n_job-1], dest=process, tag=500)
             #write output
             for v in myoutvars:
               if (all_ensembles_onejob):
                 for k in range(0,self.ne):
-                  model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],k] = myoutput[v][k,:]
+                  model_output[v][k,pfts_torun[thisjob-1],:,indy_torun[thisjob-1],indx_torun[thisjob-1]] = \
+                          myoutput[v][k,:]
               else:
-                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v][0,:]
+                model_output[v][ens_torun[thisjob-1],pfts_torun[thisjob-1],:,indy_torun[thisjob-1],indx_torun[thisjob-1]] \
+                                  = myoutput[v][0,:]
+            self.pftfrac[indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1]] = pftfracs_torun[thisjob-1]
 
            #receive remaining messages and finalize
            while (n_done < n_active):
@@ -549,9 +598,12 @@ class MyModel(object):
             for v in myoutvars:
               if (all_ensembles_onejob):
                 for k in range(0,self.ne):
-                  model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],k] = myoutput[v][k,:]
+                  model_output[v][k,pfts_torun[thisjob-1],:,indy_torun[thisjob-1],indx_torun[thisjob-1]] = \
+                        myoutput[v][k,:]
               else:
-                model_output[v][:,indy_torun[thisjob-1],indx_torun[thisjob-1],ens_torun[thisjob-1]] = myoutput[v][0,:]
+                model_output[v][ens_torun[thisjob-1],pfts_torun[thisjob-1],:,indy_torun[thisjob-1],indx_torun[thisjob-1]] \
+                        = myoutput[v][0,:]
+            self.pftfrac[indy_torun[thisjob-1],indx_torun[thisjob-1],pfts_torun[thisjob-1]] = pftfracs_torun[thisjob-1]
            self.write_nc_output(model_output, do_monthly_output=do_monthly_output, prefix=prefix)
            MPI.Finalize()
         #Slave
@@ -575,6 +627,7 @@ class MyModel(object):
               else:
                 myparms         = comm.recv(source=0, tag=100)
               myoutvars = comm.recv(source=0, tag=200)
+              mypft     = comm.recv(source=0, tag=500)
               #Initialize output arrays
               self.output = {}
               self.output_ens = {}
@@ -595,7 +648,7 @@ class MyModel(object):
                   myparms = self.pdefault
                   for p in range(0,len(self.ensemble_pnames)):
                     myparms[self.ensemble_pnames[p]] = self.parm_ensemble[k,p]
-                self.selm_instance(myparms, spinup_cycles=spinup_cycles, deciduous=deciduous)
+                self.selm_instance(myparms, spinup_cycles=spinup_cycles, pft=mypft )
                 for v in myoutvars:
                    if (v in self.outvars):
                      if (do_monthly_output):
@@ -620,6 +673,7 @@ class MyModel(object):
     def write_nc_output(self, output, do_monthly_output=False, prefix='model'):
          #set up output file
          output_nc = Dataset(prefix+'_output.nc', 'w', format='NETCDF4')
+         output_nc.createDimension('pft',3)
          output_nc.createDimension('lon',self.nx)
          output_nc.createDimension('lat',self.ny)
          if (self.ne > 1):
@@ -642,7 +696,9 @@ class MyModel(object):
          else:
            lat_out = self.latdeg
            lon_out = self.londeg
-
+         pft_out = output_nc.createVariable('pft_frac','f4',('lat','lon','pft'))
+         for n in range(0,self.ne):
+           pft_out[:,:,:] = self.pftfrac[:,:,:]
          if (do_monthly_output):
             output_nc.createDimension('time',(self.end_year-self.start_year+1)*12)
             time = output_nc.createVariable('time','f8',('time',))
@@ -664,13 +720,29 @@ class MyModel(object):
          ncvars={}
          for v in output:
             if (self.ne > 1):
-              ncvars[v] = output_nc.createVariable(v, 'f4',('ensemble','time','lat','lon'))
-              for n in range(0,self.ne):
-                ncvars[v][n,:,:,:] =output[v][:,:,:,n]
+              ncvars[v] = output_nc.createVariable(v, 'f4',('ensemble','pft','time','lat','lon'))
+              #for n in range(0,self.ne):
+              #  for t in range(0,self.nt):
+                           
+              ncvars[v][:,:,:,:,:] = output[v][:,:,:,:,:]
+                  #ncvars[v][n,t,:,:] = (output[v][t,:,:,0,n]*self.pftfrac[:,:,0]/100.0 + \
+                  #                      output[v][t,:,:,1,n]*self.pftfrac[:,:,1]/100.0 + \
+                  #                      output[v][t,:,:,2,n]*self.pftfrac[:,:,2]/100.0).squeeze()
             else:
-              ncvars[v] = output_nc.createVariable(v, 'f4',('time','lat','lon',))
-              ncvars[v][:,:,:] =output[v][:,:,:,0]
+              ncvars[v] = output_nc.createVariable(v, 'f4',('pft','time','lat','lon',))
+              for t in range(0,self.nt):
+                 ncvars[v] = output[v][0,:,:,:,:]
+#                ncvars[v][t,:,:] = (output[v][t,:,:,0]).squeeze()*pft_out[:,:,0]/100.0 + \
+#                                   (output[v][t,:,:,1]).squeeze()*pft_out[:,:,1]/100.0 + \
+#                                   (output[v][t,:,:,2]).squeeze()*pft_out[:,:,2]/100.0
          output_nc.close()
+
+         #output for eden vis system - customize as needed
+         eden_out = numpy.zeros([self.ne,pnum+1],numpy.float)
+         for n in range(0,self.ne):
+           eden_out[n,0:pnum]      = self.parm_ensemble[n,:]
+           eden_out[n,pnum:pnum+1] = numpy.mean(output['gpp'][n,0,0:60,0,0])*365.
+         numpy.savetxt("foreden.csv",eden_out,delimiter=",")
 
     def generate_synthetic_obs(self, parms, err):
         #generate synthetic observations from model with Gaussian error
