@@ -26,7 +26,7 @@ print("Variables #######################")
 for ivar in dataset.variables.keys():
   print(ivar+str(dataset.variables[ivar].shape))
   for attr in dataset.variables[ivar].ncattrs():
-    print attr , '=', getattr(dataset.variables[ivar], attr)
+    print(attr , '=', getattr(dataset.variables[ivar], attr))
   if ivar=='lon':
   	lons=dataset.variables[ivar][:]
   elif ivar=='lat':
@@ -36,10 +36,10 @@ for ivar in dataset.variables.keys():
   elif ivar=='site_name':
   	sitenames=dataset.variables[ivar][:]
 
-print lons
-print lats
-print times
-print sitenames
+print(lons)
+print(lats)
+print(times)
+print(sitenames)
 
 sys.exit()
 
