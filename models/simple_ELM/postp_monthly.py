@@ -39,10 +39,14 @@ lats=dataset.variables['lat'][:] #.shape
 
 fig=plt.figure(figsize=(12,6))
 for ens_id in range(100):
-	thisvar=np.average(dataset.variables[qoi][ens_id,0,:,lat_id,lon_id].reshape(30,12),axis=0)
-	plot(thisvar)
+	var_=dataset.variables[qoi][ens_id,0,:,lat_id,lon_id].reshape(-1,12)
+	thisvar_mean=np.average(var_,axis=0)
+	thisvar_std=np.std(var_,axis=0)
+	plot(thisvar_mean,thisvar_std,'o')
+	#errorbar(range(12),thisvar_mean,thisvar_std)
 
-
+show()
+sys.exit()
 
 
 dataset_obs = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
@@ -53,16 +57,16 @@ nsm_0=sitenames[:,:].shape[0]
 nsm_1=sitenames[:,:].shape[1]
 siteName_str=numpy.array([[sitenames[i,j].decode("utf-8") for j in range(nsm_1)] for i in range(nsm_0)])
 site_name=''.join(siteName_str[site_id])
-print site_name
+print(site_name)
 lat=dataset_obs.variables['lat'][:][site_id]
 lon=dataset_obs.variables['lon'][:][site_id]
-print lat,lon
+print(lat,lon)
 
 var_daily = dataset_obs.variables['GPP'][site_id,:]*24*3600*1000
 
 var_monthly=np.nanmean(utils.daily_to_monthly(var_daily).reshape(24,12),axis=0)
 plot(var_monthly, 'ko', markersize=10)
-print var_monthly
+print(var_monthly)
 
 xticks(range(12),monthnames)
 ylabel(qoi)
