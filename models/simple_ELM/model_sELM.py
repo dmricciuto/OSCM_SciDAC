@@ -15,6 +15,7 @@ else:
   oscm_dir='../../'
 
 
+
 class MyModel(object):
 
     def __init__(self):
@@ -95,7 +96,7 @@ class MyModel(object):
         totlitc     = self.output['totlitc']
         cstor       = self.output['cstor']
 
-        #Set initial States 
+        #Set initial States
         leafc_stor[0] = 0.0
         leafc[0]      = 0.0
         if (pft == 0 or pft == 2):
@@ -288,7 +289,7 @@ class MyModel(object):
             else:
               xsmr_deadstemc    = 0.0
               xsmr_deadcrootc   = 0.0
-              xsmr_frootc       = xsmr              
+              xsmr_frootc       = xsmr
 
             #Cacluate live wood turnover
             livestemc_turnover  = parms['lwtop_ann'] / 365. * livestemc[v]
@@ -640,7 +641,7 @@ class MyModel(object):
                    self.output[var] = numpy.zeros([8,self.nobs+1], numpy.float)
                 else:
                    self.output[var] = numpy.zeros([self.nobs+1], numpy.float)
-  
+
               thisoutput = {}
               thisoutput_ens = {}
               for k in range(0,k_max):
@@ -723,7 +724,7 @@ class MyModel(object):
               ncvars[v] = output_nc.createVariable(v, 'f4',('ensemble','pft','time','lat','lon'))
               #for n in range(0,self.ne):
               #  for t in range(0,self.nt):
-                           
+
               ncvars[v][:,:,:,:,:] = output[v][:,:,:,:,:]
                   #ncvars[v][n,t,:,:] = (output[v][t,:,:,0,n]*self.pftfrac[:,:,0]/100.0 + \
                   #                      output[v][t,:,:,1,n]*self.pftfrac[:,:,1]/100.0 + \

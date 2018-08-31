@@ -1,4 +1,5 @@
 import numpy
+import itertools
 
 try:
     import cPickle as pk
@@ -31,6 +32,54 @@ def daily_to_monthly(var_in, allyearsmean=False):
         else:
             var_out[thismonth] = var_out[thismonth] + var_in[d]/(ndays_month[thismonth]*ndays/365)
     return var_out
+
+def read_obsdata(dataset):
+
+  print("Dimensions #######################")
+  for ikey in dataset.dimensions.keys():
+      print(dataset.dimensions[ikey].name+", size " + str(dataset.dimensions[ikey].size))
+
+  print("Variables #######################")
+  for ivar in dataset.variables.keys():
+    print(ivar+str(dataset.variables[ivar].shape))
+    for attr in dataset.variables[ivar].ncattrs():
+      print(attr , '=', getattr(dataset.variables[ivar], attr))
+    if ivar=='lon':
+      lons=dataset.variables[ivar][:]
+    elif ivar=='lat':
+      lats=dataset.variables[ivar][:]
+    elif ivar=='time':
+      times=dataset.variables[ivar][:]
+    elif ivar=='site_name':
+      sitenames=dataset.variables[ivar][:]
+      snames=[]
+      for j in range(sitenames.shape[0]):
+        sname=str(sitenames[j][0]+sitenames[j][1]+sitenames[j][2]+sitenames[j][3]+sitenames[j][4]+sitenames[j][5])
+        snames.append(sname)
+
+  return snames, lons, lats
+
+def cartes_list(somelists):
+
+    final_list=[]
+    for element in itertools.product(*somelists):
+        final_list.append(element)
+
+    return final_list
+
+
+def pick_sites(obs_lons,obs_lats,lons,lats):
+    nsites=len(obs_lons)
+    assert(nsites==len(obs_lats))
+    ssind=[]
+    for i in range(nsites):
+        dists=numpy.linalg.norm(numpy.array(cartes_list([lons-obs_lons[i],lats-obs_lats[i]])),axis=1)
+        minind=numpy.argmin(dists)
+        indlat=minind%lats.shape[0]
+        indlon=int(minind/lats.shape[0])
+        if dists[minind]<1.0:
+            ssind.append([i, indlon, indlat])
+    return ssind
 
 
 def savepk(sobj,nameprefix='savestate'):

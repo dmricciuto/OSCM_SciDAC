@@ -1,6 +1,9 @@
 from netCDF4 import Dataset
 from mpl_toolkits.basemap import Basemap
 from pylab import *
+import itertools
+
+from utils import *
 
 ncfile=sys.argv[1]
 #ncfile='regional_output.nc'
@@ -45,13 +48,26 @@ m.drawlsmask(land_color='Linen', ocean_color='#CCFFFF')
 
 xx,yy=np.meshgrid(lons,lats)
 x,y = m(xx, yy)
-#plt.plot(x,y,'o',markersize=27,label='PFT')
+#plt.plot(x,y,'o',markersize=2,label='PFT')
 
 
+dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
+site_names, site_lons, site_lats = read_obsdata(dataset)
+
+print pick_sites(site_lons,site_lats,lons,lats)
+
+
+
+sys.exit()
 
 imshow(dataset.variables[qoi][ens_id,0,time_id,::-1,:], \
         extent=(x.min(),x.max(), y.min(),y.max()), \
         interpolation='bilinear', cmap=cm.RdYlGn)
 colorbar(fraction=.02,pad=0.1) #location='bottom', pad="10%")
+
+
+site_lons_mapped,site_lats_mapped= m(site_lons,site_lats)
+plt.plot(site_lons_mapped,site_lats_mapped,'ko',markersize=4,zorder=1000)
+
 savefig('map.eps')
 show()
