@@ -10,8 +10,8 @@ from common import oscm_dir
 
 
 
-dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
-site_names, site_lons, site_lats = read_obsdata(dataset)
+obs_dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
+site_names, site_lons, site_lats = read_obsdata(obs_dataset)
 
 np.savetxt('site_lons.txt',site_lons)
 np.savetxt('site_lats.txt',site_lats)

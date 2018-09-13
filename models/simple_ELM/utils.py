@@ -77,9 +77,11 @@ def pick_sites(obs_lons,obs_lats,lons,lats):
         minind=numpy.argmin(dists)
         indlat=minind%lats.shape[0]
         indlon=int(minind/lats.shape[0])
+        if indlon==23 and indlat==35:
+            indlat-=1
         if dists[minind]<1.0:
             ssind.append([i, indlon, indlat])
-    return ssind
+    return numpy.array(ssind)
 
 
 def savepk(sobj,nameprefix='savestate'):

@@ -4,6 +4,7 @@ from pylab import *
 import itertools
 
 from utils import *
+from common import oscm_dir
 
 ncfile=sys.argv[1]
 #ncfile='regional_output.nc'
@@ -51,23 +52,25 @@ x,y = m(xx, yy)
 #plt.plot(x,y,'o',markersize=2,label='PFT')
 
 
-dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
-site_names, site_lons, site_lats = read_obsdata(dataset)
+obs_dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
+site_names, site_lons, site_lats = read_obsdata(obs_dataset)
 
-print pick_sites(site_lons,site_lats,lons,lats)
+site_lon_lat =  pick_sites(site_lons,site_lats,lons,lats)
 
 
 
-sys.exit()
 
 imshow(dataset.variables[qoi][ens_id,0,time_id,::-1,:], \
         extent=(x.min(),x.max(), y.min(),y.max()), \
         interpolation='bilinear', cmap=cm.RdYlGn)
 colorbar(fraction=.02,pad=0.1) #location='bottom', pad="10%")
 
+print site_lon_lat
 
 site_lons_mapped,site_lats_mapped= m(site_lons,site_lats)
 plt.plot(site_lons_mapped,site_lats_mapped,'ko',markersize=4,zorder=1000)
+plt.plot(site_lons_mapped[site_lon_lat[:,0]],site_lats_mapped[site_lon_lat[:,0]],'ro',markersize=4,zorder=2000, label='selected')
+
 
 savefig('map.eps')
 show()

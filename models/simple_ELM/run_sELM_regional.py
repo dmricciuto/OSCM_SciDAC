@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 from utils import *
 
+
 #create model object
 model = models.MyModel()
 
