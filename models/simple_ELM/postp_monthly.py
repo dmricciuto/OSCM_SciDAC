@@ -44,11 +44,12 @@ outqois = np.empty((nsites,nqois,2,twelve))
 ytrain = np.empty((nens,nsites*nqois*2*twelve))
 outnames=[]
 xdata = np.empty((0,5))
+ydata = np.empty((0,))
 jout = 0
 for iqoi in range(nqois):
   qoi = qois[iqoi]
   jsite=0
-  for lon_id,lat_id in site_lon_lat[:,1:]:
+  for site_id,lon_id,lat_id in site_lon_lat:
     print lon_id, lat_id
     fig = plt.figure(figsize=(12,6))
     ytrain_this=np.empty((0,))
@@ -63,11 +64,15 @@ for iqoi in range(nqois):
       ytrain[ens_id,jout+twelve:jout+2*twelve] = outqois[jsite,iqoi,1,:]
 
     jsite+=1
+    var_daily = obs_dataset.variables[qoi.upper()][site_id,:]*24*3600*1000
+    var_monthly=np.nanmean(daily_to_monthly(var_daily).reshape(24,twelve),axis=0)
+    ydata   = np.append(ydata, var_monthly)
     for i in range(twelve):
       xdata   = np.append(xdata, [[lat_id,lon_id,iqoi,i,0]], axis=0)
       outnames.append(qoi+'_'+str(lat_id)+'_'+str(lon_id)+'_m '+monthnames[i])
     for i in range(twelve):
       xdata   = np.append(xdata, [[lat_id,lon_id,iqoi,i,1]], axis=0)
+      #ydata   = np.append(ydata, -999.)
       outnames.append(qoi+'_'+str(lat_id)+'_'+str(lon_id)+'_s '+monthnames[i])
 
 
@@ -75,40 +80,37 @@ for iqoi in range(nqois):
 
     savefig('ensemble_'+qoi+'_'+str(lat_id)+'_'+str(lon_id)+'.eps')
 
+np.savetxt('xdata_full.txt',  xdata,  fmt='%.2f')
+np.savetxt('ytrain_full.dat', ytrain, fmt='%.12f')
+np.savetxt('outnames_full.txt',outnames,fmt='%s')
 
-np.savetxt('xdata.txt', xdata, fmt='%.2f')
-np.savetxt('ytrain_all.dat', ytrain, fmt='%.12f')
-np.savetxt('outnames.txt',outnames,fmt='%s')
-
+np.savetxt('ydata_all.txt', ydata, fmt='%.12f')
 
 #for ivar in dataset.variables.keys():
 
 
 
 
-dataset_obs = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
-site_id=29
+# site_id=29
+# sitenames = dataset_obs.variables['site_name'][:]
+# nsm_0=sitenames[:,:].shape[0]
+# nsm_1=sitenames[:,:].shape[1]
+# siteName_str=numpy.array([[sitenames[i,j].decode("utf-8") for j in range(nsm_1)] for i in range(nsm_0)])
+# site_name=''.join(siteName_str[site_id])
+# print(site_name)
+# lat=dataset_obs.variables['lat'][:][site_id]
+# lon=dataset_obs.variables['lon'][:][site_id]
+# print(lat,lon)
 
-sitenames = dataset_obs.variables['site_name'][:]
-nsm_0=sitenames[:,:].shape[0]
-nsm_1=sitenames[:,:].shape[1]
-siteName_str=numpy.array([[sitenames[i,j].decode("utf-8") for j in range(nsm_1)] for i in range(nsm_0)])
-site_name=''.join(siteName_str[site_id])
-print(site_name)
-lat=dataset_obs.variables['lat'][:][site_id]
-lon=dataset_obs.variables['lon'][:][site_id]
-print(lat,lon)
 
-var_daily = dataset_obs.variables['GPP'][site_id,:]*24*3600*1000
+#plot(var_monthly, 'ko', markersize=10)
+#print(var_monthly)
 
-var_monthly=np.nanmean(daily_to_monthly(var_daily).reshape(24,12),axis=0)
-plot(var_monthly, 'ko', markersize=10)
-print(var_monthly)
 
-xticks(range(12),monthnames)
-ylabel(qoi)
-title('Lat = '+ str(lats[lat_id])+', Lon = '+str(lons[lon_id]))
-#show()
+# xticks(range(12),monthnames)
+# ylabel(qoi)
+# title('Lat = '+ str(lats[lat_id])+', Lon = '+str(lons[lon_id]))
+# #show()
 
 
 
