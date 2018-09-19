@@ -1,5 +1,4 @@
 from netCDF4 import Dataset
-from mpl_toolkits.basemap import Basemap
 from pylab import *
 import itertools
 
@@ -31,5 +30,5 @@ print lats
 print lons
 
 data2d = dataset.variables[qoi][ens_id,pft_id,time_id,::-1,:]
-plotMap(data2d, lats, lons, show_map = False, show_dataloc = True)
+plotMap(data2d, lats, lons, show_map = True, show_dataloc = True)
 

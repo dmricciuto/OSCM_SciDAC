@@ -3,6 +3,7 @@ import itertools
 from pylab import *
 from netCDF4 import Dataset
 from common import oscm_dir
+from mpl_toolkits.basemap import Basemap
 
 try:
     import cPickle as pk
