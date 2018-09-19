@@ -1,6 +1,8 @@
 import numpy
 import itertools
 from pylab import *
+from netCDF4 import Dataset
+from common import oscm_dir
 
 try:
     import cPickle as pk

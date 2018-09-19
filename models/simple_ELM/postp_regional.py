@@ -31,5 +31,5 @@ print lats
 print lons
 
 data2d = dataset.variables[qoi][ens_id,pft_id,time_id,::-1,:]
-plotMap(data2d, lats, lons, show_map = False, show_dataloc = False)
+plotMap(data2d, lats, lons, show_map = False, show_dataloc = True)
 
