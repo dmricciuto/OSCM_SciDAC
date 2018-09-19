@@ -1,5 +1,6 @@
 import numpy
 import itertools
+from pylab import *
 
 try:
     import cPickle as pk
@@ -83,6 +84,60 @@ def pick_sites(obs_lons,obs_lats,lons,lats):
             ssind.append([i, indlon, indlat])
     return numpy.array(ssind)
 
+
+def plotMap(data2d, lats, lons, show_map = False, show_dataloc = False):
+
+    fig=figure(figsize=(12,6))
+    #ax=fig.add_axes([0.1,-0.1,0.8,1.3])
+
+
+    if show_map:
+        m = Basemap(llcrnrlon=-120.,llcrnrlat=20.,urcrnrlon=-60.,urcrnrlat=50.,\
+                    rsphere=(6378137.00,6356752.3142),\
+                    resolution='l',projection='merc',\
+                    lat_0=40.,lon_0=-20.,lat_ts=0.)
+
+        m.drawcoastlines()
+        #m.fillcontinents()
+        # draw parallels
+        m.drawparallels(np.arange(50,30,-10),labels=[1,1,0,1])
+        # draw meridians
+        m.drawmeridians(np.arange(-120,-60,30),labels=[1,1,0,1])
+        m.drawlsmask(land_color='Linen', ocean_color='#CCFFFF')
+        #m.drawstates()
+        #m.drawcountries()
+
+    else:
+        def m(a,b):
+            return a,b
+
+
+
+    xx,yy=np.meshgrid(lons,lats)
+    x,y = m(xx, yy)
+    #plt.plot(x,y,'o',markersize=2,label='PFT')
+
+
+
+
+    imshow(data2d, \
+            extent=(x.min(),x.max(), y.min(),y.max()), \
+            interpolation='bilinear', cmap=cm.RdYlGn)
+    colorbar(fraction=.02,pad=0.1) #location='bottom', pad="10%")
+
+    if show_dataloc:
+        obs_dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
+        site_names, site_lons, site_lats = read_obsdata(obs_dataset)
+
+        site_lon_lat =  pick_sites(site_lons,site_lats,lons,lats)
+        print site_lon_lat
+        site_lons_mapped,site_lats_mapped= m(site_lons,site_lats)
+        plot(site_lons_mapped,site_lats_mapped,'ko',markersize=4,zorder=1000)
+        plot(site_lons_mapped[site_lon_lat[:,0]],site_lats_mapped[site_lon_lat[:,0]],'ro',markersize=4,zorder=2000, label='selected')
+
+
+    savefig('map.eps')
+    show()
 
 def savepk(sobj,nameprefix='savestate'):
     pk.dump(sobj,open(nameprefix+'.pk','wb'),-1)
