@@ -23,12 +23,13 @@ lats=dataset.variables['lat'][:] #.shape
 lons=dataset.variables['lon'][:]-360. #.shape
 
 
-
+np.savetxt('lons.txt',lons)
+np.savetxt('lats.txt',lats)
 
 
 print lats
 print lons
 
-data2d = dataset.variables[qoi][ens_id,pft_id,time_id,::-1,:]
+data2d = dataset.variables[qoi][ens_id,pft_id,time_id,:,:]
 plotMap(data2d, lats, lons, show_map = True, show_dataloc = True)
 

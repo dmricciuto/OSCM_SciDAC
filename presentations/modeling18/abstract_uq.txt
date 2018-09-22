@@ -1,0 +1,18 @@
+Overview of Uncertainty Quantification Methods for Complex Models
+by K. Sargsyan, C. Safta, D. Ricciuto
+
+Uncertainty quantification (UQ) is a critical part in any computational model development. However, when dealing with complex climate models, canonical UQ methods face a range of challenges including
+- large number of input parameters
+- nonlinear input-output maps
+- computational expense of a single simulation
+- scarcity of available observational data to constrain the models
+- spatio-temporal, high-dimensional output fields
+- structural errors due to oversimplification and missing physics
+
+This work will highlight state-of-the-art methods for tackling the challenges above, in the context of two major UQ tasks
+- forward UQ: uncertainty propagation, model surrogate construction and global sensitivity analysis
+- inverse UQ: model calibration, parameter estimation
+
+In particular, we will describe polynomial chaos surrogate construction enabling efficient propagation of uncertainty and global sensitivity analysis via variance-based decomposition. Input dimensionality reduction is achieved by sparsity-imposing regularization while high-dimensional spatio-temporal output field is represented by Karhunen-Loeve expansions. The inverse UQ is performed with Bayesian methods, via Markov chain Monte Carlo sampling. Bayesian machinery is well-suited to handle noisy and scarce observational data, while the required multiple model evaluations are alleviated by the pre-constructed surrogate usage. Furthermore, we will enhance the conventional Bayesian machinery to enable representation and propagation of uncertainties due to model structural errors. The overall framework allows efficient automated UQ with predictive uncertainty attributed to various sources such as parameter uncertainty, data noise and structural errors.
+
+The developed workflow is implemented or connected to UQ Toolkit (www.sandia.gov/uqtoolkit). We will demonstrate the application of the methods to the E3SM land model using observational data from selected FLUXNET sites.

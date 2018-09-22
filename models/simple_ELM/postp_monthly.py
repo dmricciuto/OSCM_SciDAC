@@ -16,19 +16,15 @@ dataset = Dataset(ncfile)
 
 qois = ['gpp']
 
+get_obsdata = False
 
-
-
-obs_dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
-site_names, site_lons, site_lats = read_obsdata(obs_dataset)
 
 nqois = len(qois)
-
-
 twelve = 12
 nens   = 2000
-
 monthnames=['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
+
+
 print("Dimensions #######################")
 for ikey in dataset.dimensions.keys(): # time(360),lon(5),lat(7)
     print(dataset.dimensions[ikey].name+", size " + str(dataset.dimensions[ikey].size)) # 7
@@ -36,9 +32,27 @@ for ikey in dataset.dimensions.keys(): # time(360),lon(5),lat(7)
 lats = dataset.variables['lat'][:] #.shape
 lons = dataset.variables['lon'][:]-360. #.shape
 
-site_lon_lat =  pick_sites(site_lons,site_lats,lons,lats)
+if get_obsdata:
+  obs_dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
+  site_names, site_lons, site_lats = read_obsdata(obs_dataset)
+  site_lon_lat =  pick_sites(lons,lats,site_lons,site_lats)
+else:
+  site_lon_lat = pick_sites(lons, lats)#[::500]
 
 nsites=len(site_lon_lat)
+# print lons, lats
+# data2d=np.empty((nsites,3))
+# j=0
+# for ilon,ilat in site_lon_lat[:,1:]:
+#   print ilon, ilat, lons[ilon], lats[ilat]
+#   data2d[j,0]=lons[ilon]
+#   data2d[j,1]=lats[ilat]
+#   data2d[j,2]=lons[ilon]+lats[ilat]
+#   j += 1
+# plotMap2(data2d)
+
+# sys.exit()
+
 
 outqois = np.empty((nsites,nqois,2,twelve))
 ytrain = np.empty((nens,nsites*nqois*2*twelve))
@@ -48,25 +62,16 @@ ydata = np.empty((0,))
 jout = 0
 for iqoi in range(nqois):
   qoi = qois[iqoi]
-  jsite=0
   for site_id,lon_id,lat_id in site_lon_lat:
     print lon_id, lat_id
-    fig = plt.figure(figsize=(12,6))
-    ytrain_this=np.empty((0,))
-    for ens_id in range(nens):
-      var_ = dataset.variables[qoi][ens_id,0,:,lat_id,lon_id].reshape(-1,twelve)
-      outqois[jsite,iqoi,0,:] = np.average(var_,axis=0)
-      outqois[jsite,iqoi,1,:] = np.std(var_,axis=0)
-      #plot(thisvar_mean,thisvar_std,'o')
-      errorbar(range(twelve),outqois[jsite,iqoi,0],outqois[jsite,iqoi,1])
+    aa=dataset.variables[qoi][:,0,:,lat_id,lon_id].reshape(nens,-1,twelve)
+    ytrain[:,jout:jout+twelve]           = np.average(aa, axis=1)
+    ytrain[:,jout+twelve:jout+2*twelve]  = np.std(aa,axis=1)
 
-      ytrain[ens_id,jout:jout+twelve] = outqois[jsite,iqoi,0,:]
-      ytrain[ens_id,jout+twelve:jout+2*twelve] = outqois[jsite,iqoi,1,:]
-
-    jsite+=1
-    var_daily = obs_dataset.variables[qoi.upper()][site_id,:]*24*3600*1000
-    var_monthly=np.nanmean(daily_to_monthly(var_daily).reshape(24,twelve),axis=0)
-    ydata   = np.append(ydata, var_monthly)
+    if get_obsdata:
+      var_daily = obs_dataset.variables[qoi.upper()][site_id,:]*24*3600*1000
+      var_monthly=np.nanmean(daily_to_monthly(var_daily).reshape(24,twelve),axis=0)
+      ydata   = np.append(ydata, var_monthly)
     for i in range(twelve):
       xdata   = np.append(xdata, [[lat_id,lon_id,iqoi,i,0]], axis=0)
       outnames.append(qoi+'_'+str(lat_id)+'_'+str(lon_id)+'_m '+monthnames[i])
@@ -78,15 +83,14 @@ for iqoi in range(nqois):
 
     jout += 2*twelve
 
-    savefig('ensemble_'+qoi+'_'+str(lat_id)+'_'+str(lon_id)+'.eps')
 
 np.savetxt('xdata_full.txt',  xdata,  fmt='%.2f')
 np.savetxt('ytrain_full.dat', ytrain, fmt='%.12f')
 np.savetxt('outnames_full.txt',outnames,fmt='%s')
 
-np.savetxt('ydata_all.txt', ydata, fmt='%.12f')
+if get_obsdata:
+  np.savetxt('ydata_all.txt', ydata, fmt='%.12f')
 
-#for ivar in dataset.variables.keys():
 
 
 
