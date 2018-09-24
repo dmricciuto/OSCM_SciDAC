@@ -63,7 +63,7 @@ jout = 0
 for iqoi in range(nqois):
   qoi = qois[iqoi]
   for site_id,lon_id,lat_id in site_lon_lat:
-    print lon_id, lat_id
+    print(lon_id, lat_id)
     aa=dataset.variables[qoi][:,0,:,lat_id,lon_id].reshape(nens,-1,twelve)
     ytrain[:,jout:jout+twelve]           = np.average(aa, axis=1)
     ytrain[:,jout+twelve:jout+2*twelve]  = np.std(aa,axis=1)
