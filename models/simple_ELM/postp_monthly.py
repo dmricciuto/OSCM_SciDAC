@@ -73,10 +73,10 @@ for iqoi in range(nqois):
       var_monthly=np.nanmean(daily_to_monthly(var_daily).reshape(24,twelve),axis=0)
       ydata   = np.append(ydata, var_monthly)
     for i in range(twelve):
-      xdata   = np.append(xdata, [[lat_id,lon_id,iqoi,i,0]], axis=0)
+      xdata   = np.append(xdata, [[lat_id,lon_id,iqoi,i+1,0]], axis=0)
       outnames.append(qoi+'_'+str(lat_id)+'_'+str(lon_id)+'_m '+monthnames[i])
     for i in range(twelve):
-      xdata   = np.append(xdata, [[lat_id,lon_id,iqoi,i,1]], axis=0)
+      xdata   = np.append(xdata, [[lat_id,lon_id,iqoi,i+1,1]], axis=0)
       #ydata   = np.append(ydata, -999.)
       outnames.append(qoi+'_'+str(lat_id)+'_'+str(lon_id)+'_s '+monthnames[i])
 
@@ -116,13 +116,3 @@ if get_obsdata:
 # title('Lat = '+ str(lats[lat_id])+', Lon = '+str(lons[lon_id]))
 # #show()
 
-
-
-# [[ 5 28 40]
-#  [22 48 29]
-#  [23 13 36]
-#  [24 25 27]
-#  [25 12 35]
-#  [27 14 36]
-#  [29 23 35]
-#  [31 12 35]]

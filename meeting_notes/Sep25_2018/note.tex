@@ -1,0 +1,118 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt]{article}
+
+\special{papersize=8.5in,11in}
+
+\usepackage{cite}
+\usepackage{color}
+\usepackage{epsfig}
+%\usepackage{pslatex}
+\usepackage{bm}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsbsy}
+\usepackage{eucal}
+\usepackage{mathrsfs}
+
+
+\input{def}
+
+\textwidth 16.0cm
+\textheight 23.0cm
+\topmargin 0cm
+\headheight 0cm
+\headsep 0cm
+\topskip 0cm
+\oddsidemargin 0.00cm
+\evensidemargin 0.00cm
+%\addtolength{\textheight}{1in}
+
+%\renewcommand{\baselinestretch}{1.5}\small\normalsize % double spacing
+%\renewcommand{\baselinestretch}{0.7}\small\normalsize % single spacing
+%\small % smaller font
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\centerline{\Large\bf Surrogate-enabled inference}
+\medskip
+\centerline{K.~Sargsyan}
+\centerline{Sandia National Laboratories, Livermore, CA}
+\centerline{\today}
+\medskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Setup} \label{sec:setup}
+
+Consider a model $Z(\vx, t, \lambda)$ that produces discretized output for a given QoI (in this case, GPP only is considered) $Z$
+over a period of time $t\in \Omega_t$ and over space $\vx=(x,y)\in \Omega_x$
+(typically a rectangular region)\footnote{where $x$ is longitude, $y$ is
+latitude.}, for a given parameter vector $\lambda\in \RR^d$.
+
+\bi
+\item Raw data: ensemble of daily simulations is available, i.e. $\{Z(\vx_i, t_j, \lambda_n)\}$
+for $i=1,\dots, I$, $j=1,\dots, J$ and $n=1, \dots, N$, where $I=61\times 41$,
+$J=N_y\times 365$ and $N=2000$. Number of years is set to $N_y=24$.
+\item Monthly averages are taken first, so, with some abuse of notation,
+let us set $J=N_y \times 12$.
+\item The actual QoI to be analyzed is the month-by-month average over all years, i.e., for $j=1,\dots, 12$
+\be
+\bar{Z_j}(\vx,\lambda)=\frac{1}{N_y}\sum_{k=0}^{N_y-1} Z(\vx,t_{j+12k}, \lambda)
+\ee
+\item We have several sites available, and for the $S=8$ sites that are in the region $\Omega_x$, we identify the closest $\vx_i$, see Figure~\ref{fig:map}. Therefore, the QoIs for which we build surrogates are
+\be
+Q_{ij}(\lambda)=\bar{Z_j}(\vx_i,\lambda), \textrm{  for } i=1,\dots, S \textrm{ and  } j=1, \dots, 12
+\ee
+\ei
+
+\section{Surrogates}
+
+A total of $12S=96$ surrogates are build, using BCS and second order Legendre-basis. A subset of inputs lead to $0$ GPP - we ignored those inputs (in fact we ignored all below $0.02$) for surrogate construction. The surrogates have shown relative errors between $5\%-15\%$, as demonstrated in two example plots in Figure~\ref{fig:surr}.
+
+
+\begin{figure}[!hb]
+\includegraphics[width=\textwidth]{figs/map.eps}
+\caption{\label{fig:map} The 8 sites that lie in the region where we have model evaluations. The average GPP field for a month of June (?) is shown.}
+\end{figure}
+
+The sensitivities for the eight sites over 12 months are shown in Figure~\ref{fig:sens} (minus the winter months with zero GPP for all ensemble members.).
+
+\begin{figure}[!hb]
+\includegraphics[width=0.53\textwidth]{figs/fit_13498.eps}\hfill
+\includegraphics[width=0.53\textwidth]{figs/fit_19974.eps}
+\caption{\label{fig:surr} Two representative surrogates.}
+\end{figure}
+
+
+\begin{figure}[!hb]
+\includegraphics[width=\textwidth]{figs/sens.eps}
+\caption{\label{fig:sens} Sensitivities of GPP for 8 sites (the winter sites are not shown due to dominantly zero-ed GPP). }
+\end{figure}
+
+\section{Inference}
+
+\begin{figure}[!hb]
+\includegraphics[width=0.53\textwidth]{figs/fit1d_27_25.eps}\hfill
+\includegraphics[width=0.53\textwidth]{figs/fitshade_27_25.eps}\\
+\includegraphics[width=0.53\textwidth]{figs/fit1d_34_23.eps}\hfill
+\includegraphics[width=0.53\textwidth]{figs/fitshade_34_23.eps}\\
+\includegraphics[width=0.53\textwidth]{figs/fit1d_36_13.eps}\hfill
+\includegraphics[width=0.53\textwidth]{figs/fitshade_36_13.eps}
+\caption{\label{fig:fits1} Inference1.}
+\end{figure}
+\begin{figure}[!hb]
+\includegraphics[width=0.53\textwidth]{figs/fit1d_40_28.eps}\hfill
+\includegraphics[width=0.53\textwidth]{figs/fitshade_40_28.eps}\\
+\includegraphics[width=0.53\textwidth]{figs/fit1d_29_48.eps}\hfill
+\includegraphics[width=0.53\textwidth]{figs/fitshade_29_48.eps}\\
+\includegraphics[width=0.53\textwidth]{figs/fit1d_35_12.eps}\hfill
+\includegraphics[width=0.53\textwidth]{figs/fitshade_35_12.eps}\\
+\includegraphics[width=0.53\textwidth]{figs/fit1d_36_14.eps}\hfill
+\includegraphics[width=0.53\textwidth]{figs/fitshade_36_14.eps}
+\caption{\label{fig:fits2} Inference2.}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

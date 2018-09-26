@@ -1,0 +1,738 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  25 SEP 2018 23:18
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**note.tex
+(./note.tex
+LaTeX2e <2017-04-15>
+Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/cite/cite.sty
+LaTeX Info: Redefining \cite on input line 302.
+LaTeX Info: Redefining \nocite on input line 332.
+Package: cite 2015/02/27  v 5.5
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 147.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2017/01/12 v0.06k Graphics/color for pdfTeX
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count87
+))
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2017/04/14 v1.1b Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 99.
+)
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+\epsfxsize=\dimen105
+\epsfysize=\dimen106
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/bm.sty
+Package: bm 2017/01/16 v1.2c Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup4
+\symboldletters=\mathgroup5
+\symboldsymbols=\mathgroup6
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 141.
+LaTeX Info: Redefining \bm on input line 207.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2016/11/05 v2.16a AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks15
+\ex@=\dimen107
+))
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+LaTeX Info: Redefining \boldsymbol on input line 28.
+\pmbraise@=\dimen108
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count88
+LaTeX Info: Redefining \frac on input line 213.
+\uproot@=\count89
+\leftroot@=\count90
+LaTeX Info: Redefining \overline on input line 375.
+\classnum@=\count91
+\DOTSCASE@=\count92
+LaTeX Info: Redefining \ldots on input line 472.
+LaTeX Info: Redefining \dots on input line 475.
+LaTeX Info: Redefining \cdots on input line 596.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen109
+LaTeX Font Info:    Redeclaring font encoding OML on input line 712.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 713.
+\macc@depth=\count93
+\c@MaxMatrixCols=\count94
+\dotsspace@=\muskip10
+\c@parentequation=\count95
+\dspbrk@lvl=\count96
+\tag@help=\toks16
+\row@=\count97
+\column@=\count98
+\maxfields@=\count99
+\andhelp@=\toks17
+\eqnshift@=\dimen110
+\alignsep@=\dimen111
+\tagshift@=\dimen112
+\tagwidth@=\dimen113
+\totwidth@=\dimen114
+\lineht@=\dimen115
+\@envbody=\toks18
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks19
+LaTeX Info: Redefining \[ on input line 2817.
+LaTeX Info: Redefining \] on input line 2818.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup7
+\symAMSb=\mathgroup8
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/eucal.sty
+Package: eucal 2009/06/22 v3.00 Euler Script fonts
+LaTeX Font Info:    Overwriting math alphabet `\EuScript' in version `bold'
+(Font)                  U/eus/m/n --> U/eus/b/n on input line 33.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/jknapltx/mathrsfs.sty
+Package: mathrsfs 1996/01/01 Math RSFS package v1.0 (jk)
+\symrsfs=\mathgroup9
+) (./def.tex) (./note.aux
+
+LaTeX Warning: Label `fig:fits1' multiply defined.
+
+)
+\openout1 = `note.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+ (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count100
+\scratchdimen=\dimen116
+\scratchbox=\box28
+\nofMPsegments=\count101
+\nofMParguments=\count102
+\everyMPshowfont=\toks20
+\MPscratchCnt=\count103
+\MPscratchDim=\dimen117
+\MPnumerator=\count104
+\makeMPintoPDFobject=\count105
+\everyMPtoPDFconversion=\toks21
+) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+))
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+38.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+LaTeX Font Info:    Try loading font information for U+msa on input line 48.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 48.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 48.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/jknapltx/ursfs.fd
+File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
+)
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 50.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 50.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <7> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 51.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 54.
+Package epstopdf Info: Source file: <figs/map.eps>
+(epstopdf)                    date: 2018-09-25 22:51:49
+(epstopdf)                    size: 2196956 bytes
+(epstopdf)             Output file: <figs/map-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 22:52:36
+(epstopdf)                    size: 75183 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/map-eps-converted-to.
+pdf figs/map.eps>
+(epstopdf)             \includegraphics on input line 75.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/map-eps-converted-to.pdf): PDF inclusion:
+ found PDF version <1.7>, but at most version <1.5> allowed
+<figs/map-eps-converted-to.pdf, id=1, 867.24pt x 433.62pt>
+File: figs/map-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/map-eps-converted-to.pdf>
+Package pdftex.def Info: figs/map-eps-converted-to.pdf used on input line 75.
+(pdftex.def)             Requested size: 455.24408pt x 227.62082pt.
+Package epstopdf Info: Source file: <figs/fit_13498.eps>
+(epstopdf)                    date: 2018-09-25 23:04:00
+(epstopdf)                    size: 32972 bytes
+(epstopdf)             Output file: <figs/fit_13498-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:05:22
+(epstopdf)                    size: 74928 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit_13498-eps-convert
+ed-to.pdf figs/fit_13498.eps>
+(epstopdf)             \includegraphics on input line 82.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit_13498-eps-converted-to.pdf): PDF incl
+usion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit_13498-eps-converted-to.pdf, id=2, 722.7pt x 722.7pt>
+File: figs/fit_13498-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit_13498-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit_13498-eps-converted-to.pdf used on input line
+ 82.
+(pdftex.def)             Requested size: 241.2788pt x 241.2817pt.
+Package epstopdf Info: Source file: <figs/fit_19974.eps>
+(epstopdf)                    date: 2018-09-25 23:04:22
+(epstopdf)                    size: 55829 bytes
+(epstopdf)             Output file: <figs/fit_19974-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:05:22
+(epstopdf)                    size: 266335 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit_19974-eps-convert
+ed-to.pdf figs/fit_19974.eps>
+(epstopdf)             \includegraphics on input line 83.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit_19974-eps-converted-to.pdf): PDF incl
+usion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit_19974-eps-converted-to.pdf, id=3, 722.7pt x 722.7pt>
+File: figs/fit_19974-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit_19974-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit_19974-eps-converted-to.pdf used on input line
+ 83.
+(pdftex.def)             Requested size: 241.2788pt x 241.2817pt.
+
+Overfull \hbox (27.3135pt too wide) in paragraph at lines 82--84
+[][] [] 
+ []
+
+Package epstopdf Info: Source file: <figs/sens.eps>
+(epstopdf)                    date: 2018-09-25 22:49:02
+(epstopdf)                    size: 864303 bytes
+(epstopdf)             Output file: <figs/sens-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 22:50:10
+(epstopdf)                    size: 48785 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/sens-eps-converted-to
+.pdf figs/sens.eps>
+(epstopdf)             \includegraphics on input line 89.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/sens-eps-converted-to.pdf): PDF inclusion
+: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/sens-eps-converted-to.pdf, id=4, 1445.4pt x 867.24pt>
+File: figs/sens-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/sens-eps-converted-to.pdf>
+Package pdftex.def Info: figs/sens-eps-converted-to.pdf used on input line 89.
+(pdftex.def)             Requested size: 455.24408pt x 273.14235pt.
+Package epstopdf Info: Source file: <figs/fit1d_27_25.eps>
+(epstopdf)                    date: 2018-09-25 23:11:48
+(epstopdf)                    size: 994094 bytes
+(epstopdf)             Output file: <figs/fit1d_27_25-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:16:45
+(epstopdf)                    size: 213924 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit1d_27_25-eps-conve
+rted-to.pdf figs/fit1d_27_25.eps>
+(epstopdf)             \includegraphics on input line 96.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit1d_27_25-eps-converted-to.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit1d_27_25-eps-converted-to.pdf, id=5, 867.24pt x 650.43pt>
+File: figs/fit1d_27_25-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit1d_27_25-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit1d_27_25-eps-converted-to.pdf used on input li
+ne 96.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fitshade_27_25.eps>
+(epstopdf)                    date: 2018-09-25 23:11:39
+(epstopdf)                    size: 4627154 bytes
+(epstopdf)             Output file: <figs/fitshade_27_25-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:14:43
+(epstopdf)                    size: 1400362 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fitshade_27_25-eps-co
+nverted-to.pdf figs/fitshade_27_25.eps>
+(epstopdf)             \includegraphics on input line 97.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fitshade_27_25-eps-converted-to.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fitshade_27_25-eps-converted-to.pdf, id=6, 867.24pt x 650.43pt>
+File: figs/fitshade_27_25-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fitshade_27_25-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fitshade_27_25-eps-converted-to.pdf used on input
+ line 97.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fit1d_34_23.eps>
+(epstopdf)                    date: 2018-09-25 23:11:48
+(epstopdf)                    size: 888315 bytes
+(epstopdf)             Output file: <figs/fit1d_34_23-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:16:47
+(epstopdf)                    size: 170117 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit1d_34_23-eps-conve
+rted-to.pdf figs/fit1d_34_23.eps>
+(epstopdf)             \includegraphics on input line 98.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit1d_34_23-eps-converted-to.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit1d_34_23-eps-converted-to.pdf, id=7, 867.24pt x 650.43pt>
+File: figs/fit1d_34_23-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit1d_34_23-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit1d_34_23-eps-converted-to.pdf used on input li
+ne 98.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fitshade_34_23.eps>
+(epstopdf)                    date: 2018-09-25 23:11:39
+(epstopdf)                    size: 4514338 bytes
+(epstopdf)             Output file: <figs/fitshade_34_23-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:14:53
+(epstopdf)                    size: 654260 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fitshade_34_23-eps-co
+nverted-to.pdf figs/fitshade_34_23.eps>
+(epstopdf)             \includegraphics on input line 99.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fitshade_34_23-eps-converted-to.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fitshade_34_23-eps-converted-to.pdf, id=8, 867.24pt x 650.43pt>
+File: figs/fitshade_34_23-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fitshade_34_23-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fitshade_34_23-eps-converted-to.pdf used on input
+ line 99.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fit1d_36_13.eps>
+(epstopdf)                    date: 2018-09-25 23:11:48
+(epstopdf)                    size: 886258 bytes
+(epstopdf)             Output file: <figs/fit1d_36_13-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:16:49
+(epstopdf)                    size: 163899 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit1d_36_13-eps-conve
+rted-to.pdf figs/fit1d_36_13.eps>
+(epstopdf)             \includegraphics on input line 100.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit1d_36_13-eps-converted-to.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit1d_36_13-eps-converted-to.pdf, id=9, 867.24pt x 650.43pt>
+File: figs/fit1d_36_13-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit1d_36_13-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit1d_36_13-eps-converted-to.pdf used on input li
+ne 100.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fitshade_36_13.eps>
+(epstopdf)                    date: 2018-09-25 23:11:39
+(epstopdf)                    size: 4516393 bytes
+(epstopdf)             Output file: <figs/fitshade_36_13-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:15:03
+(epstopdf)                    size: 650868 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fitshade_36_13-eps-co
+nverted-to.pdf figs/fitshade_36_13.eps>
+(epstopdf)             \includegraphics on input line 101.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fitshade_36_13-eps-converted-to.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fitshade_36_13-eps-converted-to.pdf, id=10, 867.24pt x 650.43pt>
+File: figs/fitshade_36_13-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fitshade_36_13-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fitshade_36_13-eps-converted-to.pdf used on input
+ line 101.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+
+Overfull \hbox (27.3135pt too wide) in paragraph at lines 96--102
+[][] [] 
+ []
+
+
+Overfull \hbox (27.3135pt too wide) in paragraph at lines 96--102
+[] [] 
+ []
+
+
+Overfull \hbox (27.3135pt too wide) in paragraph at lines 96--102
+[] [] 
+ []
+
+Package epstopdf Info: Source file: <figs/fit1d_40_28.eps>
+(epstopdf)                    date: 2018-09-25 23:11:48
+(epstopdf)                    size: 828790 bytes
+(epstopdf)             Output file: <figs/fit1d_40_28-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:16:51
+(epstopdf)                    size: 153808 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit1d_40_28-eps-conve
+rted-to.pdf figs/fit1d_40_28.eps>
+(epstopdf)             \includegraphics on input line 105.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit1d_40_28-eps-converted-to.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit1d_40_28-eps-converted-to.pdf, id=11, 867.24pt x 650.43pt>
+File: figs/fit1d_40_28-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit1d_40_28-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit1d_40_28-eps-converted-to.pdf used on input li
+ne 105.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fitshade_40_28.eps>
+(epstopdf)                    date: 2018-09-25 23:11:39
+(epstopdf)                    size: 4484542 bytes
+(epstopdf)             Output file: <figs/fitshade_40_28-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:15:13
+(epstopdf)                    size: 611572 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fitshade_40_28-eps-co
+nverted-to.pdf figs/fitshade_40_28.eps>
+(epstopdf)             \includegraphics on input line 106.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fitshade_40_28-eps-converted-to.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fitshade_40_28-eps-converted-to.pdf, id=12, 867.24pt x 650.43pt>
+File: figs/fitshade_40_28-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fitshade_40_28-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fitshade_40_28-eps-converted-to.pdf used on input
+ line 106.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fit1d_29_48.eps>
+(epstopdf)                    date: 2018-09-25 23:11:48
+(epstopdf)                    size: 967961 bytes
+(epstopdf)             Output file: <figs/fit1d_29_48-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:16:53
+(epstopdf)                    size: 221012 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit1d_29_48-eps-conve
+rted-to.pdf figs/fit1d_29_48.eps>
+(epstopdf)             \includegraphics on input line 107.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit1d_29_48-eps-converted-to.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit1d_29_48-eps-converted-to.pdf, id=13, 867.24pt x 650.43pt>
+File: figs/fit1d_29_48-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit1d_29_48-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit1d_29_48-eps-converted-to.pdf used on input li
+ne 107.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fitshade_29_48.eps>
+(epstopdf)                    date: 2018-09-25 23:11:39
+(epstopdf)                    size: 4582556 bytes
+(epstopdf)             Output file: <figs/fitshade_29_48-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:15:25
+(epstopdf)                    size: 1294576 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fitshade_29_48-eps-co
+nverted-to.pdf figs/fitshade_29_48.eps>
+(epstopdf)             \includegraphics on input line 108.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fitshade_29_48-eps-converted-to.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fitshade_29_48-eps-converted-to.pdf, id=14, 867.24pt x 650.43pt>
+File: figs/fitshade_29_48-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fitshade_29_48-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fitshade_29_48-eps-converted-to.pdf used on input
+ line 108.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fit1d_35_12.eps>
+(epstopdf)                    date: 2018-09-25 23:11:48
+(epstopdf)                    size: 908994 bytes
+(epstopdf)             Output file: <figs/fit1d_35_12-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:16:55
+(epstopdf)                    size: 198150 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit1d_35_12-eps-conve
+rted-to.pdf figs/fit1d_35_12.eps>
+(epstopdf)             \includegraphics on input line 109.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit1d_35_12-eps-converted-to.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit1d_35_12-eps-converted-to.pdf, id=15, 867.24pt x 650.43pt>
+File: figs/fit1d_35_12-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit1d_35_12-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit1d_35_12-eps-converted-to.pdf used on input li
+ne 109.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fitshade_35_12.eps>
+(epstopdf)                    date: 2018-09-25 23:11:39
+(epstopdf)                    size: 4532125 bytes
+(epstopdf)             Output file: <figs/fitshade_35_12-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:15:35
+(epstopdf)                    size: 689512 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fitshade_35_12-eps-co
+nverted-to.pdf figs/fitshade_35_12.eps>
+(epstopdf)             \includegraphics on input line 110.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fitshade_35_12-eps-converted-to.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fitshade_35_12-eps-converted-to.pdf, id=16, 867.24pt x 650.43pt>
+File: figs/fitshade_35_12-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fitshade_35_12-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fitshade_35_12-eps-converted-to.pdf used on input
+ line 110.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fit1d_36_14.eps>
+(epstopdf)                    date: 2018-09-25 23:11:48
+(epstopdf)                    size: 879675 bytes
+(epstopdf)             Output file: <figs/fit1d_36_14-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:16:57
+(epstopdf)                    size: 161282 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fit1d_36_14-eps-conve
+rted-to.pdf figs/fit1d_36_14.eps>
+(epstopdf)             \includegraphics on input line 111.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fit1d_36_14-eps-converted-to.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fit1d_36_14-eps-converted-to.pdf, id=17, 867.24pt x 650.43pt>
+File: figs/fit1d_36_14-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fit1d_36_14-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fit1d_36_14-eps-converted-to.pdf used on input li
+ne 111.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+Package epstopdf Info: Source file: <figs/fitshade_36_14.eps>
+(epstopdf)                    date: 2018-09-25 23:11:39
+(epstopdf)                    size: 4512405 bytes
+(epstopdf)             Output file: <figs/fitshade_36_14-eps-converted-to.pdf>
+(epstopdf)                    date: 2018-09-25 23:15:42
+(epstopdf)                    size: 646012 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/fitshade_36_14-eps-co
+nverted-to.pdf figs/fitshade_36_14.eps>
+(epstopdf)             \includegraphics on input line 112.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: pdflatex (file ./figs/fitshade_36_14-eps-converted-to.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/fitshade_36_14-eps-converted-to.pdf, id=18, 867.24pt x 650.43pt>
+File: figs/fitshade_36_14-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/fitshade_36_14-eps-converted-to.pdf>
+Package pdftex.def Info: figs/fitshade_36_14-eps-converted-to.pdf used on input
+ line 112.
+(pdftex.def)             Requested size: 241.2788pt x 180.95796pt.
+
+Overfull \hbox (27.3135pt too wide) in paragraph at lines 105--113
+[][] [] 
+ []
+
+
+Overfull \hbox (27.3135pt too wide) in paragraph at lines 105--113
+[] [] 
+ []
+
+
+Overfull \hbox (27.3135pt too wide) in paragraph at lines 105--113
+[] [] 
+ []
+
+
+Overfull \hbox (27.3135pt too wide) in paragraph at lines 105--113
+[] [] 
+ []
+
+
+LaTeX Warning: Float too large for page by 99.25179pt on input line 114.
+
+[1
+
+
+Non-PDF special ignored!{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/upd
+map/pdftex.map}] [2 <./figs/map-eps-converted-to.pdf> <./figs/fit_13498-eps-con
+verted-to.pdf> <./figs/fit_19974-eps-converted-to.pdf>] [3 <./figs/sens-eps-con
+verted-to.pdf>] [4 <./figs/fit1d_27_25-eps-converted-to.pdf> <./figs/fitshade_2
+7_25-eps-converted-to.pdf> <./figs/fit1d_34_23-eps-converted-to.pdf> <./figs/fi
+tshade_34_23-eps-converted-to.pdf> <./figs/fit1d_36_13-eps-converted-to.pdf> <.
+/figs/fitshade_36_13-eps-converted-to.pdf>] [5 <./figs/fit1d_40_28-eps-converte
+d-to.pdf> <./figs/fitshade_40_28-eps-converted-to.pdf> <./figs/fit1d_29_48-eps-
+converted-to.pdf> <./figs/fitshade_29_48-eps-converted-to.pdf> <./figs/fit1d_35
+_12-eps-converted-to.pdf> <./figs/fitshade_35_12-eps-converted-to.pdf> <./figs/
+fit1d_36_14-eps-converted-to.pdf> <./figs/fitshade_36_14-eps-converted-to.pdf>]
+(./note.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 3037 strings out of 492995
+ 40920 string characters out of 6132704
+ 104748 words of memory out of 5000000
+ 6493 multiletter control sequences out of 15000+600000
+ 17105 words of font info for 66 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 39i,8n,26p,358b,231s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></us
+r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/
+local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/
+local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/lo
+cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/loca
+l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/t
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
+xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texl
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texliv
+e/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on note.pdf (5 pages, 7769140 bytes).
+PDF statistics:
+ 699 PDF objects out of 1000 (max. 8388607)
+ 130 compressed objects within 2 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 91 words of extra memory for PDF output out of 10000 (max. 10000000)
+
