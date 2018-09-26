@@ -68,7 +68,11 @@ Q_{ij}(\lambda)=\bar{Z_j}(\vx_i,\lambda), \textrm{  for } i=1,\dots, S \textrm{ 
 
 \section{Surrogates}
 
-A total of $12S=96$ surrogates are build, using BCS and second order Legendre-basis. A subset of inputs lead to $0$ GPP - we ignored those inputs (in fact we ignored all below $0.02$) for surrogate construction. The surrogates have shown relative errors between $5\%-15\%$, as demonstrated in two example plots in Figure~\ref{fig:surr}.
+A total of $12S=96$ surrogates are build, using BCS and second order Legendre-basis, i.e. 
+\be
+Q_{ij}(\lambda)\approx Q^c_{ij}(\lambda),
+\ee
+parameterized by basis coefficients $c$. A subset of inputs lead to $0$ GPP - we ignored those inputs (in fact we ignored all below $0.02$) for surrogate construction. The surrogates have shown relative errors between $5\%-15\%$, as demonstrated in two example plots in Figure~\ref{fig:surr}.
 
 
 \begin{figure}[!hb]
@@ -90,7 +94,19 @@ The sensitivities for the eight sites over 12 months are shown in Figure~\ref{fi
 \caption{\label{fig:sens} Sensitivities of GPP for 8 sites (the winter sites are not shown due to dominantly zero-ed GPP). }
 \end{figure}
 
+\section{Data}
+
+Similarly, we have observational daily data for $S=8$ sites that is averaged to obtain monthly data before averaging over years to obtain month-by-month data - a total of $12S=96$ data points $\{h_{ij}\}$ for $i=1,\dots,S$ and $j=1,\dots 12$.
+
 \section{Inference}
+
+\subsection{Classical}
+The classical surrogate-enabled inference setup: iid Gaussian noise on $h_{ij}-Q^c_{ij}(\lambda)$. [More details to write later]. We selected the top four most sensitive parameters
+\verb#gdd_crit, nue_tree, crit_dayl, leafcn# for inference. See Figures~\ref{fig:fits1} and~\ref{fig:fits2} for the posterior predictive. [MCMC and parameter posteriors to come later]
+
+\subsection{Model error}
+[to come later as need arises.]
+
 
 \begin{figure}[!hb]
 \includegraphics[width=0.53\textwidth]{figs/fit1d_27_25.eps}\hfill
@@ -99,7 +115,7 @@ The sensitivities for the eight sites over 12 months are shown in Figure~\ref{fi
 \includegraphics[width=0.53\textwidth]{figs/fitshade_34_23.eps}\\
 \includegraphics[width=0.53\textwidth]{figs/fit1d_36_13.eps}\hfill
 \includegraphics[width=0.53\textwidth]{figs/fitshade_36_13.eps}
-\caption{\label{fig:fits1} Inference1.}
+\caption{\label{fig:fits1} Inference1. Lareg black dots are the mean data points, smaller ones are all samples across years.}
 \end{figure}
 \begin{figure}[!hb]
 \includegraphics[width=0.53\textwidth]{figs/fit1d_40_28.eps}\hfill
@@ -110,8 +126,19 @@ The sensitivities for the eight sites over 12 months are shown in Figure~\ref{fi
 \includegraphics[width=0.53\textwidth]{figs/fitshade_35_12.eps}\\
 \includegraphics[width=0.53\textwidth]{figs/fit1d_36_14.eps}\hfill
 \includegraphics[width=0.53\textwidth]{figs/fitshade_36_14.eps}
-\caption{\label{fig:fits2} Inference2.}
+\caption{\label{fig:fits2} Inference2. (US-WCr includes data from US-PFa as well - they both match with the same cell in the regional simulation.)}
 \end{figure}
+
+\section{Dimensionality reduction via Karhunen-Lo{\`e}ve expansions}
+ [ongoing] [will add technical details later]. Plots of mean field and eigenvalue decay are in Figure~\ref{fig:kl}.
+
+
+\begin{figure}[!hb]
+\includegraphics[height=0.33\textwidth]{figs/map_mean_kl.eps}\hfill
+\includegraphics[height=0.33\textwidth]{figs/eig.eps}
+\caption{\label{fig:kl} Mean KL field and eigenvalue decay.}
+\end{figure}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
