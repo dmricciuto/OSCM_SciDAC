@@ -169,7 +169,7 @@ def plotMap(data2d, lats, lons, show_map = False, show_dataloc = False):
         site_names, site_lons, site_lats = read_obsdata(obs_dataset)
 
         site_lon_lat =  pick_sites(lons,lats,site_lons,site_lats)
-        print site_lon_lat
+        print(site_lon_lat)
         site_lons_mapped,site_lats_mapped= m(site_lons,site_lats)
         plot(site_lons_mapped,site_lats_mapped,'ko',markersize=4,zorder=1000)
         plot(site_lons_mapped[site_lon_lat[:,0]],site_lats_mapped[site_lon_lat[:,0]],'ro',markersize=4,zorder=2000, label='selected')
