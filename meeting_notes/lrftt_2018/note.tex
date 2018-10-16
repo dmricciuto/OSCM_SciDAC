@@ -1,0 +1,248 @@
+\documentclass[10pt]{article}
+
+\textwidth 16.0cm
+\textheight 23.0cm
+\topmargin 0cm
+\headheight 0cm
+\headsep 0cm
+\topskip 0cm
+\oddsidemargin 0.00cm
+\evensidemargin 0.00cm
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage{stackengine}
+\stackMath
+
+\def\sss{\scriptscriptstyle}
+\setstackgap{L}{8pt}
+\def\stacktype{L}
+
+
+\newcommand{\xiv}{{\bm{\xi}}}
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+
+\begin{document} 
+
+\title{Exploiting Structure in Spatio-Temporal sELM Predictions}
+\author{}
+\maketitle
+
+\section{Model Formulation}
+
+\color{red} Show sELM schematic \color{black}\\
+\color{red} Show sample drivers at several sites \color{black}\\
+\color{red} Show sample drivers correlations \color{black}\\
+
+We use the following notation for the sELM model 
+
+\begin{equation}
+g(t, \lambda; \Theta)
+\end{equation}
+where $t$ is the time, and $\lambda$ is the set of parameters that control the sELM 
+sub-processes.  $\Theta$ is the vector of time-dependent drivers, 
+$\Theta=\{\theta_1(t),\ldots,\{\theta_4(t)\}$, where 
+$\theta_1$ is the transpiration beta factor (BTRAN), $\theta_2$ is the
+atmospheric incident solar radiation (FSDS), and $\theta_3$ and $\theta_4$ are
+the maximum and minimum dayly temperatures, respectively
+
+
+\section{Model Drivers}
+
+Figures~\ref{fig:btranavg}-\ref{fig:tminavg} show monthly averages for $\theta_1$ 
+through $\theta_4$ across eastern half of US. The averages correspond to a 30 year period
+from $1980$ to $2009$.
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m2.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m3.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m4.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m5.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m6.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m7.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m8.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m9.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_BTRAN_m10.png}
+\caption{Monthly averages for transpiration beta factor (BTRAN). Contour plots correspond 
+to the months of March through November (left to right and top to bottom).\label{fig:btranavg}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m2.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m3.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m4.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m5.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m6.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m7.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m8.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m9.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_FSDS_m10.png}
+\caption{Monthly averages for atmospheric incident solar radiation (FSDS, $W/m^2$). Contour plots correspond 
+to the months of March through November (left to right and top to bottom).\label{fig:fsdsavg}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m2.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m3.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m4.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m5.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m6.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m7.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m8.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m9.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMAX_m10.png}
+\caption{Monthly averages for maximum daily temperature (TMAX, $K$). Contour plots correspond 
+to the months of March through November (left to right and top to bottom).\label{fig:tmaxavg}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m2.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m3.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m4.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m5.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m6.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m7.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m8.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m9.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/avg_TMIN_m10.png}
+\caption{Monthly averages for minimum daily temperature (TMIN, $K$). Contour plots correspond 
+to the months of March through November (left to right and top to bottom).\label{fig:tminavg}}
+\end{figure}
+
+
+\section{Monthly averages}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m2.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m3.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m4.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m5.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m6.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m7.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m8.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m9.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s100_m10.png}
+\caption{Monthly GPP averages for sample ID 100. Contour plots correspond to the months of March through November (left to right and top to bottom).\label{fig:gppavg100}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m2.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m3.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m4.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m5.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m6.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m7.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m8.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m9.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/gpp_s1000_m10.png}
+\caption{Monthly GPP averages for sample ID 1000. Countour plots correspond to the months of March through November (left to right and top to bottom).\label{fig:gppavg1000}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m2.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m3.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m4.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m5.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m6.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m7.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m8.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m9.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s100_m10.png}
+\caption{Monthly LAI averages for sample ID 100. Contour plots correspond to the months of March through November (left to right and top to bottom).\label{fig:laiavg100}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m2.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m3.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m4.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m5.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m6.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m7.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m8.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m9.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/lai_s1000_m10.png}
+\caption{Monthly LAI averages for sample ID 1000. Countour plots correspond to the months of March through November (left to right and top to bottom).\label{fig:laiavg1000}}
+\end{figure}
+
+\section{Correlations}
+
+Figures~\ref{fig:gppcorrUSHA1}-\ref{fig:laicorrUSOho} show the Pearson's correlation
+coefficient between two Fluxnet sites, US-HA1 and US-Oho and the rest of the land cells
+simulated in this study. These correlations were numerically computed using a set
+of $2000$ random samples for the model parameters $\lambda$.
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m3_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m4_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m5_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m6_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m7_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m8_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m9_gpp.png}
+\caption{Pearson correlation coefficient between monthly GPP averages at US-HA1 and other land cells. 
+Countour plots correspond to the months of April through October (left to right and top to bottom).
+\label{fig:gppcorrUSHA1}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m3_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m4_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m5_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m6_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m7_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m8_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-HA1_m9_lai.png}
+\caption{Pearson correlation coefficient between monthly LAI averages at US-HA1 and other land cells. 
+Countour plots correspond to the months of April through October (left to right and top to bottom).
+\label{fig:laicorrUSHA1}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m3_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m4_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m5_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m6_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m7_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m8_gpp.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m9_gpp.png}
+\caption{Pearson correlation coefficient between monthly GPP averages at US-Oho and other land cells. 
+Countour plots correspond to the months of April through October (left to right and top to bottom).
+\label{fig:gppcorrUSOho}}
+\end{figure}
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m3_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m4_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m5_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m6_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m7_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m8_lai.png}
+\includegraphics[width = 0.32\textwidth]{./figs/sELM_Oct18/corr_US-Oho_m9_lai.png}
+\caption{Pearson correlation coefficient between monthly LAI averages at US-Oho and other land cells. 
+Countour plots correspond to the months of April through October (left to right and top to bottom).
+\label{fig:laicorrUSOho}}
+\end{figure}
+
+\section{Low-rank formulation}
+
+\end{document}
