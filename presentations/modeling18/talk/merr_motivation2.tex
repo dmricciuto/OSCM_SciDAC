@@ -1,0 +1,91 @@
+% !TEX root = slides.tex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+\label{motivation}
+
+\frametitle{Main target: model \emph{structural} error \\ \small{ deviation from `truth' or from a higher-fidelity model}}
+
+\bbi
+\item Inverse modeling context
+% \hfill \begin{tikzpicture} \node [rounded corners,fill=blue!20] {
+% Data meets Models};
+% \end{tikzpicture}
+\bgi
+\item Given experimental or higher-fidelity model data,\\
+estimate the model error
+\egi
+\medskip
+\hrule
+\medskip
+\item Represent and estimate the error associated with
+\bgi
+\item Simplifying assumptions, parameterizations
+\item Mathematical formulation, theoretical framework
+%\item Numerical discretization
+\egi
+\medskip
+\item ...will be useful for
+\bgi
+\item Model validation
+\item Model comparison
+\item Scientific discovery and model improvement
+\item Reliable computational predictions
+\egi
+
+\ebi
+\end{frame}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}[t]
+% \label{motivation1}
+
+% \frametitle{\hspace*{2.5cm} Data informs model parameters: \\ \hspace*{2.5cm} \small{but what if the model is only an approximation?}}
+
+% \centerline{
+% \includegraphics<1>[width=0.8\textwidth,clip]{merr/{model2}.eps}
+% \includegraphics<2>[width=0.8\textwidth,clip]{merr/{model1}.eps}
+% \includegraphics<3>[width=0.8\textwidth,clip]{merr/{model12}.eps}
+% \includegraphics<4>[width=0.8\textwidth,clip]{merr/{model12_}.eps}
+% }
+
+% \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+\label{motivation3}
+
+\frametitle{\hspace*{2.5cm} Ignoring model error leads to \\ \hspace*{2.cm}overconfident and biased predictions}
+\vspace{-0.3cm}
+\only<1-6>{
+\begin{tabular}{ p{0.55\textwidth}  p{0.45\textwidth}  }
+\only<1>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_only_5}.eps} & }
+\only<2>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_5}.eps} & \includegraphics[width=0.33\textwidth,clip]{merr/test_sketch/{post_5}.eps} }
+\only<3>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_5}.eps} & \includegraphics[width=0.33\textwidth,clip]{merr/test_sketch/{post_5}.eps} }
+\only<4>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_20}.eps} & \includegraphics[width=0.33\textwidth,clip]{merr/test_sketch/{post_20}.eps} }
+\only<5>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_50}.eps} & \includegraphics[width=0.33\textwidth,clip]{merr/test_sketch/{post_50}.eps} }
+\only<6>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_50}.eps} & \hspace*{-0.8cm}\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_50_abc}.eps} }
+\end{tabular}
+\small
+\only<1-5>{\hspace*{2.cm} Model-data fit} \only<6>{\hspace*{1.2cm} No model error treatment} \only<2-5>{\hspace*{30mm} Posterior on parameters} \only<6>{\hspace*{2.cm} Model error accounted for}
+}
+\vspace*{2mm}
+\footnotesize
+\bi \setlength{\leftmargini}{-2.5pt}
+\only<1->{\item Given noisy data, calibrate an exponential model:  $\quad g(x)\approx f(x;\lambda)$} %, $\textrm{ i.e. } y={f(x;\lambda)}+\epsilon$
+\only<2->{\item Employ Bayesian inference to obtain posterior PDFs on $\lambda$}
+\only<3-6>{\item True model -- dashed-red -- is \emph{structurally} different from fit model $f(x,\lambda)$}
+\only<4-5>{\item Higher data amount reduces posterior and predictive uncertainty
+\bri
+\item Increasingly sure about predictions based on the \emph{wrong} model
+%\item If the model has structural uncertainty, more data leads to biased and overconfident results
+\eri
+}
+\only<6>{\item Accounting for model error allows extra uncertainty component to propagate through predictions}
+% \item We want to quantify model-vs-truth discrepancy in a rigorous and systematic way
+% \item Cannot ignore model error
+\ei
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

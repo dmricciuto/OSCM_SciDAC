@@ -1,0 +1,56 @@
+% !TEX root = slides.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+\label{closure}
+\frametitle{Challenges and Opportunities}
+
+\vspace*{-0.4cm}
+\scriptsize{
+
+\bi
+\item[] \textbf{The curse of dimensionality}
+\bi
+\tiny{
+\item Models have large number of parameters
+\item Models are expensive
+\medskip
+\item Always prebuild a \emph{surrogate} and work with it
+\item There is room for a lot of `compression', particularly in spatio-temporal outputs: \emph{Karhunen-Lo\`{e}ve expansions} (glorified PCA)
+\item Certainly go \emph{Bayesian}: allows making sense of any amount of data/simulations and provides uncertainty estimate
+\item Can we really make sense of the model behavior with 2-3 simulations? -- well, getting there: \emph{multi-fidelity} methods for UQ
+}
+\ei
+\item[] \textbf{Model structural errors}
+\bi
+\tiny{
+\item Quantify how wrong the model is
+\item Just correcting the outputs not good enough - \emph{embed} stochastic terms in the model (or its surrogate)
+\item \emph{Model selection} needs to be done over ensembles. Again, go \emph{Bayesian}.
+}
+\ei
+\item[] \textbf{Optimal experimental design}
+\bi
+\tiny{
+\item Optimization of Sensor Networks for Improving Climate Model Predictions (OSCM). Joint work with Youssef Marzouk (MIT). PI: Dan Ricciuto
+}
+\ei
+\ei
+\hrule
+\bi
+\item[] \textbf{Potential use cases}
+\medskip
+\bi
+\scriptsize{
+\item Model fidelity hierarchy
+\item Prediction under scenario uncertainty
+\item Uncertain initialization based on observational data
+\item Model comparison with uncertainties
+}
+\ei
+\ei
+
+}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

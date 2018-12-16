@@ -1,0 +1,612 @@
+
+
+
+
+%======================================================
+% Standard abbreviations, text shortcuts
+%
+\newcommand{\iid}{\textit{i.i.d.}\xspace}
+\newcommand{\etal}{\textit{et al.}\xspace}
+\newcommand{\eg}{\textit{e.g.}\xspace}
+\newcommand{\ie}{\textit{i.e.}\xspace}
+\newcommand{\etc}{\textit{etc.}\xspace}
+
+%\def\pc{polynomial chaos}
+%\def\Pc{Polynomial chaos}
+%\def\pcs{polynomials chaoses}
+%\def\Pcs{Polynomials chaoses}
+%\def\KL{Karhunen-Loeve}
+
+%=======================================================================================
+% Revision/edits
+%
+\usepackage{color}
+\newcommand{\todo}[1]{\textcolor{red}{#1}}            % material to revise
+%\newcommand{\todo}[1]{}  % this makes revise comments disappear
+\newcommand{\strike}[1]{\textcolor{magenta}{\sout{#1}}} % material to omit
+%\renewcommand{\comment}[1]{\textcolor{blue}{[ \sc{#1} ]}} % comments
+%\renewcommand{\comment}[1]{}
+%\newcommand{\add}[1]{\textcolor{cyan}{\bf{#1}}}         % recent
+%                                % adds/mods
+\newcommand{\instructions}[1]{\textcolor{green}{\bf{#1}}}         % instructions to authors
+\newcommand{\thoughts}[1]{\textcolor{cyan}{\bf{[#1]}}}         % brainstorming, notes, ...
+%\newcommand{\instructions}[1]{}
+%\newcommand{\thoughts}[1]{}
+
+\def\btodo{\color{red}}
+\def\etodo{\normalcolor\xspace}
+
+\def\bzap{\color{black}}
+\def\ezap{\normalcolor}
+
+%\renewcommand{\invisible}[1]{}
+\newcommand{\myinvisible}[1]{ }
+\newcommand{\myvisible}[1]{{#1}}
+
+\newcommand\blr{\begin{scriptsize}\color{blue}}
+\newcommand\elr{\normalcolor\end{scriptsize}}
+
+%=======================================================================================
+% List, items, equations
+%
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+\newcommand{\bean}{\begin{eqnarray*}}
+\newcommand{\eean}{\end{eqnarray*}}
+\newcommand{\ben}{\begin{equation*}}        % eqn w/no number
+\newcommand{\een}{\end{equation*}}
+%\newcommand{\ben}{\[}
+%\newcommand{\een}{\]}
+
+
+\newenvironment{greenItemize} { \begin{list}
+{\color{green}$\bullet$\color{black}}
+{ \setlength{\rightmargin}{\leftmargin} \setlength{\itemsep}{0in} } }{ \end{list} }
+
+\newenvironment{redItemize} { \begin{list}
+{\color{red}$\bullet$\color{black}}
+{ \setlength{\rightmargin}{\leftmargin} \setlength{\itemsep}{0in} } }{ \end{list} }
+
+
+\newenvironment{blueItemize} { \begin{list}
+{\color{blue}$\bullet$\color{black}}
+{ \setlength{\rightmargin}{\leftmargin} \setlength{\itemsep}{0in} } }{ \end{list} }
+
+\newenvironment{dashItemize} { \begin{list}
+{\color{black}--\color{black}}
+{ \setlength{\rightmargin}{\leftmargin} \setlength{\itemsep}{0in} } }{ \end{list} }
+
+\newcommand{\bgi}{\begin{greenItemize}}
+\newcommand{\egi}{\end{greenItemize}}
+\newcommand{\bri}{\begin{redItemize}}
+\newcommand{\eri}{\end{redItemize}}
+\newcommand{\bbi}{\begin{blueItemize}}
+\newcommand{\ebi}{\end{blueItemize}}
+\newcommand{\bdi}{\begin{dashItemize}}
+\newcommand{\edi}{\end{dashItemize}}
+
+\newcounter{Enumi}
+\newenvironment{Enumerate}{\begin{enumerate}
+\setcounter{enumi}{\value{Enumi}}}{\setcounter{Enumi}{\value{enumi}}
+\end{enumerate}}
+
+%=======================================================================================
+% Colors
+%
+\def\red{\color{red}}
+\def\black{\color{black}}
+\def\blue{\color{blue}}
+\def\green{\color{green}}
+\def\magenta{\color{magenta}}
+
+\definecolor{babyblueeyes}{rgb}{0.63, 0.79, 0.95}
+
+
+%=======================================================================================
+% Kh.S. customization
+%
+\def\mycit#1{{\scriptsize\color{blue}[#1]\color{black}}}
+
+\def\mybox#1{
+\begin{tikzpicture} \node [rounded corners,fill=blue!10] {#1};
+\end{tikzpicture}
+}
+
+\newcommand{\hh}[2]{%
+  \colorbox{#1!50}{$\displaystyle#2$}}
+
+  \newcommand{\hhl}[3]{%
+  \only<#1>{\hh{red}{#3}}\only<#2>{\hh{white}{#3}}}
+
+  \newcommand{\hhu}{\hhl}
+%  \newcommand{\hhw}[2]{%
+%  \ifthenelse{\equal{#1}{}}{#2}{\only<#1>{\hh{white}{#2}}}}
+
+%=======================================================================================
+% Special shortcuts
+%
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\newcommand{\names}[1]{\textsc{#1}}
+\newcommand{\pdot}{\ensuremath{\!\stackrel{\scriptscriptstyle\bullet}{{}}\!}}
+
+\def\1{$_\mathrm{1}$}
+\def\2{$_\mathrm{2}$}
+\def\3{$_\mathrm{3}$}
+\def\4{$_\mathrm{4}$}
+\def\5{$_\mathrm{5}$}
+\def\6{$_\mathrm{6}$}
+\def\7{$_\mathrm{7}$}
+\def\8{$_\mathrm{8}$}
+
+\newcommand{\ra}{$\Rightarrow$}
+\newcommand{\la}{$\Leftarrow$}
+\newcommand{\ea}{$\Leftrightarrow$}
+
+%=======================================================================================
+% Sizing, spacing
+%
+\def\leftpar{\raggedright\leftskip=0.0cm\hsize=8.0cm}
+\def\rightpar{\raggedright\leftskip=12cm}
+\def\Line{\bigskip \hrule height1pt depth1pt\bigskip}
+
+
+\def\fig#1#2{
+      \hbox{
+            \hskip-2.0cm
+            \psfig{file=eps/#1.eps,height=9.0cm}
+            \hskip-3.2cm
+            \psfig{file=eps/#2.eps,height=9.0cm}
+            \hskip-8.0cm
+      }
+}
+
+\def\cap#1#2
+{\tenpoint\vskip-0.5cm\parindent=0pt
+{\hskip-0.0cm\leftpar {#1} \par}
+\vskip -\prevgraf \baselineskip
+{\hskip-3.0cm\rightpar {#2} \par}
+}
+
+\newcommand\br{\par\vspace*{-2mm}\begin{scriptsize}\color{blue}\begin{flushright}}
+\newcommand\er{\end{flushright}\normalcolor\end{scriptsize}}
+\newcommand{\bp}{ \begin{flushright}\color{blue}\vspace*{-4mm}\begin{large} }
+\newcommand{\ep}{ \end{large}\color{black}\end{flushright} }
+
+\newcommand{\gae}{\lower 8pt \hbox{$\, \buildrel {\scriptstyle >}\over {\scriptstyle \sim}\,$}}
+\newcommand{\lae}{\lower 8pt \hbox{$\, \buildrel {\scriptstyle <}\over {\scriptstyle \sim}\,$}}
+
+\def\<{\left< }
+\def\>{ \right>}
+
+\newcommand{\zapspace}{\topsep=0pt\partopsep=0pt\itemsep=0pt\parskip=0pt}
+
+%=======================================================================================
+% Chemistry
+%
+\def\chemrightarrow#1#2{\,\,\,\smash{\mathop{\longrightarrow}\limits^{#1}_{#2}}\,\,\,}
+\def\chemequilarrow#1#2{\,\,\,\smash{\mathop{\longleftrightarrow}\limits^{#1}_{#2}}\,\,\,}
+\def\chemequil{{\longleftrightarrow}}
+
+\newcommand{\ymeth}{$Y_{\C\H_4}^d$}
+\def\co2{{\rm CO}_2}
+\def\H{{\rm H}}
+\def\Hp{{\rm H}^+}
+\def\pH{{\rm pH}}
+\def\P{{\rm P}}
+\def\R{{\rm R}}
+\def\L{{\rm L}}
+\def\OH{\rm OH}
+\def\OHm{{\rm OH}^-}
+\def\K{{\rm K}}
+\def\Kp{{\rm K}^+}
+\def\P{{\rm P}}
+\def\Q{{\rm Q}}
+\def\O{{\rm O}}
+\def\E{{\rm E}}
+\def\G{{\rm G}}
+\def\R{{\rm R}}
+\def\N{{\rm N}}
+\def\U{{\rm U}}
+
+%=======================================================================================
+% Biology
+%
+\newcommand{\BS}{\emph{B. Subtilis }}
+\newcommand{\comK}{\textrm{comK}}
+\newcommand{\PcomK}{\textrm{P}_\comK}
+\newcommand{\PcomKc}{\PcomK^{\:\textrm{const}}}
+\newcommand{\comS}{\textrm{comS}}
+\newcommand{\PcomS}{\textrm{P}_\comS}
+\newcommand{\PcomSc}{\PcomS^{\:\textrm{const}}}
+\newcommand{\MecA}{\textrm{MecA}}
+
+
+%=======================================================================================
+% Tikz
+%
+
+\usetikzlibrary{positioning,arrows,shapes,shadows}
+\tikzstyle{format} = [draw, very thick, fill=blue!40]
+\tikzstyle{medium} = [ellipse, draw, thin, fill=green!20]
+\tikzstyle{qoi}=[rectangle, draw=black, rounded corners, fill=green, drop shadow]
+\tikzstyle{cblue}=[circle, draw, thin, fill=blue!10, scale=0.8]
+\tikzstyle{decision} = [diamond, draw, fill=blue!20,
+    text width=5.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{biggray}=[rectangle, draw=black, thin, fill=gray!20,
+                                 anchor=north west, text width=10em,
+                                 text height=5em, minimum width=12.5em,
+                                 minimum height=5.5em, rounded
+                                 corners=5pt]
+
+%=======================================================================================
+% Math shortcuts
+%
+\newcommand{\wh}{\widehat}
+\newcommand{\p}{\partial}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\lam}{\lambda}
+\def\sech{{\rm sech}}
+\def\eps{{\varepsilon}}
+\def\ds{\displaystyle}
+\def\eid{{\epsilon_i^{\textrm{d}}}}
+\def\funnyzeta{\varsigma}
+\def\tQ{\stackrel{\ldots}{Q}}
+\def\proj{\mathbb P}
+\def\Supp{{\mbox{Supp}}}
+\newcommand{\sd}{{\sigma_{\DD}}}
+\newcommand{\sdd}{{\sigma^2_{\DD}}}
+\newcommand{\Sfr}{\mathfrak{S}}
+\newcommand{\Lp}{\mathfrak{L}}
+\def\real{\mathbb R}
+\def\integer{\mathbb N}
+\def\rev#1#2{{\bf -A.#1-}{#2}}
+\def\funnyzeta{\varsigma}
+\def\tQ{\stackrel{\ldots}{Q}}
+
+
+%
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\bigintsymbol}{\mathlarger{\mathlarger{\int}}}
+
+
+% \newcommand{\argmin}{\operatornamewithlimits{argmin}}
+% \newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\def\argc{\underset{\vc}{\operatorname{argmin}}\:}
+
+%=======================================================================================
+%
+% Caligraphy
+%
+\def\MM{{\cal M}}
+\def\DD{{\cal D}}
+\def\FF{{\cal F}}
+\def\GG{{\cal G}}
+\def\SS{{\cal S}}
+\def\MVN{{\cal MVN}}
+\def\GP{{\cal GP}}
+
+% Scribe
+% see https://tex.stackexchange.com/questions/120065/xetex-what-happened-to-mathcal-and-mathscr
+%
+\newcommand{\Ac}{{\mathscr A}}
+\newcommand{\Bc}{{\mathscr B}}
+%\newcommand{\Mc}{{\mathscr M}}
+\newcommand{\Pc}{{\mathscr P}}
+%\newcommand{\Rc}{{\mathscr C}}
+\newcommand{\Lc}{{\mathscr  L}}
+\newcommand{\Sc}{{\mathscr  S}}
+\newcommand{\ssc}{{\mathscr  s}}
+\newcommand{\Vc}{{\mathscr  V}}
+\newcommand{\Uc}{{\mathscr U}}
+\newcommand{\Wc}{{\mathscr W}}
+\newcommand{\Ec}{{\mathscr E}}
+\newcommand{\Nc}{{\mathscr N}}
+
+%
+% Blackboard bold
+%
+\def\VV{\mathbb{V}}
+\def\EE{\mathbb{E}}
+\def\RR{\mathbb{R}}
+\newcommand{\KK}{\mathbb{K}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\CC}{\mathbb{C}}
+
+%
+% Tildifying
+%
+\newcommand{\ttt}{\tilde}
+\def\psit{\tilde \psi}
+\def\omegat{\tilde \omega}
+\def\td{\tilde \delta}
+\def\tL{\tilde L}
+\def\tU{\tilde U}
+\def\nablat{\tilde \nabla}
+\def\vut{\tilde \vu}
+\def\gt{\tilde g}
+\def\tvPsi{\tilde{\vPsi}}
+\def\tveta{\tilde{\veta}}
+\def\tid{\tilde{d}}
+\newcommand{\tf}{\tilde{f}}
+\newcommand{\ytil}{\tilde{y}}
+
+
+
+%
+% Hat and dot-ifying
+%
+\newcommand{\vxih}{{\hat{\vxi}}}
+\newcommand{\alh}{{\hat{\alpha}}}
+\def\yh{{\hat{y}}}
+\def\ch{{\hat{c}}}
+\def\hd{\dot{h}}
+\def\hdd{\ddot{h}}
+\def\tdd{\ddot{\theta}}
+\def\td{\dot{\theta}}
+\def\ad{\dot{\alpha}}
+\def\add{\ddot{\alpha}}
+
+%
+% Superscript
+%
+\def\yt{y^{\textrm{true}}}
+\def\ya{y^{\textrm{apx}}}
+\def\ct{c^{\textrm{true}}}
+\def\ca{c^{\textrm{apx}}}
+\def\zetaa{\zeta^{(a)}}
+\def\zetal{\zeta^{(l)}}
+\def\zetas{\zeta^{(s)}}
+\def\zetap{\zeta^{(p)}}
+\def\omegas{\omega^\star}
+\def\psis{\psi^\star}
+\def\psip{\psi^\phi}
+\def\omegap{\omega^\phi}
+\def\vup{\vu^*}
+\newcommand{\sss}{\:\textrm{s}^{-1}}
+
+%
+% Subscript
+%
+\newcommand{\tig}{t_\mathrm{ig}}
+\def\deff{d_{\textrm{eff}}}
+\def\dimp{d_{\textrm{imp}}}
+\def\sk{\sigma_{\textrm{KDE}}}
+\def\fmp{f_{\textrm{MPF}}}
+\def\fpp{f_{\textrm{PPF}}}
+\def\psii{\Psi_i}
+\def\psik{\Psi_k}
+\def\psij{\Psi_j}
+
+%
+% Underlining
+%
+\def\w{\underline{w}}
+\def\u{\underline{u}}
+\def\v{\underline{v}}
+\def\n{\underline{n}}
+\def\k{\underline{k}}
+
+%
+% Overlining
+%
+\def\ol{\overline}
+\def\psio{\overline{\psi}}
+\def\tsigma{\overline{\Vector \sigma}}
+\def\tS{\overline{\Vector S}}
+\def\gammao{\overline{\gamma}}
+
+
+%=======================================================================================
+%=======================================================================================
+%=======================================================================================
+%=======================================================================================
+%=======================================================================================
+%=======================================================================================
+%=======================================================================================
+%=======================================================================================
+%=======================================================================================
+
+
+\def\vnabla{\Vector \nabla}
+\def\vy{\Vector y}
+
+%\def\tt{\tilde t}
+\def\vF{\Vector F}
+
+\def\Vector#1{\mbox{\boldmath $#1$}}
+\def\vS{\Vector S}
+\def\vD{\Vector D}
+\def\vH{{\Vector H}}
+\def\vGamma{{\Vector \Gamma}}
+\def\vx{{\Vector x}}
+\def\vz{{\Vector z}}
+\def\vy{{\Vector y}}
+\def\vj{{\Vector j}}
+\def\vk{{\Vector k}}
+\def\vt{{\Vector t}}
+\def\ve{{\Vector e}}
+\def\vb{{\Vector b}}
+\def\vs{{\Vector s}}
+\def\vg{{\Vector g}}
+\def\vc{{\Vector c}}
+\def\vC{{\Vector C}}
+\def\vn{{\Vector n}}
+\def\vp{{\Vector p}}
+\def\vr{{\Vector r}}
+\def\vV{{\Vector V}}
+\def\vU{{\Vector U}}
+\def\vUa{{\Vector U}^{(a)}}
+\def\vUl{{\Vector U}^{(l)}}
+\def\vUs{{\Vector U}^{(s)}}
+\def\vUp{{\Vector U}^{(p)}}
+\def\vX{{\Vector X}}
+\def\vv{{\Vector v}}
+\def\vu{{\Vector u}}
+\def\vQ{{\Vector Q}}
+\def\vP{{\Vector P}}
+\def\vR{{\Vector R}}
+\def\vZ{{\Vector Z}}
+\def\vq{{\Vector q}}
+\def\vI{{\Vector I}}
+\def\vlam{{\bm \lambda}}
+\def\va{{\Vector a}}
+\def\vh{{\Vector h}}
+\def\vzeta{{\Vector \zeta}}
+\def\vtheta{{\Vector \theta}}
+\def\vxi{{\Vector \xi}}
+\def\vom{{\Vector \omega}}
+\def\vtau{{\Vector \tau}}
+\def\veta{{\Vector \eta}}
+\def\vtheta{{\Vector \theta}}
+\def\vsigma{{\Vector \sigma}}
+\def\vSigma{{\Vector \Sigma}}
+\def\vPsi{{\Vector \Psi}}
+\def\vlambda{{\Vector \lambda}}
+\def\vxi{{\Vector \xi}}
+\def\vmu{{\Vector \mu}}
+\def\vY{{\Vector Y}}
+\def\vchi{{\Vector \chi}}
+\def\vzeta{{\Vector \zeta}}
+\def\vmu{{\Vector \mu}}
+\def\vc{{\Vector c}}
+\def\vc{{\Vector c}}
+\def\vlam{{\Vector \lambda}}
+\def\vtheta{{\Vector \theta}}
+\def\vlambda{{\Vector \lambda}}
+\def\vPsi{{\Vector \Psi}}
+\def\tveta{\tilde{\veta}}
+\def\vC{{\Vector C}}
+\def\vP{{\Vector P}}
+\def\vX{{\Vector X}}
+\def\vW{{\Vector W}}
+\def\vx{{\Vector x}}
+\def\vz{{\Vector z}}
+\def\vmu{{\Vector \mu}}
+\def\vSigma{{\Vector \Sigma}}
+\def\vsigma{{\Vector \sigma}}
+\def\valpha{{\Vector \alpha}}
+\def\vgamma{{\Vector \gamma}}
+\def\vs{{\Vector s}}
+\def\vu{{\Vector u}}
+\def\vy{{\Vector y}}
+\def\va{{\Vector a}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\Va}{ {\bf a}}
+\newcommand{\Vx}{ {\bf x}}
+\newcommand{\VX}{ {\bf X}}
+\newcommand{\Vy}{ {\bf y}}
+\newcommand{\ub}{ {\bf u}}
+%\newcommand{\vb}{ {\bf u}}
+\newcommand{\Vn}{ {\bf n}}
+\newcommand{\Ve}{ {\bf e}}
+\newcommand{\VY}{ {\bf Y}}
+\newcommand{\VB}{ {\bf B}}
+%\newcommand{\vb}{ {\bf v}}
+\newcommand{\x}{ {\bf x}}
+\newcommand{\mb}{ {\bf m}}
+%\newcommand{\p}{ {\bf p}}
+%\newcommand{\w}{ {\bf w}}
+%\newcommand{\vu}{{\bm u}}
+%\newcommand{\vw}{{\bm w}}
+%\newcommand{\vv}{{\bm v}}
+%\newcommand{\vc}{{\bm c}}
+%\newcommand{\vy}{{\bm y}}
+%\newcommand{\vf}{{\bm f}}
+%\newcommand{\vg}{{\bm g}}
+%\newcommand{\vxi}{{\bm \xi}}
+%\newcommand{\vx}{{\bm x}}
+%\newcommand{\vz}{{\bm z}}
+%\newcommand{\vt}{{\bm t}}
+%\newcommand{\vI}{{\bm I}}
+%\newcommand{\vG}{{\bm G}}
+%\newcommand{\vP}{{\bm P}}
+%\newcommand{\vh}{{\bm h}}
+%\newcommand{\vr}{{\bm \rr}}
+%\newcommand{\vmu}{{\bm \mu}}
+%\newcommand{\valpha}{{\bm \alpha}}
+%\newcommand{\vlam}{{\bm \lambda}}
+%\newcommand{\veps}{{\bm \epsilon}}
+%\newcommand{\vPsi}{{\bm \Psi}}
+%\newcommand{\vSigma}{{\bm \Sigma}}
+%\newcommand{\vdel}{{\bm \delta}}
+%\newcommand{\DD}{{\cal D}}
+%\newcommand{\PP}{{\boldsymbol P}}
+%\newcommand{\II}{{\boldsymbol I}}
+%\newcommand{\SSig}{{\boldsymbol \Sigma}}
+\newcommand{\by}{\bm{y}}
+%\newcommand{\bu}{\bm{u}}
+\newcommand{\bg}{\bm{g}}
+\newcommand{\ba}{\bm{a}}
+\newcommand{\bb}{\bm{b}}
+\newcommand{\bc}{\bm{c}}
+%\newcommand{\bv}{\bm{v}}
+\newcommand{\bV}{\bm{V}}
+\newcommand{\bnu}{\bm{\nu}}
+\newcommand{\balpha}{\bm{\alpha}}
+\newcommand{\bgamma}{\bm{\gamma}}
+\newcommand{\bomega}{{\bm{\omega}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\bSig}{{\bf \Sigma }}
+\newcommand{\bC}{{\bf C }}
+\newcommand{\bR}{{\bf R }}
+\newcommand{\bRt}{{\bf R_\textrm{true} }}
+\newcommand{\bG}{{\bf G }}
+\newcommand{\tbG}{{\tilde{\bG} }}
+\newcommand{\bs}{{\bf s }}
+\newcommand{\bmu}{{\bf \mu }}
+\newcommand{\bxi}{{\bf \xi }}
+\newcommand{\bst}{{\bf s_\textrm{true} }}
+\newcommand{\bd}{{\bf d }}
+\newcommand{\bff}{{\bf f }}
+\newcommand{\bE}{{\bf E }}
+\newcommand{\bdel}{{\bf \delta }}
+%\newcommand{\veta}{{\bf \eta }}
+\newcommand{\bee}{{\bf e }}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{amsbsy}
+\def\bu{\boldsymbol{u}}
+\def\bv{\boldsymbol{v}}
+\def\bw{\boldsymbol{w}}
+\newcommand{\VXi}{\boldsymbol{\Xi}}
+\newcommand{\Vxi}{\boldsymbol{\xi}}
+\newcommand{\VBc}{\boldsymbol{\Bc}}
+\newcommand{\Vtheta}{\boldsymbol{\theta}}
+\newcommand{\VTheta}{\boldsymbol{\Theta}}
+\newcommand{\phib}{\boldsymbol{\phi}}
+\newcommand{\I}{\boldsymbol{I}}
+\newcommand{\Phib}{{\boldsymbol{\Phi}}}
+\newcommand{\gammab}{\boldsymbol{\gamma}}
+\newcommand{\Omegab}{\boldsymbol{\Omega}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+

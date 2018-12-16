@@ -1,0 +1,42 @@
+% !TEX root = slides.tex
+%====================================================================================
+
+%====================================================================================
+\begin{frame}[c]{More data leads to `leftover' model error}
+\label{merr_nconv}
+\footnotesize
+Calibrating a quadratic $f(x)=\lambda_0+\lambda_1x+\lambda_2 x^2$
+\\w.r.t. `truth' $g(x)=6+ x^2- 0.5 (x+1)^{3.5}$ measured with noise $\sigma=0.1$.
+
+%\vspace*{-0.2cm}
+\hspace*{-0.3cm}
+\begin{minipage}{0.55\textwidth}
+\underline{\emph{Summary of features:}}
+\bi
+\item Well-defined model-to-model calibration
+\vspace*{-0.05cm}
+\item Model-driven discrepancy correlations
+\vspace*{-0.05cm}
+\item Respects physical constraints
+\vspace*{-0.05cm}
+\item Disambiguates model and data errors
+\vspace*{-0.05cm}
+\item Calibrated predictions of multiple QoIs
+\ei
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+\vspace*{0.2cm}
+\includegraphics[width=1.\textwidth]{merr/{var_conv_case_full}.eps}
+\end{minipage}
+
+
+\vspace*{0.2cm}
+%$\qquad\quad\quad N=20 \qquad\qquad\qquad\qquad N=50 \qquad\qquad\quad\qquad\quad N=1000$
+%\includegraphics[width=0.45\textwidth]{merr/fit_N50.eps}\hfill
+%\includegraphics[width=0.45\textwidth]{merr/fit_N1000.eps}
+\includegraphics[width=0.33\textwidth]{scram-merr/{fit_o2_N100_r1}.eps}
+\includegraphics[width=0.33\textwidth]{scram-merr/{fit_o2_N1000_r1}.eps}
+\includegraphics[width=0.33\textwidth]{scram-merr/{fit_o2_N10000_r1}.eps}
+
+
+\end{frame}

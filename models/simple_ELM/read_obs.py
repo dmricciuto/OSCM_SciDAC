@@ -11,8 +11,9 @@ from common import oscm_dir
 
 
 obs_dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
-site_names, site_lons, site_lats = read_obsdata(obs_dataset)
+sites_info = read_sites(obs_dataset)
+nsites = len(sites_info)
 
-np.savetxt('site_lons.txt',site_lons)
-np.savetxt('site_lats.txt',site_lats)
-np.savetxt('site_names.txt',site_names,fmt='%s')
+#np.savetxt('site_lons.txt',site_lons, fmt='%.2f')
+np.savetxt('site_coords.txt',[sites_info[j][1:3] for j in range(nsites)], fmt='%.2f')
+np.savetxt('site_names.txt',[sites_info[j][0] for j in range(nsites)],fmt='%s')

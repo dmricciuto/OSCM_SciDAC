@@ -1,0 +1,43 @@
+\begin{frame}[t] \label{pcuq3}
+  \frametitle{Multivariate Polynomial Chaos}
+  
+  \begin{columns}[totalwidth=\textwidth]
+  \begin{column}{0.5\textwidth}
+$\left\{\begin{aligned}
+U_1&=\sum_{k=0}^{K_1} u_{1k}\Psi_k(\xi_1,\dots,\xi_n)\\
+U_2&=\sum_{k=0}^{K_2} u_{2k}\Psi_k(\xi_1,\dots,\xi_n)\\
+\vdots &\quad \qquad\qquad \vdots \\
+U_d&=\sum_{k=0}^{K_d} u_{dk}\Psi_k(\xi_1,\dots,\xi_n)
+\end{aligned}\right.
+$
+  \end{column}
+  \begin{column}{0.85\textwidth}
+   \begin{center}
+   \footnotesize
+\bi
+\item Multivariate polynomial \\ $\Psi_k(\vxi)=\psi_{\alpha_1}(\xi_1)\cdots \psi_{\alpha_n}(\xi_n)$
+\item Usually $d=n$
+\item Construction non-trivial: e.g., capture 
+\hspace*{0.5cm}
+\bi
+\item \begin{scriptsize} the PDF of $U$ \end{scriptsize}
+\item \begin{scriptsize} select moments of $U$ \end{scriptsize}
+\item \begin{scriptsize} some QoI $h(U)$ \end{scriptsize}
+\ei
+\item Multivariate normal is a special case
+\item Multiindex $(\alpha_1,\dots,\alpha_n)$ selection, \\ Truncation;  see later
+\item Rosenblatt map \\(multivariate CDF transform)
+\ei  
+     \end{center}
+  \end{column}
+\end{columns}
+
+\bigskip
+\only<2>
+{
+Fun example: $X=\xi_1^2+\xi_2^2$ is exponential r.v. if $\xi$'s are i.i.d. gaussians. However, no finite order 1D PC exists.
+}
+
+ 
+ \end{frame}
+

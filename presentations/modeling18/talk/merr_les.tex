@@ -1,0 +1,160 @@
+% !TEX root = slides.tex
+
+%==============================================================================
+%==============================================================================
+\begin{frame}[t]
+\label{merr3}
+\frametitle{Jet-in-Crossflow studies: \\Static-vs-Dynamic or 2D-vs-3D}
+%  \only<2>{2D-vs-3D} Jet-in-Crossflow}
+
+% \bi
+% \item Pre-build a 3-parameter surrogate $f_s(x;\lambda)\approx f(x;\lambda)$
+% \item Ranges selected from baseline computations: \\$C_R\in[0.005,0.08]$, $Pr^{-1}_t, Sc^{-1}_t\in[0.25,2.0]$
+% \ei
+\centering
+\includegraphics<1>[width= 0.5\textwidth]{scram-merr/merr_with_data_noise/static_vs_dynamic/classical/minf_tke_fullprofile_L0100_h.pdf}
+\includegraphics<1>[width= 0.5\textwidth]{scram-merr/merr_with_data_noise/static_vs_dynamic/gausmarg_embed_0/minf_tke_fullprofile_L0100_h.pdf}
+\includegraphics<2>[width= 0.5\textwidth]{scram-merr/merr_with_data_noise/twoD_vs_threeD/classical/minf_scalar_dissip_fullprofile_L0088_h.pdf}
+\includegraphics<2>[width= 0.5\textwidth]{scram-merr/merr_with_data_noise/twoD_vs_threeD/gausmarg_embed_0_and_2/minf_scalar_dissip_fullprofile_L0088_h.pdf}
+\includegraphics<3>[clip,trim=0 0 0 0, width= 0.5\textwidth]{scram-merr/classical_Mach_fullprofile_calib_spanAve.pdf}
+\includegraphics<3>[clip,trim=0 0 0 0, width= 0.5\textwidth]{scram-merr/fit_Mach_fullprofile_spanavg.pdf}
+\vspace*{-2.0cm}
+\hspace*{2cm} No model error \hspace*{2.95cm} Embedded model error
+\vspace*{1.9cm}
+
+
+ %% \begin{itemize}
+ %%        \setlength{\itemindent}{-.25in}
+%\item
+  Overall uncertainty breakdown for posterior predictive:
+\[
+\sigma_i^{2}=\underbrace{\EE_{\tlam}\left[\sigma_i^2(\tlam)\right]}_{\textrm{Model error}} +\underbrace{\VV_{\tlam}\left[\mu_i(\tlam)\right]}_{\textrm{Posterior uncertainty}}  +\underbrace{(\sigma^{LOO}_i)^2}_{\textrm{Surrogate error}}+\underbrace{(\sigma_{f_i})^2}_{\textrm{Data noise}}
+\]
+%        \end{itemize}
+
+$\:$\hspace*{-0.3cm}
+\includegraphics[clip,trim=0 0 0 0, width=0.1\textwidth]{scram-merr/lightgrey.png}\hspace*{1.2cm}
+\includegraphics[clip,trim=0 0 0 0, width=0.1\textwidth]{scram-merr/darkgrey.png}\hspace*{1.2cm}
+\includegraphics[clip,trim=0 0 0 0, width=0.1\textwidth]{scram-merr/lightblue.png}\hspace*{0.5cm}
+
+\end{frame}
+%==============================================================================
+
+\begin{frame}[c]{\small{LES computation in Scramjet engine: static-vs-dynamic SGS model calibration}}
+\framesubtitle{Calibrate with Turbulent Kinetic Energy (TKE) data, predict both TKE and Pressure}
+\label{les_merr}
+\footnotesize
+%\bi %\setlength{\itemindent}{-2.1em}
+%\item Built linear surrogates of average Turbulent Kinetic Energy (TKE) and Pressure w.r.t.
+%\item[] $\lambda=(C_R,Pr^{-1}_t,Sc^{-1}_t)$ for $x=(x=100 d_{inj},y=y_k d_{inj},z=0)$, with $k=1,\dots,31$.
+%\item Replace the static SGS model $f^{TKE}(x;\lambda)$ with its surrogate $f^{TKE}_s(x;\lambda)$
+%\item Use dynamic SGS model $g^{TKE}(x)$ as data for calibration
+%\item Calibrate with TKE data, predict both TKE and Pressure
+%\ei
+
+\vspace*{-12mm}
+%\centerline{Pushed forward posterior}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\vspace*{0mm}\centerline{TKE}
+\includegraphics[clip,trim=0 0 0 0, width=\textwidth]{scram-merr/fit_TKE_c.eps}\\
+\vspace*{-17mm}\centerline{No model error}\vspace*{13mm}
+\includegraphics[clip,trim=0 0 0 0, width=\textwidth]{scram-merr/fit_TKE.eps}\\
+\vspace*{-16mm}\centerline{With model error}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\vspace*{0mm}\centerline{Pressure}
+\includegraphics[clip,trim=0 0 0 0, width=\textwidth]{scram-merr/fit_Pressure_c.eps}\\
+\vspace*{-16mm}\centerline{No model error}\vspace*{12mm}
+\includegraphics[clip,trim=0 0 0 0, width=\textwidth]{scram-merr/fit_Pressure.eps}\\
+\vspace*{-15mm}\centerline{With model error}
+\end{column}
+\end{columns}
+
+% Top row is classical (least-squares fit with inferred variance) calibration with errorbars representing pushed-forward stdev
+% Bottom row is the case with model error embedded in $C_R$ only
+% (since the sensitivity analysis reveals that the two other parameters have much weaker influence on these outputs)
+% We used gaussian-marginalized approximate likelihood, MCMC with 30K samples
+% Dark-grey corresponds to  posterior variance of the mean of pushed-forward model
+% Light-grey corresponds to posterior average of the variance of pushed-forward model
+
+
+\end{frame}
+
+
+% %==============================================================================
+% %==============================================================================
+% \begin{frame}[t]
+% \label<1->{merr5}
+% \frametitle{2D-vs-3D study: Setup}
+% %\vspace*{-1.0cm}
+% \btodo WIP \etodo
+% \bi
+% \setlength{\itemindent}{-4mm}
+% \item Problem Focus: P1 Jet in Crossflow problem \\-- static SGS constants, $d/8$ grid resolution
+% \item Calibrate a 2D model using 3D benchmark simulations as data
+% \item Quantify the model error associated with 2D treatment
+% %\item Benchmark run taken from Study 1, run \#42/64
+% \item Red curves show ensemble of 2D runs over $\lambda$-range
+% \item 3D QoI selection for 2D comparison: (a) centerline, (b) spanwise average
+% \ei
+
+% \centerline{
+% \includegraphics<1>[clip,trim=0 0 0 0, width=0.72\textwidth]{scram-merr/profile_allruns_Mach_L0100.pdf}
+% \includegraphics<2>[clip,trim=0 0 0 0, width=0.72\textwidth]{scram-merr/profile_allruns_P_L0100.pdf}
+% \includegraphics<3>[clip,trim=0 0 0 0, width=0.72\textwidth]{scram-merr/profile_allruns_rho_L0100.pdf}
+% }
+
+
+% \end{frame}
+%==============================================================================
+
+% \begin{frame}[t]
+% \label{merr6}
+% \frametitle{2D-vs-3D study: Surrogate construction details}
+% \btodo WIP \etodo
+% \vspace*{-0.35cm}
+% \small
+% \bi
+% \setlength{\itemsep}{0.3mm}
+% \setlength{\itemindent}{-4.4mm}
+% \item Model still expensive; direct evaluations in MCMC infeasible
+% \item Ensemble of $500$ simulations of the 2D model $f(\lambda)$
+% \item Legendre polynomial expansion surrogate, Leave-one-out (LOO) error estimate
+% \item Initial GSA for centerline $M$ QoI suggests how to embed model error
+% \ei
+% \tiny
+% \vspace*{-0.1cm}
+% \begin{table}[!t]
+% \centering
+% \begin{tabular}{@{}ccc@{}}
+% \hline
+%   Parameter         & Notation & Range   \\ \hline\hline
+% Modified Smagorinsky constant  &     $C_R$             &   $[0.005, 0.08]$              \\ \hline
+% (inverse) Turbulent Prandtl number &        $Pr^{-1}_t$          &     $[0.25, 2.0]$            \\ \hline
+% (inverse) Turbulent Schmidt number &        $Sc^{-1}_t$          &     $[0.25, 2.0]$     \\ \hline
+% Turbulence intensity (air) &        $I_i=u'_i/U_i$          &  $[0.025, 0.075]$          \\ \hline
+% Turbulence intensity ratio (air) &        $I_r=v'/u'$           &    $[0.5, 1.0]$           \\  \hline
+% Turbulence length scale (air) &        $L_i$           &    $[0.0, 8.0]$           \\  \hline\hline
+% \end{tabular}
+% \end{table}
+
+% \vspace*{-0.3cm}
+% \centerline{
+% \includegraphics[clip,trim=0 0 0 0, width=0.75\textwidth]{scram-sep16/sens_tot_Mach_fullprofile_L0100.pdf}
+% %\includegraphics[clip,trim=0 0 0 0, width=0.45\textwidth]{sens_tot_P_fullprofile_L0100.pdf}
+% }
+
+
+
+% \end{frame}
+%==============================================================================
+%==============================================================================
+%==================================================================================
+
+
+
+%==================================================================================
+
+

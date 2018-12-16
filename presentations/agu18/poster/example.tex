@@ -1,0 +1,48 @@
+% !TEX root = poster.tex
+\node [mybox,anchor=north west, font=\fontsize{\fntszL}{\fntszL}\selectfont]
+at (\exPos) (boxEx){%
+\begin{minipage}{\bxszB}
+
+ \begin{figure*}[ht]
+ \subfloat{%
+  \begin{tabular}{c}
+ Calibrating \\linear, quadratic and cubic\\
+ %\\$f(x)=\lambda_0+\lambda_1x+\lambda_2 x^2$
+models w.r.t. `truth' \\$g(x)=6+ x^2- 0.5 (x+1)^{3.5}$ \\measured with noise $\sigma=0.1$
+  \end{tabular}
+ }%
+ \subfloat{%
+  \begin{tabular}{c}
+$\quad$\includegraphics[width=0.45\textwidth]{merr/{var_conv_case_full}.eps} \\
+  \end{tabular}
+ }%
+\end{figure*}
+
+\vspace{-0.1cm}
+\centering
+{\bf Left-over model error with increased data amount}
+\begin{figure*}[ht]
+ \subfloat{%
+  \begin{tabular}{c}
+%\fontsize{35}{45}\selectfont{N=20}\\
+\includegraphics[width=0.3\textwidth]{merr/{case3_fit_gausmarg_n20_s0.1_quad_Ntext}.eps} \\
+  \end{tabular}
+ }%
+ \subfloat{%
+  \begin{tabular}{c}
+%\fontsize{35}{45}\selectfont{N=50}\\
+\includegraphics[width=0.3\textwidth]{merr/{case3_fit_gausmarg_n50_s0.1_quad_Ntext}.eps} \\
+  \end{tabular}
+ }%
+ \subfloat{%
+  \begin{tabular}{c}
+%\fontsize{35}{45}\selectfont{N=1000}\\
+\includegraphics[width=0.3\textwidth]{merr/{case3_fit_gausmarg_n1000_s0.1_quad_Ntext}.eps} \\
+  \end{tabular}
+ }%
+\end{figure*}
+\end{minipage}
+};
+\vspace*{-3cm}\fontsize{35}{45}\selectfont{N=50}
+\node[fancytitle, right=10pt, font=\fontsize{\fntszL}{\fntszL}\selectfont]
+at (boxEx.north west) {\bf Demonstration};

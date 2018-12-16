@@ -1,0 +1,48 @@
+% !TEX root = slides.tex
+%==================================================================================
+\begin{frame}[t]
+\label{pc-use}
+  \frametitle{PC features: Global Sensitivity Analysis \hfill \small{$Z(\vxi)\simeq \displaystyle{\sum_{k=0}^K} z_k \Psi_k(\vxi)$}}
+
+
+\bi
+\item Main effect sensitivity indices
+\ben
+S_i=\frac{Var[\mathbb{E}(Z(\vxi|\xi_i)]}{Var[Z(\vxi)]}=\frac{\sum_{k\in\mathbb{I}_{i}} z^2_k ||\Psi_k||^2}{\sum_{k>0} z^2_k ||\Psi_k||^2}
+\een
+  \bi
+  \item $\mathbb{I}_i$ is the set of bases with only $\xi_i$
+    involved
+  \item $S_i$ is the uncertainty contribution that is due to
+    $i$-th parameter only
+  \ei
+
+
+\only<1>{
+\item Total effect sensitivity indices
+ \ben
+ T_i=1-\frac{Var[\mathbb{E}(Z(\vxi|\xi_{-i})]}{Var[Z(\vxi)]}=\frac{\sum_{k\in\mathbb{I}^T_{i}} z^2_k ||\Psi_k||^2}{\sum_{k>0} z^2_k ||\Psi_k||^2}
+ \een
+  $\mathbb{I}^T_i$ is the set of bases with $\xi_i$
+   involved, including all its interactions.
+}
+
+\only<2>{
+\item Joint sensitivity indices
+\ben
+S_{ij}=\frac{Var[\mathbb{E}(Z(\vxi|\xi_i,\xi_j)]}{Var[Z(\vxi)]}-S_i-S_j=\frac{\sum_{k\in\mathbb{I}_{ij}} z^2_k ||\Psi_k||^2}{\sum_{k>0} z^2_k ||\Psi_k||^2}
+\een
+  \bi
+  \item $\mathbb{I}_{ij}$ is the set of bases with only $\xi_i$ and
+    $\xi_j$ involved
+  \item $S_{ij}$ is the uncertainty contribution that is due to
+    $(i,j)$ parameter pair
+  \ei
+ }
+
+
+\ei
+
+
+\end{frame}
+

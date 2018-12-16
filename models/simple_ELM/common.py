@@ -43,3 +43,6 @@ for p in pdict:
     else:
         pmin[p] = pdict[p]*0.5
         pmax[p] = pdict[p]*1.5
+
+
+dim = 47

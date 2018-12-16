@@ -1,0 +1,28 @@
+% !TEX root = slides.tex
+\begin{frame}[t]
+\label{sketch}
+\vspace*{-0.3cm}
+
+\footnotesize
+\frametitle{Forward/Inverse UQ workflow}
+\bi
+\item \textbf{Preprocess:} Surrogate construction, GSA, select embedding
+\item \textbf{Calibration:} Prior selection, MCMC
+\item \textbf{Prediction:} Forward PC propagation, possible extrapolation
+\ei
+
+\input{sketch2}
+
+\footnotesize
+\bi
+\item Predictive uncertainty decomposition: Total Variance = \\
+\medskip
+\begin{tikzpicture} \node [rounded corners,top color=purple!20, bottom color=purple!10,fill=blue!20] {
+ \small{Parametric uncertainty + Data noise + Model error + Surrogate error
+}
+};
+ \end{tikzpicture}
+ \item All developments done within UQTk, lightweight C++/Python library out of SNL-CA (\emph{www.sandia.gov/uqtoolkit})
+\ei
+
+\end{frame}

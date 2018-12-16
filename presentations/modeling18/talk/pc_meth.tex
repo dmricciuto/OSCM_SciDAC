@@ -1,0 +1,91 @@
+% !TEX root = slides.tex
+%==================================================================================
+\begin{frame}[t]
+\label{galerkin}
+\frametitle{Alternative methods to obtain PC coefficients}
+\vspace*{-7mm}
+
+\ben
+Z=f(U(\vxi)) \simeq \sum_{k=0}^{K} z_k \Psi_k(\vxi)
+\een
+
+\small{
+\bri
+\item<1-> \underline{Projection} $\qquad \qquad z_k=\frac{\langle f(\vxi) \Psi_k(\vxi)\rangle}{||\Psi_k||^2}$\\
+
+The integral $\langle f(\vxi) \Psi_k(\vxi)\rangle=\int f(\vxi) \Psi_k(\vxi) \pi_\vxi(\vxi) d\vxi$ is estimated by...
+\bbi
+\item {Monte-Carlo
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.4\textwidth}
+  \[\frac{1}{N}\sum_{j=1}^N f(\vxi_j) \Psi_k(\vxi_j)\]
+\end{column}
+  \begin{column}{0.2\textwidth}
+  %\vspace*{0.2in}
+ % \hspace{-0.25in}
+\includegraphics[angle=-90, width=0.6in]{misc/mcmany.eps}
+ \end{column}
+   \begin{column}{0.5\textwidth}
+   \vspace*{0.3cm}
+many(!) random samples
+\end{column}
+  \end{columns}
+}
+
+\item {Quadrature
+\begin{columns}[T,totalwidth=\textwidth]
+  \begin{column}{0.4\textwidth}
+  \[\sum_{j=1}^Q f(\vxi_j) \Psi_k(\vxi_j) w_j\]
+  \end{column}
+  \begin{column}{0.2\textwidth}
+ % \vspace*{0.2in}
+ % \hspace{-0.25in}
+\includegraphics[angle=-90, width=0.6in]{quad/qdp.eps}
+ \end{column}
+   \begin{column}{0.5\textwidth}
+   \vspace*{0.3cm}
+samples at quadrature
+\end{column}
+  \end{columns}
+}
+
+\ebi
+\eri
+
+\only<2->{
+\vspace*{-0.2cm}
+%\begin{center}
+%\line(1,0){350}
+%\end{center}
+
+%\begin{tikzpicture} \node [rounded corners,fill=blue!10] {
+%$\underbrace{P(f_k | u(\vxi_j))}_{\textrm{Posterior}}\propto \underbrace{P(u(\vxi_j)|f_k)}_{\textrm{Likelihood}}\underbrace{P(f_k)}_{\textrm{Prior}}$
+%};
+%\end{tikzpicture}
+
+
+\bri
+\item {\underline{Bayesian regression}
+\begin{columns}[T,totalwidth=\textwidth]
+\hspace*{-0.5cm}
+  \begin{column}{0.52\textwidth}
+\only<2>{\[P(z_k | f(\vxi_j))\propto P(f(\vxi_j)|z_k)P(z_k)\]}
+\only<3>{\[\underbrace{P(\vz|\DD)}_{\color{blue}\textrm{Posterior}\color{black}}\propto \underbrace{P(\DD|\vz)}_{\color{blue}\textrm{Likelihood}\color{black}} \underbrace{P(\vz)}_{\color{blue}\textrm{Prior}\color{black}}\]}
+ \end{column}
+  \begin{column}{0.2\textwidth}
+  \vspace*{-0.2in}
+%  \hspace{-0.25in}
+\includegraphics[angle=-90, width=0.6in]{misc/mcfew.eps}
+ \end{column}
+   \begin{column}{0.4\textwidth}
+ %  \vspace*{0.3cm}
+any (number of) samples
+\end{column}
+  \end{columns}
+}
+
+\eri
+}
+}
+\end{frame}
+%==================================================================================

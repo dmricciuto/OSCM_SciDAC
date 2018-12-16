@@ -1,0 +1,79 @@
+%!TEX root=slides.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]\label{for-uq}
+\frametitle{Forward UQ}
+   \addtocounter{framenumber}{-1}
+
+\vspace*{-0.4cm}
+\bi
+\item Local sensitivity analysis and error propagation
+\hspace*{6.3cm}
+\includegraphics[angle=0, height=1.2in]{misc/local_sens.eps}
+\vspace*{-3.1cm}
+\ben
+\hspace*{-2cm}
+\Delta y = \frac{\dd f}{\dd x}\bigg|_{x_0} \Delta x
+\vspace*{-3mm}
+\een
+This is ok for:
+\bi
+\item small uncertainty
+\item low degree of non-linearity
+\ei
+\medskip
+\medskip
+\medskip
+
+\hspace*{4.6cm}
+\includegraphics[angle=0, height=1.1in]{misc/correl_1.eps}\hspace*{0.4cm}
+\includegraphics[angle=0, height=1.1in]{misc/correl_2.eps}
+\vspace*{-3.1cm}
+\item Non-probabilistic methods
+\bi
+\setlength\itemsep{0.1cm}
+\item Evidence theory
+\item Fuzzy logic
+\item Interval math
+\item Misses correlations
+\ei
+\bigskip
+\bigskip
+
+\item \textbf{Probabilistic methods} -- our focus
+\ei
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]\label{for-uq}
+\frametitle{Probabilistic Forward UQ }
+
+\bi\setlength{\itemsep}{3mm}
+
+\item Uncertain inputs/outputs as random variables
+
+\hspace*{4cm}\mybox{$y=f(\lambda)$}
+
+\item Default way - sampling:
+\bi
+ \setlength\itemsep{0.1cm}
+\item Random sampling, MC/QMC
+\item Generate random samples $\{\lambda_i\}_{i=1}^N$ from the PDF of $\lambda$, $p(\lambda)$
+\item Evaluate the model $y_i=f(\lambda_i)$, construct $p(y)$ or gather statistics
+\item Slow convergence of MC/QMC $\Rightarrow$ infeasibly large $N$ required
+\ei
+
+\item Build a cheap surrogate for $f(\lambda)$, then use MC
+
+\bi
+ \setlength\itemsep{0.1cm}
+\item Collocation -- interpolants
+\item Regression -- fitting
+\ei
+\item \textbf{Polynomial Chaos (PC)} is a convenient machinery
+
+
+\ei
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,114 @@
+#!/bin/csh
+
+if($1 == "h")then
+  echo "usage: links [h|r]"
+  echo "       links   : build links"
+  echo "       links h : print this usage text"
+  echo "       links r : remove links"
+  exit
+endif
+
+if(!(-e fig)) mkdir ./fig
+cd ./fig
+
+if($1 == "r")then
+ /bin/rm -f dfi ijnme uq_eps eig_eps clm_eps uqdisc_eps demo quad
+ /bin/rm -f eps bcs_eps sds_eps figs_kl odeisp muq bf bkle
+ /bin/rm -f jet_eps nhepEdge moderr dfi_new_eps quest_eps
+ /bin/rm -f msquad moderr_jb merr pdfkde_eps uqtk_figs deps noaa
+ /bin/rm -f hmatrix afig logos misc noaa dfi_shock scram-misc
+ exit
+endif
+
+# defaults
+set TALK_DIST_BASE = ${HOME}
+set SCRAM_BASE = ${HOME}
+set QUEST_DIST_BASE = ${HOME}
+set BES_DIST_BASE = ${HOME}
+set UQTK_BASE = ${HOME}
+
+if      ($USER == "najm")then
+	set TALK_DIST_BASE = ${HOME}
+	set SCRAM_BASE = ${HOME}
+	set QUEST_DIST_BASE = ${HOME}
+	set BES_DIST_BASE = ${HOME}
+	set UQTK_BASE = ${HOME}
+else if ($USER == "csafta")then
+	set TALK_DIST_BASE = ${HOME}/Projects
+	set SCRAM_BASE = ${HOME}/Projects
+	set QUEST_DIST_BASE = ${HOME}/Projects
+	set BES_DIST_BASE = ${HOME}/Projects
+	set UQTK_BASE = ${HOME}/Projects
+else if ($USER == "ksargsy")then
+	set TALK_DIST_BASE = ${HOME}/research
+	set SCRAM_BASE = ${HOME}/research
+	set QUEST_DIST_BASE = ${HOME}/research
+	set BES_DIST_BASE = ${HOME}/research
+	set UQTK_BASE = ${HOME}/research
+else if ($USER == "kchowdh")then
+	set TALK_DIST_BASE = ${HOME}/Research
+	set SCRAM_BASE = ${HOME}/Research
+	set QUEST_DIST_BASE = ${HOME}/Research
+	set BES_DIST_BASE = ${HOME}/Research
+	set UQTK_BASE = ${HOME}/Research
+else if ($USER == "bjdebus")then
+	set TALK_DIST_BASE = ${HOME}/research/papers_talks
+	set SCRAM_BASE = ${HOME}/research
+	set QUEST_DIST_BASE = ${HOME}/research/QUEST
+	set BES_DIST_BASE = ${HOME}/research
+	set UQTK_BASE = ${HOME}/research/uq_toolkit
+else if ($USER == "mseldre")then
+	set TALK_DIST_BASE = ${HOME}/dev/getz.ca
+	set SCRAM_BASE = ${HOME}/dev/getz.ca
+	set QUEST_DIST_BASE = ${HOME}/dev/getz.ca
+	set BES_DIST_BASE = ${HOME}/dev/getz.ca
+	set UQTK_BASE = ${HOME}/dev/getz.ca
+else if ($USER == "gnlacaz")then
+	set TALK_DIST_BASE = ${HOME}
+	set SCRAM_BASE = ${HOME}/WORK/Program_DARPA/
+	set QUEST_DIST_BASE = ${HOME}
+	set BES_DIST_BASE = ${HOME}
+	set UQTK_BASE = ${HOME}
+endif
+
+
+echo "hmatrix:"   ; if(!(-e hmatrix))    ln -s ${TALK_DIST_BASE}/talk_dist/hmatrix/			       ./hmatrix
+echo "bkle:"      ; if(!(-e bkle))       ln -s ${TALK_DIST_BASE}/talk_dist/bpca/   			       ./bkle
+echo "dfi:"       ; if(!(-e dfi))        ln -s ${TALK_DIST_BASE}/talk_dist/arch/bes/dfi                        .
+echo "dfi_shock:" ; if(!(-e dfi_shock))  ln -s ${TALK_DIST_BASE}/talk_dist/arch/bes/dfi_shock                  .
+echo "dfi_new:"   ; if(!(-e dfi_new_eps))ln -s ${TALK_DIST_BASE}/talk_dist/arch/bes/dfi_new                    ./dfi_new_eps
+echo "ijnme:"     ; if(!(-e ijnme))      ln -s ${TALK_DIST_BASE}/talk_dist/arch/uq/chem/eps/ctw/ijnme          .
+echo "uq_eps:"    ; if(!(-e uq_eps))     ln -s ${TALK_DIST_BASE}/talk_dist/arch/uq/chem/eps                    ./uq_eps
+echo "eig_eps:"   ; if(!(-e eig_eps))    ln -s ${TALK_DIST_BASE}/talk_dist/arch/uq/eig/eps                     ./eig_eps
+echo "bcsclm:"   ; if(!(-e bcsclm))    ln -s ${TALK_DIST_BASE}/talk_dist/arch/bcsclm                         ./bcsclm
+echo "uqdisc_eps:"; if(!(-e uqdisc_eps)) ln -s ${TALK_DIST_BASE}/talk_dist/arch/uqdisc                         ./uqdisc_eps
+echo "demo:"      ; if(!(-e demo))       ln -s ${TALK_DIST_BASE}/talk_dist/arch/uq/demo                        .
+echo "quad:"      ; if(!(-e quad))       ln -s ${TALK_DIST_BASE}/talk_dist/arch/quad                           .
+echo "eps:"       ; if(!(-e eps))        ln -s ${QUEST_DIST_BASE}/quest_dist/doc/talk/ARCHIVE/misc             ./eps
+echo "quest_eps:" ; if(!(-e quest_eps))  ln -s ${TALK_DIST_BASE}/talk_dist/arch/quest                          ./quest_eps
+echo "bcs:"   ; if(!(-e bcs_eps))    ln -s ${TALK_DIST_BASE}/talk_dist/arch/bcs                            ./bcs_eps
+echo "sds_eps:"   ; if(!(-e sds_eps))    ln -s ${TALK_DIST_BASE}/talk_dist/arch/sds                            ./sds_eps
+echo "figs_kl:"   ; if(!(-e figs_kl))    ln -s ${QUEST_DIST_BASE}/quest_dist/doc/talk/UQTk-SIAMUQ-2012/figs_kl .
+echo "odeisp:"    ; if(!(-e odeisp))     ln -s ${BES_DIST_BASE}/bes_dist/doc/talk/archive/odeisp               .
+echo "muq:"       ; if(!(-e muq))        ln -s ${TALK_DIST_BASE}/talk_dist/arch/uq/muq                         .
+echo "bf:"        ; if(!(-e bf))         ln -s ${TALK_DIST_BASE}/talk_dist/arch/bf                             .
+echo "moderr:"    ; if(!(-e moderr))     ln -s ${BES_DIST_BASE}/bes_dist/doc/talk/archive/moderr               .
+echo "nhepEdge:"  ; if(!(-e nhepEdge))   ln -s ${TALK_DIST_BASE}/talk_dist/arch/bes/nhepEdge 		       .
+echo "jet_eps:"   ; if(!(-e jet_eps))    ln -s ${TALK_DIST_BASE}/talk_dist/arch/bes/jetuq                      ./jet_eps
+echo "msquad:"    ; if(!(-e msquad))     ln -s ${TALK_DIST_BASE}/talk_dist/arch/msquad                         .
+echo "moderr_jb:" ; if(!(-e moderr_jb))  ln -s ${BES_DIST_BASE}/bes_dist/doc/talk/siamcse/2015/ModelError/fig  ./moderr_jb
+echo "merr:"      ; if(!(-e merr))       ln -s ${TALK_DIST_BASE}/talk_dist/arch/merr                          ./
+echo "scram-merr:"; if(!(-e scram-merr)) ln -s ${SCRAM_BASE}/scram/doc/talk/arch/merr                          ./scram-merr
+echo "scram-misc:"; if(!(-e scram-misc)) ln -s ${SCRAM_BASE}/scram/doc/talk/arch/misc                          ./scram-misc
+echo "pdfkde_eps:"; if(!(-e pdfkde_eps)) ln -s ${QUEST_DIST_BASE}/quest_dist/run/pdf_test/figs 		       ./pdfkde_eps
+echo "uqtk_figs:" ; if(!(-e uqtk_figs))  ln -s ${UQTK_BASE}/UQTk/doc/manual/figs                               ./uqtk_figs
+echo "logos:"     ; if(!(-e logos))      ln -s ${TALK_DIST_BASE}/talk_dist/arch/logos                                    ./
+echo "misc:"      ; if(!(-e misc))       ln -s ${TALK_DIST_BASE}/talk_dist/arch/misc                                     ./
+echo "binf:"      ; if(!(-e binf))       ln -s ${TALK_DIST_BASE}/talk_dist/arch/binf                                     ./
+echo "agu14/tcom/fig:"  ; if(!(-e tcom_fig))   ln -s ${TALK_DIST_BASE}/talk_dist/agu14/tcom/fig                      ./tcom_fig
+echo "cmuq:"     ; if(!(-e cmuq))      ln -s ${TALK_DIST_BASE}/talk_dist/arch/cmuq                                    ./
+
+cd ..
+exit
+
+

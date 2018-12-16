@@ -1,0 +1,73 @@
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+\tikzstyle{blbanner}=[rectangle, draw=mediumtealblue, thin, fill=sapphire,
+                                 anchor=north, minimum width=\pWidth, minimum height=1in]
+
+\tikzstyle{rdbanner}=[rectangle, draw=carmine, thin, fill=carmine,
+                                 anchor=north, minimum width=\pWidth, minimum height=0.1in]
+
+\tikzstyle{dsbanner}=[rectangle, draw=khaki, thin, fill=khaki,
+                                 anchor=north, minimum width=\pWidth, minimum height=0.2in]
+
+\tikzstyle{ent1} = [minimum height=3em, minimum width=5em, draw=white]
+\tikzstyle{ent2} = [minimum height=3em, minimum width=5em]
+
+\tikzstyle{mybox} = [draw=sapphire, fill=khaki!10, line width=0.05in,
+    rectangle, rounded corners, inner sep=10pt, inner ysep=20pt]
+
+\tikzstyle{framebox} = [draw=black, fill=none, line width=0.05in,
+    rectangle, rounded corners, inner sep=30pt, inner ysep=40pt, text width=8in]
+
+\tikzstyle{fancytitle} =[fill=sapphire, text=white]
+
+
+% List, items, equations
+%
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+\newcommand{\bean}{\begin{eqnarray*}}
+\newcommand{\eean}{\end{eqnarray*}}
+\newcommand{\ben}{\begin{equation*}}        % eqn w/no number
+\newcommand{\een}{\end{equation*}}
+%\newcommand{\ben}{\[}
+%\newcommand{\een}{\]}
+
+
+\newenvironment{greenItemize} { \begin{list}
+{\color{green}$\bullet$\color{black}}
+{ \setlength{\rightmargin}{\leftmargin} \setlength{\itemsep}{0in} } }{ \end{list} }
+
+\newenvironment{redItemize} { \begin{list}
+{\color{red}$\bullet$\color{black}}
+{ \setlength{\rightmargin}{\leftmargin} \setlength{\itemsep}{0in} } }{ \end{list} }
+
+
+\newenvironment{blueItemize} { \begin{list}
+{\color{blue}$\bullet$\color{black}}
+{ \setlength{\rightmargin}{\leftmargin} \setlength{\itemsep}{0in} } }{ \end{list} }
+
+\newenvironment{dashItemize} { \begin{list}
+{\color{black}--\color{black}}
+{ \setlength{\rightmargin}{\leftmargin} \setlength{\itemsep}{0in} } }{ \end{list} }
+
+\newcommand{\bgi}{\begin{greenItemize}}
+\newcommand{\egi}{\end{greenItemize}}
+\newcommand{\bri}{\begin{redItemize}}
+\newcommand{\eri}{\end{redItemize}}
+\newcommand{\bbi}{\begin{blueItemize}}
+\newcommand{\ebi}{\end{blueItemize}}
+\newcommand{\bdi}{\begin{dashItemize}}
+\newcommand{\edi}{\end{dashItemize}}
+
+\newcounter{Enumi}
+\newenvironment{Enumerate}{\begin{enumerate}
+\setcounter{enumi}{\value{Enumi}}}{\setcounter{Enumi}{\value{enumi}}
+\end{enumerate}}
+
+\newcommand{\tlam}{{\tilde{\alpha}}}

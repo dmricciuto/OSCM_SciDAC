@@ -1,0 +1,93 @@
+% !TEX root = poster.tex
+\node [mybox,anchor=north west, font=\fontsize{\fntszL}{\fntszL}\selectfont]
+at (\likPos) (boxLik){%
+\begin{minipage}{\bxszA}
+
+ \bigskip
+ \begin{itemize}
+
+\item Cast input parameters $\lambda$ as a random variable $\Lambda$
+\item Parameter estimation of $\lambda$ turns into PDF estimation of $\Lambda$
+\item Parameterize PDF form $\pi_\Lambda(\cdot;\alpha)$
+\begin{itemize}
+\item \emph{e.g.} Polynomial Chaos $\Lambda=\sum_{k=0}^K \alpha_k \Psi_k(\xi)$
+\end{itemize}
+\item Back to parameter estimation, now for $\alpha=(\alpha_0,\dots,\alpha_K)$
+%\item Back to calibration: parameterize $\pi_\Lambda(\cdot; \alpha)$ and calibrate for $\alpha$
+
+\hrule
+\item Full Likelihood: $L(\alpha) = p(y|\alpha) = p(y_1,\ldots, y_N|\alpha)=\pi(y)$
+%\begin{itemize}
+%\item Degenerate if no data noise
+%\item Requires multivariate KDE or high-d integration
+%\item Gaussian approximation: $L(\alpha)\propto \exp\left(-\frac{1}{2}(y-\mu(\alpha))^T \Sigma^{-1}(\alpha)(y-\mu(\alpha))\right)$
+%\item Non-intrusive spectral projection with Polynomial Chaos relieves the expense and provides easy access to mean $\mu(\alpha)$ and covariance $\Sigma(\alpha)$
+%\end{itemize}
+\item Marginal Apprx: $L(\alpha) \approx \prod_{i=1}^N p(y_i|\alpha)=\prod_{i=1}^N \pi(y_i)$
+%\begin{itemize}
+%\item Requires univariate KDE
+%\item Neglects built-in correlations
+%\item Gaussian approximation: $L(\alpha)\propto \exp\left(-\frac{1}{2}\sum_{i=1}^N \Sigma^{-1}_{ii}(\alpha)(y_i-\mu_i(\alpha))^2\right)$
+%\end{itemize}
+\item Approximate Bayesian Computation: $L(\alpha)=\frac{1}{\epsilon} K \left(\frac{\rho(S_M,S_{\cal D})}{\epsilon}\right)$\\
+%Seek to satisfy the constraints: \\
+%\begin{itemize}
+%\item Mean of $f(x_i;\Lambda)$ is ``centered" on the data
+%\item The width of the distribution of $f(x_i;\Lambda)$ is consistent with the spread of
+%the data around the nominal model prediction
+%\[
+%L(\alpha)\propto \exp \left(-\frac{1}{2\epsilon^2}\sum_{i=1}^N
+%\left[(\mu_i(\alpha)-y_i)^2 +
+%(\sqrt{\Sigma_{ii}(\alpha)}-\gamma|\mu_i(\alpha)-y_i|)^2\right]\right)
+%\]
+%\end{itemize}
+\vspace*{-1.1cm}
+\item Gaussian Apprx: $L(\alpha)\propto e^{-\frac{1}{2}(y-\mu(\alpha))^T \Sigma^{-1}(\alpha)(y-\mu(\alpha))}$
+
+\end{itemize}
+
+\end{minipage}
+};
+\node[fancytitle, right=10pt, font=\fontsize{\fntszL}{\fntszL}\selectfont]
+at (boxLik.north west) {\bf Likelihood Construction};
+
+%
+%\item Full Likelihood: $L(\alpha) = p(y|\alpha) = p(y_1,\ldots, y_N|\alpha)=\pi(y)$
+%\vspace*{0.2cm}
+%\bi
+%\setlength{\itemsep}{1mm}
+%\item Degenerate if no data noise
+%\item Requires multivariate KDE or high-d integration
+%\item Gaussian approximation: $L(\alpha)\propto \exp\left(-\frac{1}{2}(y-\mu(\alpha))^T \Sigma^{-1}(\alpha)(y-\mu(\alpha))\right)$
+%\item Non-intrusive spectral projection with Polynomial Chaos relieves the expense and provides easy access to mean $\mu(\alpha)$ and covariance $\Sigma(\alpha)$
+%\ei
+%}
+%\only<3>
+%{
+%\item Marginalized Likelihood: $L(\alpha) = p(y|\alpha) \approx \prod_{i=1}^N p(y_i|\alpha)=\prod_{i=1}^N \pi(y_i)$
+%\vspace*{0.2cm}
+%\bi
+%\setlength{\itemsep}{1mm}
+%\item Requires univariate KDE
+%\item Neglects built-in correlations
+%\item Gaussian approximation: $L(\alpha)\propto \exp\left(-\frac{1}{2}\sum_{i=1}^N \Sigma^{-1}_{ii}(\alpha)(y_i-\mu_i(\alpha))^2\right)$
+%\ei
+%}
+%\only<4>
+%{
+%\item Approximate Bayesian Computation (ABC): $L(\alpha)=\frac{1}{\epsilon} K \left(\frac{\rho(\mathcal{S_\MM,S_{\cal D}})}{\epsilon}\right)$\\
+% %Seek to satisfy the constraints: \\
+%\bi\setlength\itemsep{2mm}
+%\item \footnotesize{Mean of $f(x_i;\Lambda)$ is ``centered" on the data}
+%\item \footnotesize{The width of the distribution of $f(x_i;\Lambda)$ is consistent with the spread of
+%the data around the nominal model prediction}
+%\ei
+%\footnotesize{
+%\[
+%L(\alpha)\propto \exp \left(-\frac{1}{2\epsilon^2}\sum_{i=1}^N
+%\left[(\mu_i(\alpha)-y_i)^2 +
+%(\sqrt{\Sigma_{ii}(\alpha)}-\gamma|\mu_i(\alpha)-y_i|)^2\right]\right)
+%\]
+%}
+%}
+%\ei

@@ -1,0 +1,103 @@
+%\documentclass[compress,notes=only]{beamer}
+\documentclass[compress]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\setbeameroption{show only notes}
+%\setbeamertemplate{note page}{\pagecolor{yellow!5}\insertnote}\usepackage{palatino}
+
+\input{header}
+\input{def}
+\input{mytikz}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\input{title}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%\input{acknowledgement}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Intro]{Introduction}
+%\input{outline}
+
+
+
+\input{uq_motivation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[ForwardUQ]{Forward UQ}
+%\input{outline}
+
+
+\subsection[Polynomial Chaos]{Polynomial Chaos}
+
+\input{for-uq}
+
+\input{pc_intro}
+\subsection[High-D Challenge]{High Dimensional PC Surrogate Construction}
+
+\input{fuq_challenges}
+
+
+
+%\input{bayespc}
+% %\input{wibcs}
+% %\input{bcs}
+\subsection[ELM]{E3SM Land Model}
+\input{fuq_e3sm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[InverseUQ]{Inverse UQ}
+%\input{outline}
+
+\subsection[Bayes]{Bayesian Inference}
+\input{bayesfit}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection[Model Error]{Account for Model Error in Bayesian Inference}
+
+\input{merr_motivation3}
+\input{merr_rep}
+\input{merr_sketch}
+\input{merr_elm}
+
+
+
+%
+\section[Summary]{Summary}
+
+\subsection[Literature]{Literature}
+\input{lit}
+
+\subsection[Challenges]{Challenges}
+
+\input{challenges}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{framenumber}{-39}
+\setbeamertemplate{footline}[default]
+
+\input{empty}
+\input{intro-caseuq}
+
+\input{sens}
+\input{merr_motivation2}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

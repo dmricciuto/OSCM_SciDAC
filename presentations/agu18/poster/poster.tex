@@ -1,0 +1,109 @@
+\documentclass[tikz]{standalone}
+
+\usepackage{anyfontsize}
+\usepackage{tikz}
+\usepackage{amsmath,amssymb}
+\usepackage{subfig}
+\usepackage{bm}
+\usepackage{relsize}
+%\usepackage{tabularx}
+
+\usetikzlibrary{shapes,arrows,shadows,fit}
+
+% Colors
+\definecolor{mediumtealblue}{rgb}{0.0, 0.33, 0.71}
+\definecolor{carmine}{rgb}{0.59, 0.0, 0.09}
+\definecolor{desert}{rgb}{0.76, 0.6, 0.42}
+\definecolor{khaki}{rgb}{0.76, 0.69, 0.57}
+\definecolor{sapphire}{rgb}{0.03, 0.15, 0.4}
+
+% Fontsizes
+\newcommand{\fntszL}{45}
+\newcommand{\fntszC}{40}
+\newcommand{\fntszS}{42}
+
+% Block sizes
+\newcommand{\bxszA}{14.9in}
+\newcommand{\bxszB}{14.7in}
+\newcommand{\bxszC}{15.4in}
+
+% Custom sizes
+\newcommand{\pLength}{35.7in} %36
+\newcommand{\pWidth}{47.9in} %48
+\newcommand{\titLoc}{5.3in}
+
+% Block positions
+%\newcommand{\goalpos}{-24.75in,-5.3in}
+%\newcommand{\chalpos}{-24.75in,-15.4in}
+%\newcommand{\ideapos}{-24.75in,-24.2in}
+%\newcommand{\bayespos}{-24.75in,-35.9in}
+%\newcommand{\likpos}{0in,-5.3in}
+%\newcommand{\predpos}{0in,-10.0in}
+%\newcommand{\expos}{0in,-19.6in}
+%\newcommand{\apppos}{15.75in,-5.3in}
+\newcommand{\goalPos}{-0.5*\pWidth+0.8in,-\titLoc-1.0in}
+%\newcommand{\chalPos}{-0.5*\pWidth+0.8in,-\titLoc-11.3in}
+\newcommand{\repPos}{-0.5*\pWidth+0.8in,-\titLoc-11.6in}
+%\newcommand{\ideaPos}{-0.5*\pWidth+0.8in,-\titLoc-19.9in}
+%\newcommand{\likPos}{-0.5*\pWidth+17.in,-\titLoc-1.0in}
+\newcommand{\bayesPos}{-0.5*\pWidth+16.3in,-\titLoc-1.0in}
+\newcommand{\predPos}{-0.5*\pWidth+16.3in,-\titLoc-11.6in}
+\newcommand{\appPos}{-0.5*\pWidth+31.6in,-\titLoc-1.0in}
+%\newcommand{\exPos}{-0.5*\pWidth+33.in,-\titLoc-1.0in}
+%\newcommand{\wfPos}{-0.5*\pWidth+33.in,-\titLoc-11.0in}
+%\newcommand{\sumPos}{-0.5*\pWidth+33.in,-\titLoc-11.0in}
+
+\newcommand{\bigintsymbol}{\mathlarger{\mathlarger{\int}}}
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+
+
+\begin{document}
+
+% Tikz definitions
+\input defs
+
+\begin{tikzpicture}[>=latex]
+
+% Top and bottom banners
+\input banners
+
+% Acknowledgment
+\input ack
+
+% Title
+\input title
+
+\input goal
+
+\input repr
+
+%\input challenge
+
+%\input idea
+
+
+%\input likelihood
+
+\input bayesian
+
+\input prediction
+
+%\input workflow
+
+%\input example
+
+
+\input application
+
+
+%\input summary
+
+\begin{pgfonlayer}{background}
+   \node [bottom color=khaki!5,top color=khaki!80!white,fill,fit=(topd) (botd)] {};
+\end{pgfonlayer}
+
+\end{tikzpicture}
+\end{document}
+
+
+

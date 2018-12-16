@@ -1,0 +1,95 @@
+% !TEX root = slides.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t] 
+\label{motivation}
+
+\frametitle{Main target: quantification of model error}
+
+\underline{\underline{Model error = deviation from `truth', or from a higher-fidelity model}}
+
+\medskip
+\bbi
+\item Represent and estimate the error associated with 
+\bgi
+\item Simplifying assumptions, parameterizations
+\item Mathematical formulation, theoretical framework
+\item Numerical discretization 
+\egi
+\medskip
+\item ...will be useful for 
+\bgi
+\item Model validation
+\item Model comparison
+\item Scientific discovery and model improvement 
+\item Reliable computational predictions
+\egi
+\medskip
+\item Inverse modeling context
+\bgi
+\item Given experimental or higher-fidelity model data,\\
+estimate the model error
+\egi
+\ebi
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t] 
+\label{motivation2}
+
+\frametitle{Motivation: can't afford ignoring model error}
+\vspace*{-3mm}
+
+\only<1-6>{
+\begin{tabular}{ p{0.55\textwidth}  p{0.45\textwidth}  }    
+\only<1>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_only_5}.eps} & }
+\only<2>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_5}.eps} & \includegraphics[width=0.33\textwidth,clip]{merr/test_sketch/{post_5}.eps} }
+\only<3>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_5}.eps} & \includegraphics[width=0.33\textwidth,clip]{merr/test_sketch/{post_5}.eps} }
+\only<4>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_20}.eps} & \includegraphics[width=0.33\textwidth,clip]{merr/test_sketch/{post_20}.eps} }
+\only<5>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_50}.eps} & \includegraphics[width=0.33\textwidth,clip]{merr/test_sketch/{post_50}.eps} }
+\only<6>{\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_50}.eps} & \hspace*{-0.8cm}\includegraphics[width=0.5\textwidth,clip]{merr/test_sketch/{data_fit_model_50_abc}.eps} }
+\end{tabular}
+\small
+\hspace*{2.cm} Model-data fit \only<2-5>{\hspace*{32mm} Posterior on parameters} \only<6>{\hspace*{35mm} What we want}
+
+\vspace*{2mm}
+\only<1>{
+\bi \setlength{\leftmargini}{-2pt}
+\item Given noisy data -- Gaussian noise  
+\item $y=g_\mathrm{true}(x)+\epsilon$
+\ei
+}
+\only<2-3>{
+\bi \setlength{\leftmargini}{-2pt}
+\item Employ Bayesian inference to fit an exponential model: $y_\mathrm{m}=f(x;\lambda)$
+\item Discrepancy between data and prediction presumed exclusively due to \emph{i.i.d.} Gaussian data noise: $y=f(x;\lambda)+\epsilon_\mathrm{d}$
+\only<2>{
+\item Plotted: 
+\bi
+\item Posterior density on the parameters
+\item Preditive mean and standard deviation
+\ei
+}
+\only<3>{
+\item True model $g(x)$ -- dashed-red -- differs from fit model $f(x,\lambda)$
+\item Actual discrepancy includes both data and model errors
+}
+\ei
+}
+\only<4-5>{
+\bi \setlength{\leftmargini}{-2pt}
+\item Increasing number of data points decreases posterior and predictive uncertainty
+\item We are increasingly sure about predictions based on the \emph{wrong} model
+\ei
+}
+\only<6>{
+\bi \setlength{\leftmargini}{-2pt}
+\item If the model has structural uncertainty, more data leads to biased and overconfident results
+\item We want to quantify model-vs-truth discrepancy in a rigorous and systematic way
+\bi
+\item Cannot ignore model error
+\ei
+\ei
+}
+}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

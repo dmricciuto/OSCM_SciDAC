@@ -1,0 +1,37 @@
+% !TEX root = slides.tex
+%==================================================================================
+%==================================================================================
+%==================================================================================
+ 
+ %==================================================================================
+
+
+
+  %==================================================================================
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t] 
+\label{non-intrusive-other}
+\frametitle{Other non-intrusive methods (stochastic collocation)}
+
+\bi
+\item Interpolation: Fit interpolant to samples
+\bi\item Oscillation concern in multi-D\ei
+\medskip
+\item Regression: Estimate best-fit response surface 
+\bi
+\item Least-squares 
+\bi\item Sparsity via $\ell_1$ constraints; compressive sensing\ei
+\item Bayesian inference 
+\bi\item Sparsity via Laplace priors; Bayesian compressive sensing\ei
+\item Useful when quadrature methods are infeasible, e.g.:
+\bdi
+\item Samples given \emph{a priori}
+\item Can't choose sample locations 
+\item Can't take enough samples
+\item Forward model is noisy
+\edi
+\ei
+\ei
+\end{frame}

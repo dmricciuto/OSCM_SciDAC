@@ -31,5 +31,10 @@ print lats
 print lons
 
 data2d = dataset.variables[qoi][ens_id,pft_id,time_id,:,:]
-plotMap(data2d, lats, lons, show_map = True, show_dataloc = True)
+
+#plotMap(data2d, lats, lons, show_map = True, show_dataloc = True)
+
+xdata_full = np.loadtxt('xdata_all.txt')
+plotMap(data2d, xdata_full[:,1], xdata_full[:,0], show_map = True, show_dataloc = True)
+
 

@@ -1,0 +1,54 @@
+% !TEX root = slides.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t] \label{bayes} \frametitle{Inverse UQ}
+
+\bi
+\item Parameter fitting, tuning
+\item Statistical inference problem
+\item Given ...
+\bi
+\item ... model output QoI $y \approx f(x;\lambda)$
+\item ... observational data $\{x_i,y_i\}_{i=1}^N$
+\item Find model parameters $\lambda$
+\ei
+\ei
+\vspace*{-0.33cm}
+
+\only<1>
+{
+\bi
+\bigskip
+\item Prior $\qquad\quad p(\lambda)$: expert knowledge, or uninformative
+\item Posterior $\quad p(\lambda|y)$: updated `knowledge' of $\lambda$, given data $y$
+\item Likelihood $\:\: L(\lambda)=p(y|\lambda)$: key, noise/error model, encapsulates assumptions about data collection
+\item Evidence $\quad p(y)$: not important for parameter (coeff. $\lambda$) estimation; crucial for model selection - via Bayes factor (Occam's razor)
+\ei
+}
+
+\only<2>
+{
+\vspace*{1cm}
+\bi
+\item Posterior sampling via Markov chain Monte Carlo (MCMC)
+\item Given samples from posterior, one can interrogate it further
+\bi
+\item Estimate PDF with KDE
+\item Compute moments
+\item Build functional representation, such as PC
+\item Pipe it to the next model as an uncertain input
+\ei
+\ei
+}
+
+
+\vspace*{-7cm}
+\hspace*{7cm}
+\mybox{
+$ \displaystyle
+\overbrace{p(\lambda|y)}^{\text{Posterior}} = \frac{\overbrace{p(y|\lambda)}^{\text{Likelihood}} \quad \overbrace{p(\lambda)}^{\text{Prior}}} {\underbrace{p(y)}_{\text{Evidence}}}
+$
+}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

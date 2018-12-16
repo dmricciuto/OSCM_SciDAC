@@ -1,0 +1,29 @@
+%==================================================================================
+\begin{frame}[t]
+\label{bayespc_gaus}
+\frametitle{Bayesian inference of PC surrogate}
+
+\vspace*{-2mm}
+\centerline{$Z=f(\vxi) \simeq f_s(\vxi)\equiv \sum_{k=0}^{K} z_k \Psi_k(\vxi)  \qquad \quad\overbrace{P(\vz|\DD)}^{\color{blue}\textrm{Posterior}\color{black}}\propto \overbrace{P(\DD|\vz)}^{\color{blue}\textrm{Likelihood}\color{black}} \overbrace{P(\vz)}^{\color{blue}\textrm{Prior}\color{black}}$}
+
+
+\small{
+\bi
+{\item \underline{Data} consists of  \emph{training runs} \[ \DD\equiv\{(\vxi_i, Z_i)\}_{i=1}^N \]}
+{\item \underline{Likelihood} with a gaussian noise model with $\sigma^2$ fixed or inferred,
+\ben
+L(\vz)=P(\DD|\vz)=\left(\frac{1}{\sigma\sqrt{2\pi}}\right)^N \prod_{i=1}^N \exp\left(-\frac{(f_i-f_s(\vxi_i))^2}{2\sigma^2}\right)
+\een
+}
+{\item \underline{Prior} on $\vz$ is chosen to be conjugate, uniform or gaussian.}
+\vspace*{1mm}
+{\item \underline{Posterior} is a \emph{multivariate normal} \[\vz\quad\in\quad{\cal MVN}(\vmu,\vSigma)\]}
+{\item The (uncertain) surrogate is \emph{a gaussian process}
+\vspace*{-1mm}
+\[f_s(\vxi)=\sum_{k=0}^{K} z_k \Psi_k(\vxi)=\vPsi(\vxi)^T \vf \quad\in\quad \GP(\vPsi(\vxi)^T \vmu, \vPsi(\vxi)\vSigma\vPsi(\vxi')^T )  \]
+}
+\ei
+}
+
+\end{frame}
+%==================================================================================

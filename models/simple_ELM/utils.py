@@ -5,6 +5,7 @@ from netCDF4 import Dataset
 from common import oscm_dir
 from mpl_toolkits.basemap import Basemap
 import matplotlib.tri as tri
+from common import pmin, pmax
 
 try:
     import cPickle as pk
@@ -38,7 +39,7 @@ def daily_to_monthly(var_in, allyearsmean=False):
             var_out[thismonth] = var_out[thismonth] + var_in[d]/(ndays_month[thismonth]*ndays/365)
     return var_out
 
-def read_obsdata(dataset):
+def read_sites(dataset):
 
   print("Dimensions #######################")
   for ikey in dataset.dimensions.keys():
@@ -49,20 +50,129 @@ def read_obsdata(dataset):
     print(ivar+str(dataset.variables[ivar].shape))
     for attr in dataset.variables[ivar].ncattrs():
       print(attr , '=', getattr(dataset.variables[ivar], attr))
-    if ivar=='lon':
-      lons=dataset.variables[ivar][:]
-    elif ivar=='lat':
-      lats=dataset.variables[ivar][:]
-    elif ivar=='time':
-      times=dataset.variables[ivar][:]
-    elif ivar=='site_name':
-      sitenames=dataset.variables[ivar][:]
-      snames=[]
-      for j in range(sitenames.shape[0]):
-        sname=str(sitenames[j][0]+sitenames[j][1]+sitenames[j][2]+sitenames[j][3]+sitenames[j][4]+sitenames[j][5])
-        snames.append(sname)
+  lons=dataset.variables['lon'][:]
+  lats=dataset.variables['lat'][:]
+  times=dataset.variables['time'][:]
+  sitenames=dataset.variables['site_name'][:]
 
-  return snames, lons, lats
+  sites_info=[]
+  for j in range(sitenames.shape[0]):
+    sname=str(sitenames[j][0]+sitenames[j][1]+sitenames[j][2]+sitenames[j][3]+sitenames[j][4]+sitenames[j][5])
+    site_info = [sname, lons[j], lats[j]]
+    sites_info.append(site_info)
+
+  return sites_info
+
+def read_simdata_input(dataset):
+
+    print("Dimensions #######################")
+    for ikey in dataset.dimensions.keys(): # time(360),lon(5),lat(7)
+        print(dataset.dimensions[ikey].name+", size " + str(dataset.dimensions[ikey].size)) # 7
+
+    print("Variables #######################")
+    pnames=[]
+    ptrain=np.empty((dataset.dimensions['ensemble'].size,))
+    prange_list=[]
+
+    for ivar in dataset.variables.keys():
+        print(ivar+str(dataset.variables[ivar].shape))
+        for attr in dataset.variables[ivar].ncattrs():
+            print(attr , '=', getattr(dataset.variables[ivar], attr))
+
+        if ivar!='gpp' and ivar!='lai' and \
+                ivar!='lon' and ivar!='lat' and \
+                ivar!='time' and ivar!='pft_frac':
+
+            pnames.append(ivar)
+            print np.array(dataset.variables[ivar][:]).shape
+            ptrain=np.vstack((ptrain,np.array(dataset.variables[ivar][:])))
+            prange_list.append([pmin[ivar],pmax[ivar]])
+
+    lons=dataset.variables['lon'][:]-360
+    lats=dataset.variables['lat'][:]
+    times=dataset.variables['time'][:]
+    pfts=dataset.variables['pft_frac'][:]
+
+    pnames=np.array(pnames)
+    ptrain=ptrain[1:,:].T
+    prange=np.array(prange_list)
+
+    qtrain=scaleDomTo01(ptrain, prange)
+
+    return pnames, prange, ptrain, qtrain
+
+def read_simdata_ytrain(dataset):
+    qois = ['gpp']
+    nqois = len(qois)
+
+    monthnames=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', \
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    twelve = len(monthnames)
+    print("Dimensions #######################")
+    for ikey in dataset.dimensions.keys():
+        #ikey==dataset.dimensions[ikey].name
+        print(ikey+", size " + str(dataset.dimensions[ikey].size)) # 7
+
+    nens   = dataset.dimensions['ensemble'].size
+    npfts  = dataset.dimensions['pft'].size
+    nyears = dataset.dimensions['time'].size / twelve
+
+    lons  = dataset.variables['lon'][:]-360. #.shape
+    ilons=range(lons.shape[0]) #range(11,14)
+    nlons = len(ilons)
+    lats  = dataset.variables['lat'][:] #.shape
+    ilats=range(lats.shape[0]) #range(36,38)
+    nlats = len(ilats)
+
+
+    bm = Basemap()
+    #outqois = np.empty((nsites,nqois,2,twelve))
+    ytrain  = np.empty((nens,0))
+    outnames=[]
+    xdata = np.empty((0,5))
+    #ydata = np.empty((0,))
+    #jout = 0
+    for iqoi in range(nqois):
+      qoi = qois[iqoi]
+      for ilon in ilons:
+        lon = lons[ilon]
+        for ilat in ilats:
+          lat = lats[ilat]
+          if bm.is_land(lon,lat):
+            print('lon={:d}, lat={:d} is land'.format(ilon,ilat))
+            #print("lon=%d, lat=%d : Land", ilon,ilat)
+            aa=dataset.variables[qoi][:,iqoi,:,ilat,ilon].reshape(nens,-1,twelve)
+            #print iqoi, ilat, ilon, aa
+            ytrain = np.append(ytrain, np.average(aa, axis=1),axis=1)
+            ytrain = np.append(ytrain, np.std(aa, axis=1),axis=1)
+            for imo in range(1,twelve+1):
+              xdata  = np.append(xdata, [[lon,lat,iqoi,imo,0]], axis=0)
+              outnames.append(qoi+' '+str(lat)+' '+str(lon)+' mean '+monthnames[imo-1])
+
+            for imo in range(1,twelve+1):
+              xdata  = np.append(xdata, [[lon,lat,iqoi,imo,1]], axis=0)
+              outnames.append(qoi+' '+str(lat)+' '+str(lon)+' stdev '+monthnames[imo-1])
+          else:
+            print('lon={:d}, lat={:d} is not land'.format(ilon,ilat))
+
+    return xdata, outnames, ytrain
+
+def scale01ToDom(xx,dom):
+    dim=xx.shape[1]
+    xxsc=np.zeros((xx.shape[0],xx.shape[1]))
+    for i in range(dim):
+        xxsc[:,i]=xx[:,i]*(dom[i,1]-dom[i,0])+dom[i,0]
+
+    return xxsc
+
+def scaleDomTo01(xx,dom):
+    dim=xx.shape[1]
+    xxsc=np.zeros((xx.shape[0],xx.shape[1]))
+    for i in range(dim):
+        xxsc[:,i]=(xx[:,i]-dom[i,0])/(dom[i,1]-dom[i,0])
+
+    return xxsc
 
 def cartes_list(somelists):
 
@@ -72,6 +182,38 @@ def cartes_list(somelists):
 
     return final_list
 
+def pick_ind(data,row):
+    ind_data = np.empty((0,),dtype=int)
+    assert(data.shape[1]==len(row))
+    nr=len(row)
+    ndata=data.shape[0]
+    inds = []
+    for j in range(nr):
+        if (row[j]!=None):
+            inds.append(np.where(data[:,j]==row[j])[0])
+    ind_out = np.arange(ndata)
+    for ind in inds:
+        ind_out = np.intersect1d(ind_out,ind)
+    ind_data = np.append(ind_data,ind_out,axis=0)
+
+
+    return ind_data
+
+def pick_sites2(lonlats,obs_lonlats):
+
+    nsites=len(obs_lonlats)
+    ssind=[]
+    for i in range(nsites):
+        arr=lonlats-np.array([obs_lonlats[i,0],obs_lonlats[i,1]])
+        dists=numpy.linalg.norm(arr,axis=1)
+        minind=numpy.argmin(dists)
+        print minind, dists.shape
+
+        if dists[minind]<1.0:
+            ssind.append([i, lonlats[minind,0], lonlats[minind,1]])
+
+
+    return numpy.array(ssind)
 
 def pick_sites(lons,lats,obs_lons=[],obs_lats=[]):
 

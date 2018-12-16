@@ -1,0 +1,24 @@
+% !TEX root = slides.tex
+ %==================================================================================
+\begin{frame}[t]
+\label{pc-use}
+  \frametitle{PC features: moment extraction}
+
+
+\ben
+Z \simeq \sum_{k=0}^K z_k \Psi_k(\vxi)
+\een
+
+\bi
+\item Expectation: $\langle Z \rangle = z_0$
+\item Variance $\sigma^2$
+\bean
+\sigma^2 & = & \left \langle (Z - \langle Z \rangle)^2 \right \rangle
+           =   \left \langle (\sum_{k=1}^K z_k \Psi_k(\vxi))^2 \right \rangle \\
+         & = & \left \langle \sum_{k=1}^K \sum_{j=1}^K z_j z_k \Psi_j(\vxi) \Psi_k(\vxi) \right \rangle \\
+         & = & \sum_{k=1}^K \sum_{j=1}^K z_j z_k \left \langle \Psi_j(\vxi) \Psi_k(\vxi) \right \rangle
+           =   \sum_{k=1}^K z_k^2  ||\Psi_k||^2
+\eean
+\ei
+
+\end{frame}

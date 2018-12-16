@@ -1,0 +1,24 @@
+% !TEX root = poster.tex
+\node [mybox,anchor=south east, font=\fontsize{\fntszL}{\fntszL}\selectfont] 
+at (\sumPos) (boxSumm){%
+\begin{minipage}{\bxszA}
+\begin{itemize}
+\item Surrogates are necessary for complex climate models
+\item Polynomial Chaos surrogate via Bayesian machinery
+\item High-dimensionality is addressed by the iteratively reweighted Bayesian compressive sensing algorithm
+%\item Constrained/dependent input parameters are mapped to an unconstrained input parameter set via Rosenblatt transformation
+\item Global sensitivity analysis applied to surrogate achieves dimensionality reduction
+\item Data clustering and classification employed for nonsmooth models to obtain a piecewise-PC surrogate model
+\item K. Sargsyan \textit{et al.}, ``Dimensionality Reduction for Complex Models via Bayesian Compressive Sensing", \textit{Int. J. of Uncertainty Quantification}, 4(1), pp. 63-93, 2014.
+\end{itemize}
+ \begin{center}{\textbf{\LARGE {\color{blue} Current and future work}}}\end{center} 
+
+\begin{itemize}
+\item Optimal computational design to improve BCS efficiency
+\item Local surrogate construction and calibration of input parameters given observational data %\color{white}\cite{Sargsyan:2014,Babacan:2010}
+\end{itemize}
+
+\end{minipage}
+};
+\node[fancytitle, right=10pt, font=\fontsize{\fntszL}{\fntszL}\selectfont] 
+at (boxSumm.north west) {\bf Summary/Highlights};

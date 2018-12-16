@@ -1,0 +1,167 @@
+%\usepackage[notcite,notref]{showkeys} % comment out to suppress showing keys
+\setbeamertemplate{navigation symbols}{}%remove navigation symbols
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \usecolortheme{seahorse}
+  \usefonttheme[onlymath]{serif}
+  \setbeamerfont{title}{shape=\itshape,family=\rmfamily}
+  \setbeamercovered{transparent}
+%  \setbeamertemplate{footline}[frame number]
+}
+
+
+\graphicspath{ {fig/} {fig/merr/}}
+
+\newcommand{\margin}{0.02\paperwidth}
+
+\beamersetrightmargin{\margin}
+\beamersetleftmargin{\margin}
+
+% And, for the author name
+\newcommand*\oldmacroA{}%
+\let\oldmacroA\insertshorttitle%
+\renewcommand*\insertshorttitle{%%
+   EESM PI Meeting \qquad\qquad November 6, 2018 \hfill  \insertframenumber}%\,/\,\inserttotalframenumber}
+%% put frame numbers in lower right
+
+% And, for the author name
+\newcommand*\oldmacroB{}%
+\let\oldmacroB\insertshortauthor%
+\renewcommand*\insertshortauthor{%
+\hspace*{5mm} \oldmacroB}
+
+
+%======================================================================
+
+\usepackage{cancel}
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb,amsbsy,relsize}
+\usepackage{bm}
+\usepackage{xspace}
+
+\usepackage{fancybox}
+
+% choose a fonttheme
+
+\usefonttheme{professionalfonts} % using non standard fonts for beamer
+\usefonttheme{serif} % default family is serif
+%\usefonttheme[onlymath]{serif}
+
+%\usefonttheme{default}
+%\usefonttheme{structurebol
+
+%======================================================================
+
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb,amsbsy}
+\usepackage{bm}
+%\usepackage[mathx]{mathabx} % useful for \overgroup and \undergroup but cpu intensive
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{verbatim}
+\usepackage{xspace}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{grffile}
+\usepackage{relsize}
+\usepackage{tabu}
+
+\usepackage{color}
+\usepackage{xcolor}
+
+%======================================================================
+% package for putting color boxes in text
+\usepackage{tcolorbox}
+
+% optional argument defines the background color; default is light blue
+%\newtcbox{\boxit}[1][blue!30]{%
+\newtcbox{\boxit}[1][SkyBlue]{%
+  nobeforeafter,colframe=#1,colback=#1,boxrule=0.5pt,arc=2pt,%
+  boxsep=1pt,left=0pt,right=0pt,top=0pt,bottom=0pt,tcbox raise base%
+}
+%======================================================================
+
+
+% compact lists
+\usepackage{mdwlist}
+
+%======================================================================
+%\AtBeginSection[] % Do nothing for \section*
+%{
+%\begin{frame}<beamer>
+%\frametitle{Outline}
+%\tableofcontents[currentsection]
+%\end{frame}
+%}
+
+%\AtBeginSubsection[] % Do nothing for \subsection*
+%{
+%\begin{frame}<beamer>
+%\frametitle{Outline}
+%\tableofcontents[currentsection,currentsubsection]
+%\end{frame}
+%}
+
+%======================================================================
+% spacing in Outline slide
+
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\beamer@sectionintoc}    {\vfill}{\vskip3.0mm}{}{}  % section spacing
+\pretocmd{\beamer@subsectionintoc} {\vskip1.5mm}{}{}          % subsection
+\makeatother
+
+%======================================================================
+
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{amsfonts,amsmath,amssymb,amsbsy,relsize}
+\usepackage{bm}
+\usepackage{xspace}
+
+%\usepackage{soul}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% comment out to suppress showing keys in final version
+%\usepackage[notcite,notref]{showkeys}
+\usepackage{multirow}
+\usepackage{pgf,pgfarrows,pgfnodes}
+\usepackage{animate} %need the animate.sty file
+
+%\usepackage[top=15mm,bottom=15mm,outer=40mm,inner=20mm,heightrounded, marginparwidth=38mm,marginparsep=1mm]{geometry}
+\usepackage{tikz}
+
+
+\usetikzlibrary{positioning,arrows,shapes,shadows}
+\tikzstyle{format} = [draw, very thick, fill=blue!40]
+\tikzstyle{medium} = [ellipse, draw, thin, fill=green!20]
+\tikzstyle{qoi}=[rectangle, draw=black, rounded corners, fill=green, drop shadow]
+\tikzstyle{cblue}=[circle, draw, thin,fill=blue!10, scale=0.8]
+\tikzstyle{decision} = [diamond, draw, fill=blue!20,
+    text width=5.5em, text badly centered, minimum size=3.6cm, node distance=3cm, inner sep=0pt]
+    \tikzstyle{biggray}=[rectangle, draw=black, thin, fill=gray!20,
+                                 anchor=south east, text width=10em,
+                                 text height=5em, minimum width=10em,
+                                 minimum height=5.5em, rounded
+                                 corners=20pt]
+    \tikzstyle{highlight}=[rectangle, draw=black, thin, fill=orange!50,
+                                 anchor=north west, text width=10em,
+                                 text height=0.1em, minimum width=10em,
+                                 minimum height=5.5em, rounded
+                                 corners=2pt]
+%\beamertemplatenavigationsymbolsempty
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gantt charts
+
+%\usepackage{pgfgantt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
