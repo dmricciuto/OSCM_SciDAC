@@ -722,20 +722,10 @@ class MyModel(object):
          for v in output:
             if (self.ne > 1):
               ncvars[v] = output_nc.createVariable(v, 'f4',('ensemble','pft','time','lat','lon'))
-              #for n in range(0,self.ne):
-              #  for t in range(0,self.nt):
-
               ncvars[v][:,:,:,:,:] = output[v][:,:,:,:,:]
-                  #ncvars[v][n,t,:,:] = (output[v][t,:,:,0,n]*self.pftfrac[:,:,0]/100.0 + \
-                  #                      output[v][t,:,:,1,n]*self.pftfrac[:,:,1]/100.0 + \
-                  #                      output[v][t,:,:,2,n]*self.pftfrac[:,:,2]/100.0).squeeze()
             else:
               ncvars[v] = output_nc.createVariable(v, 'f4',('pft','time','lat','lon',))
-              for t in range(0,self.nt):
-                 ncvars[v] = output[v][0,:,:,:,:].squeeze()
-#                ncvars[v][t,:,:] = (output[v][t,:,:,0]).squeeze()*pft_out[:,:,0]/100.0 + \
-#                                   (output[v][t,:,:,1]).squeeze()*pft_out[:,:,1]/100.0 + \
-#                                   (output[v][t,:,:,2]).squeeze()*pft_out[:,:,2]/100.0
+              ncvars[v][:,:,:,:] = output[v][0,:,:,:,:].squeeze()
          output_nc.close()
 
          #output for eden vis system - customize as needed
