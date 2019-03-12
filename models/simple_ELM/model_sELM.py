@@ -732,18 +732,18 @@ class MyModel(object):
             else:
               ncvars[v] = output_nc.createVariable(v, 'f4',('pft','time','lat','lon',))
               for t in range(0,self.nt):
-                 ncvars[v] = output[v][0,:,:,:,:]
+                 ncvars[v] = output[v][0,:,:,:,:].squeeze()
 #                ncvars[v][t,:,:] = (output[v][t,:,:,0]).squeeze()*pft_out[:,:,0]/100.0 + \
 #                                   (output[v][t,:,:,1]).squeeze()*pft_out[:,:,1]/100.0 + \
 #                                   (output[v][t,:,:,2]).squeeze()*pft_out[:,:,2]/100.0
          output_nc.close()
 
          #output for eden vis system - customize as needed
-         eden_out = numpy.zeros([self.ne,pnum+1],numpy.float)
-         for n in range(0,self.ne):
-           eden_out[n,0:pnum]      = self.parm_ensemble[n,:]
-           eden_out[n,pnum:pnum+1] = numpy.mean(output['gpp'][n,0,0:60,0,0])*365.
-         numpy.savetxt("foreden.csv",eden_out,delimiter=",")
+         #eden_out = numpy.zeros([self.ne,pnum+1],numpy.float)
+         #for n in range(0,self.ne):
+         #  eden_out[n,0:pnum]      = self.parm_ensemble[n,:]
+         #  eden_out[n,pnum:pnum+1] = numpy.mean(output['gpp'][n,0,0:60,0,0])*365.
+         #numpy.savetxt("foreden.csv",eden_out,delimiter=",")
 
     def generate_synthetic_obs(self, parms, err):
         #generate synthetic observations from model with Gaussian error
