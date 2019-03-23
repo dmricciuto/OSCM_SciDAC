@@ -497,7 +497,7 @@ class MyModel(object):
                   self.load_forcings(lon=lons_torun[i], lat=lats_torun[i])
                 if (self.ne > 1):
                   for p in range(0,len(self.ensemble_pnames)):
-                    self.parms[self.ensemble_pnames[p]] = self.parm_ensemble[i,p]
+                    self.parms[self.ensemble_pnames[p]] = self.parm_ensemble[ens_torun[i],p]
                 self.selm_instance(self.parms, spinup_cycles=spinup_cycles, pft=pfts_torun[i])
                 self.pftfrac[indy_torun[i],indx_torun[i],pfts_torun[i]] = pftfracs_torun[i]
                 for v in myoutvars:

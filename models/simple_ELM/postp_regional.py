@@ -11,7 +11,7 @@ print("Reading "+ncfile)
 
 dataset = Dataset(ncfile)
 qoi='gpp'
-ens_id=111
+ens_id=1
 time_id=30
 pft_id=0
 
@@ -27,14 +27,16 @@ np.savetxt('lons.txt',lons)
 np.savetxt('lats.txt',lats)
 
 
-print lats
-print lons
+print(lats)
+print(lons)
 
 data2d = dataset.variables[qoi][ens_id,pft_id,time_id,:,:]
+print(data2d)
 
-#plotMap(data2d, lats, lons, show_map = True, show_dataloc = True)
+# only works if there is at least 2 cells in each direction
+plotMap(data2d, lats, lons, show_map = True, show_dataloc = True)
 
-xdata_full = np.loadtxt('xdata_all.txt')
-plotMap(data2d, xdata_full[:,1], xdata_full[:,0], show_map = True, show_dataloc = True)
+#xdata_full = np.loadtxt('xdata_all.txt')
+#plotMap(data2d, xdata_full[:,1], xdata_full[:,0], show_map = True, show_dataloc = True)
 
 

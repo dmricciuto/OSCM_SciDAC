@@ -21,7 +21,7 @@ get_obsdata = False
 
 nqois = len(qois)
 twelve = 12
-nens   = 2000
+nens   = 50 #000
 monthnames=['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
 
 

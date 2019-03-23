@@ -46,3 +46,8 @@ for p in pdict:
 
 
 dim = 47
+
+
+outvars = ['gpp','npp','gr', 'mr','hr','nee','lai', \
+           'leafc','leafc_stor','frootc','frootc_stor','livestemc', \
+           'deadstemc','livecrootc','deadcrootc','ctcpools','totecosysc','totsomc','totlitc', 'cstor']

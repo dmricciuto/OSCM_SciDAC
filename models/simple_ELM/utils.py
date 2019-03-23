@@ -5,7 +5,7 @@ from netCDF4 import Dataset
 from common import oscm_dir
 from mpl_toolkits.basemap import Basemap
 import matplotlib.tri as tri
-from common import pmin, pmax
+from common import pmin, pmax, outvars
 
 try:
     import cPickle as pk
@@ -74,17 +74,20 @@ def read_simdata_input(dataset):
     ptrain=np.empty((dataset.dimensions['ensemble'].size,))
     prange_list=[]
 
+
     for ivar in dataset.variables.keys():
         print(ivar+str(dataset.variables[ivar].shape))
         for attr in dataset.variables[ivar].ncattrs():
             print(attr , '=', getattr(dataset.variables[ivar], attr))
 
-        if ivar!='gpp' and ivar!='lai' and \
-                ivar!='lon' and ivar!='lat' and \
-                ivar!='time' and ivar!='pft_frac':
+        if ivar not in outvars and \
+                ivar != 'lon' and ivar != 'lat' and \
+                ivar != 'time' and ivar != 'pft_frac':
 
             pnames.append(ivar)
-            print np.array(dataset.variables[ivar][:]).shape
+            print(pnames)
+            print(ptrain, np.array(dataset.variables[ivar][:]))
+            print(ptrain.shape, np.array(dataset.variables[ivar][:]).shape)
             ptrain=np.vstack((ptrain,np.array(dataset.variables[ivar][:])))
             prange_list.append([pmin[ivar],pmax[ivar]])
 
@@ -207,7 +210,6 @@ def pick_sites2(lonlats,obs_lonlats):
         arr=lonlats-np.array([obs_lonlats[i,0],obs_lonlats[i,1]])
         dists=numpy.linalg.norm(arr,axis=1)
         minind=numpy.argmin(dists)
-        print minind, dists.shape
 
         if dists[minind]<1.0:
             ssind.append([i, lonlats[minind,0], lonlats[minind,1]])
@@ -308,13 +310,22 @@ def plotMap(data2d, lats, lons, show_map = False, show_dataloc = False):
 
     if show_dataloc:
         obs_dataset = Dataset(oscm_dir+"/models/site_observations/fluxnet_daily_obs.nc4",'r',format='NETCDF4')
-        site_names, site_lons, site_lats = read_obsdata(obs_dataset)
+
+        sites_info = read_sites(obs_dataset)
+        site_names = [site_info[0] for site_info in sites_info]
+        site_lons = [site_info[1] for site_info in sites_info]
+        site_lats = [site_info[2] for site_info in sites_info]
+
 
         site_lon_lat =  pick_sites(lons,lats,site_lons,site_lats)
-        print(site_lon_lat)
         site_lons_mapped,site_lats_mapped= m(site_lons,site_lats)
+
         plot(site_lons_mapped,site_lats_mapped,'ko',markersize=4,zorder=1000)
-        plot(site_lons_mapped[site_lon_lat[:,0]],site_lats_mapped[site_lon_lat[:,0]],'ro',markersize=4,zorder=2000, label='selected')
+
+        for i in site_lon_lat[:,0]:
+            plot(site_lons_mapped[i],
+                 site_lats_mapped[i],
+                 'ro',markersize=4,zorder=2000, label='selected')
 
 
     savefig('map.eps')
