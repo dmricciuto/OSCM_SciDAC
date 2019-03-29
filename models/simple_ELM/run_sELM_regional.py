@@ -1,25 +1,45 @@
-import numpy
+import sys
+import argparse
 import model_sELM as models
-import os, math, random
-import matplotlib.mlab as mlab
-import matplotlib.pyplot as plt
 
-from utils import *
+parser = argparse.ArgumentParser()
+parser.add_argument('coords', type=float, nargs='*',
+                    help="coordinates (lon, lat)")
+parser.add_argument("-p", "--pnames_file", dest="pnames_file", type=str, default=None,
+                    help="Parameter names file")
+parser.add_argument("-s", "--psam_file", dest="psam_file", type=str, default='',
+                    help="Parameter samples file")
+parser.add_argument("-n", "--nens", type=int, dest="nens", default=3,
+                    help="Ensemble size")
+parser.add_argument("-o", "--out_prefix", dest="out_prefix", type=str, default='regional',
+                    help="Output file prefix")
+args = parser.parse_args()
 
+if len(args.coords) == 0:
+    site_coords = [-72.17, 42.54]
+else:
+    site_coords = [args.coords[0], args.coords[1]]
+
+if args.pnames_file is not None:
+    with open(args.pnames_file) as f:
+        pnames_ens = f.read().splitlines()
+else:
+    pnames_ens = ['nue_tree', 'gdd_crit']  # 'leafcn', 'slatop_decid']
+
+ndim = len(pnames_ens)
+nens = args.nens
+
+out_prefix = args.out_prefix
 
 # create model object
 model = models.MyModel()
 
-# Create a 10-member, 3-parameter ensemble
-pnames_ens = ['nue_tree', 'gdd_crit'] #'leafcn', 'slatop_decid']
-n_ensemble = 50
-
 # Desired outputs
-myoutvars = ['gpp', 'lai', 'npp']
+#myoutvars = ['gpp', 'lai', 'npp']
 print('Generating ensemble')
-model.generate_ensemble(n_ensemble, pnames_ens)
-
-print(model.parm_ensemble)
+model.generate_ensemble(nens, pnames_ens, fname=args.psam_file, normalized=False)
+assert(model.parm_ensemble.shape[0] == nens)
+assert(model.parm_ensemble.shape[1] == ndim)
 
 # Daily output
 # model.run_selm(spinup_cycles=4,
@@ -32,11 +52,18 @@ print(model.parm_ensemble)
 #                prefix='regional', do_monthly_output=True,
 #                pft=0, use_MPI=True)
 
-site_coords = [-72.17, 42.54]  # -72.17 42.54    b'US-Ha1'
-dellon = 0.01
-dellat = 0.01
+# if len(sys.argv) == 1:
+#     site_coords = [-72.17, 42.54]  # -72.17 42.54    b'US-Ha1'
+# else:
+#     assert(len(sys.argv) == 3)
+#     site_coords = [float(sys.argv[1]), float(sys.argv[2])]
+
+print("Simulation requested for site coords: ", site_coords)
+
+dellon = 0.1
+dellat = 0.1
 model.run_selm(spinup_cycles=4,
                lon_bounds=[site_coords[0] - dellon, site_coords[0] + dellon],
                lat_bounds=[site_coords[1] - dellat, site_coords[1] + dellat],
-               prefix='regional', do_monthly_output=True,
+               prefix=out_prefix, do_monthly_output=True,
                pft=0, use_MPI=False)

@@ -1,22 +1,28 @@
 
-from netCDF4 import Dataset
-from mpl_toolkits.basemap import Basemap
-from pylab import *
-import os
-import numpy
+import sys
 import utils
+import numpy as np
+from netCDF4 import Dataset
 
-from common import pmin, pmax
 
-ncfile=sys.argv[1]
-#ncfile='regional_output.nc'
-print("Reading "+ncfile)
+ncfile = sys.argv[1]
+# ncfile='regional_output.nc'
+print("Reading " + ncfile)
 
-dataset = Dataset(ncfile)
-#qoi='gpp'
+simdata = Dataset(ncfile)
 
-pnames, prange, ptrain, qtrain = utils.read_simdata_input(dataset)
+pnames, prange, ptrain, qtrain = utils.read_simdata_input(simdata)
 
-np.savetxt('ptrain_all.dat',ptrain)
-np.savetxt('pnames.txt',pnames,fmt='%s')
-np.savetxt('prange.dat',prange)
+np.savetxt('ptrain_all.dat', ptrain)
+np.savetxt('pnames.txt', pnames, fmt='%s')
+np.savetxt('prange.dat', prange)
+
+xdata_all, outnames, ytrain = utils.read_simdata_ytrain(simdata)
+
+
+np.savetxt('xdata_all.txt', xdata_all)
+np.savetxt('ytrain_all.dat', ytrain)
+with open('outnames_all.txt', 'w') as f:
+    for item in outnames:
+        f.write("%s\n" % item)
+

@@ -2,7 +2,7 @@ import numpy
 from netCDF4 import Dataset
 #import matplotlibpyplot as plt
 from math import sin, cos, sqrt, atan2, radians
-import time, os
+import time, os, sys
 import utils
 
 if os.environ['USER']=='ksargsy':
