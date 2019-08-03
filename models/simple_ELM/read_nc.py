@@ -20,7 +20,7 @@ np.savetxt('prange.dat', prange)
 xdata_all, outnames, ytrain = utils.read_simdata_ytrain(simdata)
 
 
-np.savetxt('xdata_all.txt', xdata_all)
+np.savetxt('xdata_all.txt', xdata_all, fmt='%.2f')
 np.savetxt('ytrain_all.dat', ytrain)
 with open('outnames_all.txt', 'w') as f:
     for item in outnames:
