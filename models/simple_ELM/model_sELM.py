@@ -2,7 +2,7 @@ import numpy
 from netCDF4 import Dataset
 #import matplotlibpyplot as plt
 from math import sin, cos, sqrt, atan2, radians
-import time, os
+import time, os, sys
 import utils
 
 if os.environ['USER']=='ksargsy':
@@ -497,7 +497,7 @@ class MyModel(object):
                   self.load_forcings(lon=lons_torun[i], lat=lats_torun[i])
                 if (self.ne > 1):
                   for p in range(0,len(self.ensemble_pnames)):
-                    self.parms[self.ensemble_pnames[p]] = self.parm_ensemble[i,p]
+                    self.parms[self.ensemble_pnames[p]] = self.parm_ensemble[ens_torun[i],p]
                 self.selm_instance(self.parms, spinup_cycles=spinup_cycles, pft=pfts_torun[i])
                 self.pftfrac[indy_torun[i],indx_torun[i],pfts_torun[i]] = pftfracs_torun[i]
                 for v in myoutvars:
@@ -722,28 +722,18 @@ class MyModel(object):
          for v in output:
             if (self.ne > 1):
               ncvars[v] = output_nc.createVariable(v, 'f4',('ensemble','pft','time','lat','lon'))
-              #for n in range(0,self.ne):
-              #  for t in range(0,self.nt):
-
               ncvars[v][:,:,:,:,:] = output[v][:,:,:,:,:]
-                  #ncvars[v][n,t,:,:] = (output[v][t,:,:,0,n]*self.pftfrac[:,:,0]/100.0 + \
-                  #                      output[v][t,:,:,1,n]*self.pftfrac[:,:,1]/100.0 + \
-                  #                      output[v][t,:,:,2,n]*self.pftfrac[:,:,2]/100.0).squeeze()
             else:
               ncvars[v] = output_nc.createVariable(v, 'f4',('pft','time','lat','lon',))
-              for t in range(0,self.nt):
-                 ncvars[v] = output[v][0,:,:,:,:]
-#                ncvars[v][t,:,:] = (output[v][t,:,:,0]).squeeze()*pft_out[:,:,0]/100.0 + \
-#                                   (output[v][t,:,:,1]).squeeze()*pft_out[:,:,1]/100.0 + \
-#                                   (output[v][t,:,:,2]).squeeze()*pft_out[:,:,2]/100.0
+              ncvars[v][:,:,:,:] = output[v][0,:,:,:,:].squeeze()
          output_nc.close()
 
-         # #output for eden vis system - customize as needed
-         # eden_out = numpy.zeros([self.ne,pnum+1],numpy.float)
-         # for n in range(0,self.ne):
-         #   eden_out[n,0:pnum]      = self.parm_ensemble[n,:]
-         #   eden_out[n,pnum:pnum+1] = numpy.mean(output['gpp'][n,0,0:60,0,0])*365.
-         # numpy.savetxt("foreden.csv",eden_out,delimiter=",")
+         #output for eden vis system - customize as needed
+         #eden_out = numpy.zeros([self.ne,pnum+1],numpy.float)
+         #for n in range(0,self.ne):
+         #  eden_out[n,0:pnum]      = self.parm_ensemble[n,:]
+         #  eden_out[n,pnum:pnum+1] = numpy.mean(output['gpp'][n,0,0:60,0,0])*365.
+         #numpy.savetxt("foreden.csv",eden_out,delimiter=",")
 
     def generate_synthetic_obs(self, parms, err):
         #generate synthetic observations from model with Gaussian error
