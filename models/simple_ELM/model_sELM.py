@@ -738,12 +738,12 @@ class MyModel(object):
 #                                   (output[v][t,:,:,2]).squeeze()*pft_out[:,:,2]/100.0
          output_nc.close()
 
-         #output for eden vis system - customize as needed
-         eden_out = numpy.zeros([self.ne,pnum+1],numpy.float)
-         for n in range(0,self.ne):
-           eden_out[n,0:pnum]      = self.parm_ensemble[n,:]
-           eden_out[n,pnum:pnum+1] = numpy.mean(output['gpp'][n,0,0:60,0,0])*365.
-         numpy.savetxt("foreden.csv",eden_out,delimiter=",")
+         # #output for eden vis system - customize as needed
+         # eden_out = numpy.zeros([self.ne,pnum+1],numpy.float)
+         # for n in range(0,self.ne):
+         #   eden_out[n,0:pnum]      = self.parm_ensemble[n,:]
+         #   eden_out[n,pnum:pnum+1] = numpy.mean(output['gpp'][n,0,0:60,0,0])*365.
+         # numpy.savetxt("foreden.csv",eden_out,delimiter=",")
 
     def generate_synthetic_obs(self, parms, err):
         #generate synthetic observations from model with Gaussian error
@@ -879,7 +879,7 @@ class MyModel(object):
         self.obs={}
         nsm_0=site_name[:,:].shape[0]
         nsm_1=site_name[:,:].shape[1]
-        siteName_str=numpy.array([[site_name[i,j].decode("utf-8") for j in range(nsm_1)] for i in range(nsm_0)])
+        siteName_str='US-UMB' #numpy.array([[site_name[i,j].decode("utf-8") for j in range(nsm_1)] for i in range(nsm_0)])
         #for s in site_name:
         for s in siteName_str:
           if site in ''.join(s):

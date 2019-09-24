@@ -71,7 +71,8 @@ def read_simdata_input(dataset):
 
     print("Variables #######################")
     pnames=[]
-    ptrain=np.empty((dataset.dimensions['ensemble'].size,))
+    nens = dataset.dimensions['ensemble'].size
+    ptrain=np.empty((nens,))
     prange_list=[]
 
     for ivar in dataset.variables.keys():
@@ -79,12 +80,13 @@ def read_simdata_input(dataset):
         for attr in dataset.variables[ivar].ncattrs():
             print(attr , '=', getattr(dataset.variables[ivar], attr))
 
-        if ivar!='gpp' and ivar!='lai' and \
-                ivar!='lon' and ivar!='lat' and \
-                ivar!='time' and ivar!='pft_frac':
+        # if ivar!='gpp' and ivar!='lai' and \
+        #         ivar!='lon' and ivar!='lat' and \
+        #         ivar!='time' and ivar!='pft_frac':
+        if np.array(dataset.variables[ivar][:]).shape[0]==nens and len(np.array(dataset.variables[ivar][:]).shape)==1:
 
             pnames.append(ivar)
-            print np.array(dataset.variables[ivar][:]).shape
+            print("AAA ", ptrain.shape, np.array(dataset.variables[ivar][:]).shape)
             ptrain=np.vstack((ptrain,np.array(dataset.variables[ivar][:])))
             prange_list.append([pmin[ivar],pmax[ivar]])
 
@@ -207,7 +209,6 @@ def pick_sites2(lonlats,obs_lonlats):
         arr=lonlats-np.array([obs_lonlats[i,0],obs_lonlats[i,1]])
         dists=numpy.linalg.norm(arr,axis=1)
         minind=numpy.argmin(dists)
-        print minind, dists.shape
 
         if dists[minind]<1.0:
             ssind.append([i, lonlats[minind,0], lonlats[minind,1]])

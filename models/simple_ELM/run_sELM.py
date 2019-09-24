@@ -45,11 +45,11 @@ model.load_obs(site)
 
 # ------------------- Run and analyze the default model ---------
 #Run model with default parameters
-model.run_selm(spinup_cycles=6, deciduous=True)
+model.run_selm(spinup_cycles=6) #, deciduous=True)
 #Ouptut model GPP
 numpy.savetxt('gpp_model.txt',model.output['gpp'])
 #Output observed GPP
-numpy.savetxt('gpp_obs.txt',model.obs['gpp'])
+numpy.savetxt('gpp_obs.txt',model.obs['GPP'])
 #plot all variables for the default run
 #model.plot_output(startyear=2000,endyear=2005)
 
