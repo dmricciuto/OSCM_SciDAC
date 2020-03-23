@@ -10,10 +10,7 @@ import numpy as np
 
 sys.path.append(os.environ['WW']+'/run/xuq')
 import workflows as wf
-import myutils as mu
 
-from pylab import *
-import cPickle as pk
 
 import warnings
 #from sklearn.gaussian_process.kernels import Matern,RBF,WhiteKernel, ExpSineSquared
@@ -21,13 +18,10 @@ import warnings
 from utils import *
 
 
-rc('legend',loc='best', fontsize=22)
-rc('lines', linewidth=4, color='r')
-rc('axes',linewidth=3,grid=True,labelsize=22)
-rc('xtick',labelsize=20)
-rc('ytick',labelsize=20)
-#rc('font', family='serif')
-rc('figure',max_open_warning=100)
+from fitpy.utils.common import myrc
+
+
+rcParams = myrc()
 
 ##########################################################
 ##########################################################
@@ -50,8 +44,8 @@ inds.append(np.where(xdata[:,4]==0.0)[0])
 
 for ind in inds:
     ind_out = np.intersect1d(ind_out,ind)
-print ind_out
-meanMode, klModes, eigValues, xiSam, relDiag=wf.kle(xdata[ind_out], ysam[:,ind_out].T, neig = 20)
+print(ind_out)
+meanMode, klModes, eigValues, xiSam, relDiag=wf.kle(xdata[ind_out], ysam[:,ind_out].T, neig = 8)
 
 
 lats=np.loadtxt('lats.txt')
@@ -62,7 +56,7 @@ for j in range(nsites):
     data2d[j,0]=lons[int(xdata[ind_out[j],1])]
     data2d[j,1]=lats[int(xdata[ind_out[j],0])]
 data2d[:,2]=meanMode
-print data2d
+print(data2d)
 plotMap2(data2d)
 
 

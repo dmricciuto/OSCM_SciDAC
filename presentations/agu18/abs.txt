@@ -1,5 +1,6 @@
 Bayesian Framework for Structural Uncertainty Estimation of Land Models
-by K. Sargsyan, D. Ricciuto, C. Safta
+
+Khachik Sargsyan, Daniel Ricciuto, Cosmin Safta
 
 As a result of conventional inversion, calibrated model parameters are often biased due to unaccounted structural errors. Consequently, the calibrated models have deficient predictive skills due to overconfident and biased inputs. For example, in climate models, structural errors are known to be the largest contributors of predictive uncertainty budget. While augmenting model outputs with statistical correction terms may remove the predictive bias, it can also violate physical laws, or make the calibrated model ineffective for predicting non-observable quantities of interest.
 
@@ -7,6 +8,4 @@ This work will present a framework for representing, quantifying and propagating
 
 The developed inverse/forward UQ workflow is implemented in UQ Toolkit (www.sandia.gov/uqtoolkit). We will demonstrate the application of the methodology on E3SM Land Model given measurements obtained at select FLUXNET sites.
 
-################################################################
 
-Sandia National Laboratories is a multimission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary of Honeywell International, Inc., for the U.S. Department of Energy’s National Nuclear Security Administration under contract DE-NA-0003525.

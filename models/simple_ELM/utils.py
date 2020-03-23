@@ -104,13 +104,58 @@ def read_simdata_input(dataset):
     ptrain = ptrain[1:, :].T
     prange = np.array(prange_list)
 
-    qtrain = scaleDomTo01(ptrain, prange)
+    qtrain = 2. * scaleDomTo01(ptrain, prange) - 1.
 
-    return pnames, prange, ptrain, qtrain
+    return pnames, prange, ptrain, qtrain, lons, lats, times, pfts
 
 
-def read_simdata_ytrain(dataset):
-    qois = ['gpp']
+def read_simdata_ytrain_reg(dataset, qois=['gpp', 'lai'], lonrange=[-97., -66.], latrange=[28., 50.], ens=None):
+    nqois = len(qois)
+    nens = dataset.dimensions['ensemble'].size
+    npfts = dataset.dimensions['pft'].size
+    nmonths = dataset.dimensions['time'].size
+
+    lons = dataset.variables['lon'][:] - 360.  # .shape
+    lonmask = np.array([lons>lonrange[0]])[0] * np.array([lons<lonrange[1]])[0]
+    nlons = np.sum(lonmask)
+    lats = dataset.variables['lat'][:]  # .shape
+    latmask = np.array([lats>latrange[0]])[0] * np.array([lats<latrange[1]])[0]
+    nlats = np.sum(latmask)
+
+
+    if ens is None:
+        ens = nens
+
+    bm = Basemap()
+    ytrain = np.empty((ens, 0))
+    outnames = []
+    xdata = np.empty((0, 4))
+    #ydata = np.empty((0,))
+    #jout = 0
+
+    for ilon in range(nlons):
+        lon = lons[lonmask][ilon]
+        for ilat in range(nlats):
+            lat = lats[latmask][ilat]
+            if bm.is_land(lon, lat):
+                print('lon={:d}, lat={:d} ({:2.2f}, {:2.2f}) is land'.format(ilon, ilat, lon, lat))
+                for iqoi in range(nqois):
+                    qoi = qois[iqoi]
+                    aa = dataset.variables[qoi][:ens, 0, :, ilat, ilon]
+                    # print iqoi, ilat, ilon, aa
+                    ytrain = np.hstack((ytrain, aa))
+                    for imo in range(nmonths):
+                        xdata = np.append(
+                            xdata, [[lon, lat, iqoi, imo]], axis=0)
+                        outnames.append(
+                            qoi + ' ' + str(lat) + ' ' + str(lon) + ' mo' + str(imo))
+
+            else:
+                print('lon={:d}, lat={:d} ({:2.2f}, {:2.2f}) is not land'.format(ilon, ilat, lon, lat))
+
+    return xdata, outnames, ytrain
+
+def read_simdata_ytrain(dataset, qois=['gpp']):
     nqois = len(qois)
 
     monthnames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -147,10 +192,9 @@ def read_simdata_ytrain(dataset):
             for ilat in ilats:
                 lat = lats[ilat]
                 if bm.is_land(lon, lat):
-                    print('lon={:d}, lat={:d} is land'.format(ilon, ilat))
-                    #print("lon=%d, lat=%d : Land", ilon,ilat)
+                    print('lon={:d}, lat={:d} ({:2.2f}, {:2.2f}) is land'.format(ilon, ilat, lon, lat))
                     aa = dataset.variables[qoi][
-                        :, iqoi, :, ilat, ilon].reshape(nens, -1, twelve)
+                        :, 0, :, ilat, ilon].reshape(nens, -1, twelve)
                     # print iqoi, ilat, ilon, aa
                     ytrain = np.append(ytrain, np.average(aa, axis=1), axis=1)
                     ytrain = np.append(ytrain, np.std(aa, axis=1), axis=1)
@@ -166,8 +210,7 @@ def read_simdata_ytrain(dataset):
                         outnames.append(
                             qoi + ' ' + str(lat) + ' ' + str(lon) + ' stdev ' + monthnames[imo - 1])
                 else:
-                    print('lon={:d}, lat={:d} is not land'.format(ilon, ilat))
-
+                    print('lon={:d}, lat={:d} ({:2.2f}, {:2.2f}) is not land'.format(ilon, ilat, lon, lat))
     return xdata, outnames, ytrain
 
 
