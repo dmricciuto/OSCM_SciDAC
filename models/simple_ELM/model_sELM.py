@@ -4,16 +4,7 @@ from netCDF4 import Dataset
 from math import sin, cos, sqrt, atan2, radians
 import time, os, sys
 import utils
-
-if os.environ['USER']=='ksargsy':
-  print('Hello Khachik')
-  oscm_dir=os.environ['HOME']+'/research/OSCM_SciDAC/'
-elif os.environ['USER']=='csafta':
-  print('Hello Cosmin')
-  oscm_dir=os.environ['HOME']+'/Projects/OSCM_SciDAC.dmr/'
-else:
-  oscm_dir='../../'
-
+from common import oscm_dir
 
 
 class MyModel(object):
@@ -68,6 +59,7 @@ class MyModel(object):
         #Model outputs
         self.outvars = ['gpp','npp','gr', 'mr','hr','nee','lai','leafc','leafc_stor','frootc','frootc_stor','livestemc', \
                         'deadstemc','livecrootc','deadcrootc','ctcpools','totecosysc','totsomc','totlitc', 'cstor']
+
 
 
     def selm_instance(self, parms, spinup_cycles=0, pft=0):
@@ -493,6 +485,7 @@ class MyModel(object):
           if ((n_active == 1 and self.ne == 1) or size == 0):
             #No MPI
             for i in range(0,n_active):
+                print('%d/%d sample '%(i+1, n_active))
                 if (self.site == 'none'):
                   self.load_forcings(lon=lons_torun[i], lat=lats_torun[i])
                 if (self.ne > 1):
@@ -835,7 +828,7 @@ class MyModel(object):
              self.forcings['rad']   = fsds*86400/1e6
              self.forcings['cair']  = numpy.zeros([self.nobs], numpy.float) + 360.0
              self.forcings['doy']   = (numpy.cumsum(numpy.ones([self.nobs], numpy.float)) - 1) % 365 + 1
-             self.forcings['time']  = self.start_year + (numpy.cumsum(numpy.ones([self.nobs], numpy.float)-1))/365.0
+             self.forcings['time']  = self.start_year + (numpy.cumsum(numpy.ones([self.nobs], numpy.float))-1)/365.0
              self.forcings['dayl']  = numpy.zeros([self.nobs], numpy.float)
              for d in range(0,self.nobs):
                #Calculate day length
@@ -857,6 +850,8 @@ class MyModel(object):
                  self.output[var] = numpy.zeros([8,self.nobs+1], numpy.float)
              else:
                  self.output[var] = numpy.zeros([self.nobs+1], numpy.float)
+
+         return self.forcings
 
     #Load actual observations and uncertainties
     def load_obs(self, site):

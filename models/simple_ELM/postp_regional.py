@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from netCDF4 import Dataset
 from pylab import *
 import itertools
@@ -34,7 +36,7 @@ data2d = dataset.variables[qoi][ens_id,pft_id,time_id,:,:]
 print(data2d)
 
 # only works if there is at least 2 cells in each direction
-plotMap(data2d, lats, lons, show_map = True, show_dataloc = True)
+plotMap(data2d, lats, lons, show_map = True, show_dataloc = False)
 
 #xdata_full = np.loadtxt('xdata_all.txt')
 #plotMap(data2d, xdata_full[:,1], xdata_full[:,0], show_map = True, show_dataloc = True)

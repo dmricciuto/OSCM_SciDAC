@@ -5,14 +5,33 @@ from netCDF4 import Dataset
 from common import oscm_dir
 from mpl_toolkits.basemap import Basemap
 import matplotlib.tri as tri
-from common import pmin, pmax, outvars
 
-try:
-    import cPickle as pk
-except:
-    import pickle as pk
+import pickle as pk
 
-# Transform daily data to monthly (or produce a monthly mean seasonal cycle
+def get_qoi_regave(dataset, qoi):
+    nens, npfts, ntime, nlats, nlons = dataset.variables[qoi].shape
+
+    var = np.empty((nens, ntime))
+    for ens_id in range(nens):
+        aa = np.zeros(ntime,)
+        for lat_id in range(nlats):
+            for lon_id in range(nlons):
+                aa += np.sum(dataset.variables[qoi][ens_id, :, :, lat_id, lon_id]*dataset.variables['pft_frac'][lat_id,lon_id,:].reshape(-1,1), axis=0)/100.
+
+        var[ens_id, :] = aa/(nlats*nlons)
+
+    return var
+
+
+def get_lonlat(sitename):
+    site_lonlats = np.loadtxt(oscm_dir + '/models/site_info/site_coords.txt')
+    site_names = np.loadtxt(oscm_dir + 'models/site_info/site_names.txt', dtype=str)
+
+    indx = np.where(site_names == sitename)[0]
+
+    lon, lat = site_lonlats[indx, 0][0], site_lonlats[indx, 1][0]
+
+    return lon, lat
 
 
 def daily_to_monthly(var_in, allyearsmean=False):
@@ -226,7 +245,7 @@ def get_ydata(xdata_full):
 
     sim_locs = np.unique(xdata_full[:, 0:2], axis=0)
     obs_locs = np.array([sites_info[j][1:3] for j in range(nsites)])
-    site_xind = pick_sites2(sim_locs, obs_locs)
+    site_xind = pick_sites2(sim_locs, obs_locs) ## This function has moved to elm/gutils.py
     sitenames = [sites_info[j][0] for j in range(nsites)]
 
     ydata_mean = np.empty((0,))
@@ -317,19 +336,7 @@ def pick_ind(data, row):
 
 
 
-def pick_sites2(lonlats, obs_lonlats):
 
-    nsites = len(obs_lonlats)
-    ssind = []
-    for i in range(nsites):
-        arr = lonlats - np.array([obs_lonlats[i, 0], obs_lonlats[i, 1]])
-        dists = numpy.linalg.norm(arr, axis=1)
-        minind = numpy.argmin(dists)
-
-        if dists[minind] < 1.0:
-            ssind.append([i, lonlats[minind, 0], lonlats[minind, 1]])
-
-    return numpy.array(ssind)
 
 
 def pick_sites(lons, lats, obs_lons=[], obs_lats=[]):

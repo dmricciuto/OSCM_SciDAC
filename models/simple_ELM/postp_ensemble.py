@@ -1,33 +1,48 @@
+#!/usr/bin/env python
+
+import sys
+import numpy as np
 from netCDF4 import Dataset
-from pylab import *
+import matplotlib.pyplot as plt
 
-ncfile = sys.argv[1]
-# ncfile='regional_output.nc'
+import utils
+import model_sELM as selm
+
+
+ncfile = sys.argv[1] #'regional_output.nc'
+
+
+
 print("Reading " + ncfile)
-
 dataset = Dataset(ncfile)
-qoi = 'gpp'
-lat_id = 0  # 30
-lon_id = 0  # 40
-nens = dataset.variables[qoi].shape[0]
-
 print("Dimensions #######################")
 for ikey in dataset.dimensions.keys():  # time(360),lon(5),lat(7)
     print(dataset.dimensions[ikey].name + ", size " +
           str(dataset.dimensions[ikey].size))  # 7
 
+print("Variables #######################")
+for ikey in dataset.variables.keys():
+    print(dataset.variables[ikey].name + ", size " +
+          str(dataset.variables[ikey].shape))
+
 lons = dataset.variables['lon'][:] - 360.  # .shape
 lats = dataset.variables['lat'][:]  # .shape
 
-fig = plt.figure(figsize=(12, 6))
+
+# create model object
+model = selm.MyModel()
+qois = model.outvars
+qois.remove('ctcpools')
 
 
-for ens_id in range(nens):
-    thisvar = dataset.variables[qoi][ens_id, 0, :, lat_id, lon_id]
-    plot(1980 + dataset.variables['time'][:] / 365, thisvar)
-# np.savetxt('gpp.txt',thisvar)
-# xlim(2000,2010)
-# ylim(0,10)
-# savefig('regional.eps')
-show()
-# sys.exit()
+years = 1980 + dataset.variables['time'][:] / 365
+
+for qoi in qois:
+    qoi_var = utils.get_qoi_regave(dataset, qoi)
+
+    fig = plt.figure(figsize=(12, 6))
+    plt.plot(years, qoi_var.T)
+
+    plt.savefig(qoi+'_ens.png')
+    plt.clf()
+
